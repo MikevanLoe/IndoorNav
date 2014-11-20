@@ -4,9 +4,13 @@
  * and open the template in the editor.
  */
 
-package project.movinindoor.Reparation;
+package project.movinindoor.Algorithm;
 
 import project.movinindoor.Algorithm.Algorithm;
+import project.movinindoor.Reparation.Building;
+import project.movinindoor.Reparation.Campus;
+import project.movinindoor.Reparation.Priority;
+import project.movinindoor.Reparation.Reparation;
 
 /**
  *
