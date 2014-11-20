@@ -1,9 +1,14 @@
 package project.movinindoor;
 
+import android.app.Activity;
+import android.net.nsd.NsdManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +26,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MapsActivity extends FragmentActivity {
+
+    private DrawerLayout drawerLayout;
+    private ListView listView;
+    private String[] itemsNavigation;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
@@ -74,21 +83,16 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
+        _initMenu();
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                float minZoom = 15.0f;
-                if (cameraPosition.zoom < minZoom)
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
-            }
-        });
+        drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
+        listView=(ListView) findViewById(R.id.drawer_list);
     }
+
+    private void _initMenu() {
+
+    }
+
 
     @Override
     protected void onResume() {
@@ -132,7 +136,21 @@ public class MapsActivity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(52.49951, 6.07869)).title("Marker"));
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.setIndoorEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
 
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                float minZoom = 15.0f;
+                if (cameraPosition.zoom < minZoom)
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
+            }
+        });
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
     }
