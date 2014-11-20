@@ -2,6 +2,7 @@ package project.movinindoor;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -9,6 +10,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -22,6 +24,7 @@ public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
+    private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
 
     TileProvider tileProvider = new UrlTileProvider(256, 256) {
         @Override
@@ -75,10 +78,19 @@ public class MapsActivity extends FragmentActivity {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 15.0f;
-                if (cameraPosition.zoom < minZoom)
+                LatLng position = cameraPosition.target;
+
+                if (cameraPosition.zoom < minZoom) {
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
+                }
+                // If the camera is not between the bounderies anymore it moves the camera to the center of the campus
+                else if(!(position.latitude > bounds.southwest.latitude) || !(position.latitude < bounds.northeast.latitude) || !(position.longitude > bounds.southwest.longitude) || !(position.longitude < bounds.northeast.longitude))
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), cameraPosition.zoom));
+                }
             }
         });
+
     }
 
     @Override
