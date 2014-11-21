@@ -5,6 +5,7 @@ import android.net.nsd.NsdManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
@@ -90,8 +91,8 @@ public class MapsActivity extends FragmentActivity {
     }
 
     private void _initMenu() {
-
     }
+
 
 
     @Override
@@ -139,7 +140,7 @@ public class MapsActivity extends FragmentActivity {
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
 
