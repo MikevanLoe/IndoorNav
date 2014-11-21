@@ -1,18 +1,8 @@
 package project.movinindoor;
 
-import android.app.Activity;
-import android.net.nsd.NsdManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
-=======
-import android.support.v4.widget.DrawerLayout;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
->>>>>>> 9571bcc3fc220c2580cf8c0183c736a292c37cfe
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,10 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MapsActivity extends FragmentActivity {
-
-    private DrawerLayout drawerLayout;
-    private ListView listView;
-    private String[] itemsNavigation;
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
@@ -78,20 +64,16 @@ public class MapsActivity extends FragmentActivity {
     };
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.maps_menu, menu);
-        return true;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
-        _initMenu();
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.setIndoorEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
 
-<<<<<<< HEAD
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -109,16 +91,7 @@ public class MapsActivity extends FragmentActivity {
             }
         });
 
-=======
-        drawerLayout=(DrawerLayout) findViewById(R.id.drawer_layout);
-        listView=(ListView) findViewById(R.id.drawer_list);
->>>>>>> 9571bcc3fc220c2580cf8c0183c736a292c37cfe
     }
-
-    private void _initMenu() {
-
-    }
-
 
     @Override
     protected void onResume() {
@@ -162,21 +135,7 @@ public class MapsActivity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(52.49951, 6.07869)).title("Marker"));
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                float minZoom = 15.0f;
-                if (cameraPosition.zoom < minZoom)
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
-            }
-        });
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
     }
