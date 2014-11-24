@@ -80,7 +80,9 @@ public class MapsActivity extends FragmentActivity {
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         //mMap.getUiSettings().setZoomControlsEnabled(false);
+
         mMap.setIndoorEnabled(true); 
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
@@ -147,30 +149,22 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(52.49951, 6.07869)).title("Marker"));
         mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(true);
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
 
-        /*mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 15.0f;
                 if (cameraPosition.zoom < minZoom)
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
             }
-        });*/
-        mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
-
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
-        //mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
+        });
 
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
