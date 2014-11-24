@@ -16,7 +16,7 @@ import java.util.Map;
 public class Floor {
     
     Map<Integer, Reparation> repairList;
-    public Priority priority;
+    public Reparation.PriorityType priority;
     
     public Floor() {
         repairList = new HashMap<Integer, Reparation>();

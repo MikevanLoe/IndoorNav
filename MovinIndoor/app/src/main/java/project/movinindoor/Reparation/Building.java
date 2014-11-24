@@ -15,30 +15,30 @@ import java.util.Map;
  */
 public class Building {
     
-    Map<String, Floor> floorList;
-    public Priority priority;
+    Map<Integer, Floor> floorList;
+    public Reparation.PriorityType priority;
 
     public Building() {
         int totalFloors = 10;
-        floorList = new HashMap<String, Floor>();
+        floorList = new HashMap<Integer, Floor>();
 
         for (int i = 0; i <= totalFloors; i++) {
-            Floor floor = new Floor(); 
-            floorList.put(Integer.toString(i), floor); 
-        }  
-    }
-    
-    public Building(int totalFloors) {
-        floorList = new HashMap<String, Floor>();
-
-        for (int i = 0; i <= totalFloors; i++) {
-            Floor floor = new Floor(); 
-            floorList.put(Integer.toString(i), floor); 
+            Floor floor = new Floor();
+            floorList.put(i, floor);
         }
-         
     }
-    
-    public void Add(String name, Floor obj) {
+
+    public Building(int totalFloors) {
+        floorList = new HashMap<Integer, Floor>();
+
+        for (int i = 0; i <= totalFloors; i++) {
+            Floor floor = new Floor();
+            floorList.put(i, floor);
+        }
+
+    }
+
+    public void Add(int name, Floor obj) {
         floorList.put(name, obj);
     }
     
