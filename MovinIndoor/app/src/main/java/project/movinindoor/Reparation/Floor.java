@@ -16,7 +16,11 @@ import java.util.Map;
 public class Floor {
     
     Map<Integer, Reparation> repairList;
+<<<<<<< HEAD
     public Reparation.PriorityType priority;
+=======
+    public Priority priority;
+>>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
     
     public Floor() {
         repairList = new HashMap<Integer, Reparation>();

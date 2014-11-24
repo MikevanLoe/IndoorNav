@@ -6,6 +6,11 @@
 
 package project.movinindoor.Algorithm;
 
+<<<<<<< HEAD
+=======
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
 
 import project.movinindoor.Reparation.Buildings;
 
@@ -15,8 +20,13 @@ import project.movinindoor.Reparation.Buildings;
  */
 
 public class Algorithm {
+<<<<<<< HEAD
     public Buildings buildings;
 
+=======
+    Buildings buildings;
+    
+>>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
     public Algorithm(Buildings campusWin) {
         buildings = campusWin;
     }
