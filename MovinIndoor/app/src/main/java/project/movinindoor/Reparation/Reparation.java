@@ -11,7 +11,6 @@ package project.movinindoor.Reparation;
  * @author Davey
  */
 public class Reparation {
-<<<<<<< HEAD
 
     public enum PriorityType {
         VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTENT(5), URGENT(6);
@@ -26,38 +25,19 @@ public class Reparation {
         }
     }
 
-=======
-    
-
-
-    
-    
->>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
     public enum BuildingEnum {
     A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
     }
-    
-<<<<<<< HEAD
-=======
 
-    
->>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
     private static int CountID = 1;
     public int Id;
     public BuildingEnum Building;
     public int Floor;
     public int Location;
-<<<<<<< HEAD
     public PriorityType Priority;
     public String Description;
-    
+
     public Reparation(BuildingEnum building, int floor, int location, PriorityType priority, String desc) {
-=======
-    public Priority Priority;
-    public String Description;
-    
-    public Reparation(BuildingEnum building, int floor, int location, Priority priority, String desc) {
->>>>>>> a0a4c60641c3717e61d14641c85e327d4f76f426
         this.Id = CountID++;
         this.Building = building;
         this.Floor = floor;
