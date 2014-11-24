@@ -6,8 +6,6 @@
 
 package project.movinindoor.Algorithm;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import project.movinindoor.Reparation.Buildings;
 
@@ -17,8 +15,8 @@ import project.movinindoor.Reparation.Buildings;
  */
 
 public class Algorithm {
-    Buildings buildings;
-    
+    public Buildings buildings;
+
     public Algorithm(Buildings campusWin) {
         buildings = campusWin;
     }
