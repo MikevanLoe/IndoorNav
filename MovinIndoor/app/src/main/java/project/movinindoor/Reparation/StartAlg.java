@@ -10,27 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import project.movinindoor.Algorithm.Algorithm;
+
 /**
  *
  * @author Davey
  */
 public class StartAlg {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
     
-    
-    
-        Repair();
-    }
-    
-    
-    
-    
-    public static void Repair() {
+    public void StartAlg() {
         // List with all Buildings
         List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
         for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) {
@@ -75,7 +64,7 @@ public class StartAlg {
          //System.out.println(buildings.getRepairsFromLocation(Reparation.BuildingEnum.D, "0", 45));
          
          //start Algorithm
-         //Algorithm algo = new Algorithm(buildings);
+         Algorithm algo = new Algorithm(buildings);
 
     for (Entry<Reparation.BuildingEnum, Building> b : buildings.buildingList.entrySet()) {
         for (Entry<String, Floor> f : b.getValue().floorList.entrySet()) {
