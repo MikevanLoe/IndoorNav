@@ -38,8 +38,8 @@ public class MapsActivity extends FragmentActivity {
         @Override
         public URL getTileUrl(int x, int y, int zoom) {
 
-    /* Define the URL pattern for the tile images */
-            String s = String.format("https://c6cad6a5034e906cdc0cb7705f1e8d6f00b847f2.googledrive.com/host/0B_NvHdXrVsSwTXZ0dmxEejlOeHc/%d/%d/%d.png",
+    /* Define the URL pattern for the tile images wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d*/
+            String s = String.format("wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
                     zoom, x, y);
 
             if (!checkTileExists(x, y, zoom)) {
@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity {
             }
 
             try {
+                System.out.println(s);
                 return new URL(s);
             } catch (MalformedURLException e) {
                 throw new AssertionError(e);
@@ -60,8 +61,8 @@ public class MapsActivity extends FragmentActivity {
          * need to define the supported x, y range at each zoom level.
          */
         private boolean checkTileExists(int x, int y, int zoom) {
-            int minZoom = 12;
-            int maxZoom = 16;
+            int minZoom = 0;
+            int maxZoom = 100;
 
             if ((zoom < minZoom || zoom > maxZoom)) {
                 return false;
@@ -136,21 +137,21 @@ public class MapsActivity extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(52.49951, 6.07869)).title("Marker"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49951, 6.07869), 15));
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+        /*mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 15.0f;
                 if (cameraPosition.zoom < minZoom)
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
             }
-        });
+        });*/
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
     }
