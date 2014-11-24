@@ -28,7 +28,7 @@ public class Reparation {
     public enum BuildingEnum {
     A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
     }
-    
+
     private static int CountID = 1;
     public int Id;
     public BuildingEnum Building;
@@ -36,7 +36,7 @@ public class Reparation {
     public int Location;
     public PriorityType Priority;
     public String Description;
-    
+
     public Reparation(BuildingEnum building, int floor, int location, PriorityType priority, String desc) {
         this.Id = CountID++;
         this.Building = building;
