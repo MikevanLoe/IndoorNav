@@ -15,26 +15,27 @@ import java.util.Map;
  */
 public class Building {
     
-    public Map<String, Floor> floorList;
+    Map<String, Floor> floorList;
+    public Priority priority;
 
     public Building() {
+        int totalFloors = 10;
         floorList = new HashMap<String, Floor>();
-        
-        Floor floor0 = new Floor();       
-        Floor floor1 = new Floor();
-        Floor floor2 = new Floor();
-        Floor floor3 = new Floor();
-        Floor floor4 = new Floor();
-        Floor floor5 = new Floor();
-        
-        floorList.put("0", floor0);        
-        floorList.put("1", floor1);
-        floorList.put("2", floor2);
-        floorList.put("3", floor3);
-        floorList.put("4", floor4);
-        floorList.put("5", floor5);
-        
-        
+
+        for (int i = 0; i <= totalFloors; i++) {
+            Floor floor = new Floor(); 
+            floorList.put(Integer.toString(i), floor); 
+        }  
+    }
+    
+    public Building(int totalFloors) {
+        floorList = new HashMap<String, Floor>();
+
+        for (int i = 0; i <= totalFloors; i++) {
+            Floor floor = new Floor(); 
+            floorList.put(Integer.toString(i), floor); 
+        }
+         
     }
     
     public void Add(String name, Floor obj) {
