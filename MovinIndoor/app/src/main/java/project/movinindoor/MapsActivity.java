@@ -28,9 +28,10 @@ import java.net.URL;
 
 public class MapsActivity extends FragmentActivity {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    public final String TAG = "MapsActivity";
+    private GoogleMap mMap; // Might be null if Google Play services APK is not available
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
+
+    public final String TAG = "MapsActivity";
 
     TileProvider tileProvider = new UrlTileProvider(256, 256) {
         @Override
@@ -39,8 +40,6 @@ public class MapsActivity extends FragmentActivity {
     /* Define the URL pattern for the tile images */
             String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
                     zoom, x, y);
-            //Log.d("value of y", Integer.toString(y));
-            //Log.d("value of zoom", Integer.toString(zoom));
             if (!checkTileExists(x, y, zoom)) {
                 return null;
             }
@@ -77,9 +76,11 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php");
+
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
-        //mMap.getUiSettings().setZoomControlsEnabled(false);
 
         mMap.setIndoorEnabled(true); 
 
@@ -103,10 +104,6 @@ public class MapsActivity extends FragmentActivity {
         });
 
     }
-
-    private void _initMenu() {
-    }
-
 
     @Override
     protected void onResume() {
