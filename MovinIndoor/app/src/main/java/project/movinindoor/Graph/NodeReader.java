@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import project.movinindoor.MapsActivity;
+
 /**
  * Created by Davey on 25-11-2014.
  */
@@ -23,17 +25,20 @@ public class NodeReader {
     public NodeReader() {
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream("WTCNavMesh.json");
+            inputStream = MapsActivity.getContext().getAssets().open("WTCNavMesh.json");
+
+
             HashMap<String, Node> read = readJsonStream(inputStream);
+
+            Log.i("groep4", String.valueOf(read.size()));
+
             jsonList = calculate(read);
 
 
-        } catch (FileNotFoundException e) {
-            Log.i("FILENOTFOUND", e.getMessage());
-        } catch (IOException e) {
-            Log.i("IOEXCEPTION", e.getMessage());
-        }
 
+        } catch (Exception e) {
+            Log.i("groep2", e.getMessage());
+        }
     }
 
     public HashMap<String, Node> calculate(HashMap<String, Node> read ) {

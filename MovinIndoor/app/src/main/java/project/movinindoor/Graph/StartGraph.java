@@ -14,6 +14,7 @@ public class StartGraph {
 
 
         try {
+            Log.i("groep3", r.jsonList.toString());
             for (Node n : r.jsonList.values()) {
                 g.addVertex(n.nodeId);
             }
@@ -41,7 +42,7 @@ public class StartGraph {
 //        g.printPath("6");
         }catch(Exception e){
 //            Log.i("FAILED", e.toString());
-            Log.i("exception", e.getMessage());
+            Log.i("groep1", e.getMessage());
         }
     }
 }

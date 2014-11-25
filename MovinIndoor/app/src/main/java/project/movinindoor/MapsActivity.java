@@ -1,5 +1,6 @@
 package project.movinindoor;
 
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,7 @@ import project.movinindoor.Graph.StartGraph;
 
 public class MapsActivity extends FragmentActivity {
 
+    public static Context context;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
@@ -73,11 +75,20 @@ public class MapsActivity extends FragmentActivity {
         }
     };
 
+    public static Context getContext() {
+        return context;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+        context = getApplicationContext();
+
+
+//        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         //mMap.getUiSettings().setZoomControlsEnabled(false);
