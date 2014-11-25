@@ -18,23 +18,22 @@ import java.util.List;
  */
 public class NodeReader {
 
+    HashMap<String, Node> jsonList;
+
     public NodeReader() {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream("WTCNavMesh.json");
             HashMap<String, Node> read = readJsonStream(inputStream);
-            HashMap<String, Node> t = calculate(read);
+            jsonList = calculate(read);
 
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.i("FILENOTFOUND", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.i("IOEXCEPTION", e.getMessage());
         }
-    }
 
-    public HashMap<String, Node> addVertexes() {
-        
     }
 
     public HashMap<String, Node> calculate(HashMap<String, Node> read ) {
@@ -82,8 +81,6 @@ public class NodeReader {
     }
 
 
-
-
     public HashMap<String, Node> readMessagesArray(JsonReader reader) throws IOException {
         HashMap<String, Node> nodes = new HashMap<String, Node>();
 
@@ -100,7 +97,7 @@ public class NodeReader {
     public Node readNodes(JsonReader reader) throws IOException {
 
         String nodeID = null;
-        List position = null;
+        List<Double> position = null;
         String floor = null;
         List<ToNode> nodeLinks = null;
 
@@ -125,8 +122,8 @@ public class NodeReader {
 
 
 
-    public List readDoublesArray(JsonReader reader) throws IOException {
-        List doubles = new ArrayList();
+    public List<Double> readDoublesArray(JsonReader reader) throws IOException {
+        List<Double> doubles = new ArrayList();
 
         reader.beginArray();
         while (reader.hasNext()) {

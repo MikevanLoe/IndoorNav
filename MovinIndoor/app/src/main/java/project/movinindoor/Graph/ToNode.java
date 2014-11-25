@@ -1,8 +1,8 @@
 package project.movinindoor.Graph;
 
 /**
- * Created by Davey on 25-11-2014.
- */
+* Created by Davey on 25-11-2014.
+        */
 public class ToNode {
 
     public String toNodeID;
