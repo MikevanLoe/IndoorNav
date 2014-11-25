@@ -4,23 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/map" tools:context=".MapsActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+    <!-- Framelayout to display Fragments -->
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    </FrameLayout>
 
     <!-- The navigation drawer -->
 
     <ListView
         android:id="@+id/drawer_list"
-        android:entries="@array/links"
+        android:entries="@array/nav_drawer_items"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#222222"
+        android:background="#FFFFFF"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
+        android:dividerHeight="1dp"
         android:textFilterEnabled="false"></ListView>
 
 </android.support.v4.widget.DrawerLayout>
