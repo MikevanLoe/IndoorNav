@@ -147,7 +147,6 @@ public class Buildings {
      * Calculates and sets the average priority of the given building.
      *
      * @param Reparation.BuildingEnum building
-     * @param int floor
      */
     public void calculatePriorityBuilding(Reparation.BuildingEnum building) {
         Map<Integer, Floor> prioFloor = getRepairsFromBuilding(building);
