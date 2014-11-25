@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.UrlTileProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import project.movinindoor.Graph.StartGraph;
+
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -98,6 +100,7 @@ public class MapsActivity extends FragmentActivity {
             }
         });
 
+        StartGraph.runGraphs();
     }
 
     private void _initMenu() {
@@ -108,6 +111,8 @@ public class MapsActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+
+        StartGraph.runGraphs();
     }
 
     /**
