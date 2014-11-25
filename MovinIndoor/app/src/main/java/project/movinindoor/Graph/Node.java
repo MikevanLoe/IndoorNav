@@ -8,12 +8,12 @@ import java.util.List;
 public class Node {
 
     public String nodeId;
-    public List location;
+    public List<Double> location;
     public String floor;
     public List<ToNode> toNode;
 
 
-    public Node(String nodeId, List location, String floor, List<ToNode> toNode) {
+    public Node(String nodeId, List<Double> location, String floor, List<ToNode> toNode) {
         this.nodeId = nodeId;
         this.location = location;
         this.floor = floor;

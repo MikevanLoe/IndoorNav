@@ -29,10 +29,11 @@ public class NodeReader {
 
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.i("FILENOTFOUND", e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.i("IOEXCEPTION", e.getMessage());
         }
+
     }
 
     public HashMap<String, Node> calculate(HashMap<String, Node> read ) {
@@ -80,8 +81,6 @@ public class NodeReader {
     }
 
 
-
-
     public HashMap<String, Node> readMessagesArray(JsonReader reader) throws IOException {
         HashMap<String, Node> nodes = new HashMap<String, Node>();
 
@@ -98,7 +97,7 @@ public class NodeReader {
     public Node readNodes(JsonReader reader) throws IOException {
 
         String nodeID = null;
-        List position = null;
+        List<Double> position = null;
         String floor = null;
         List<ToNode> nodeLinks = null;
 
@@ -123,8 +122,8 @@ public class NodeReader {
 
 
 
-    public List readDoublesArray(JsonReader reader) throws IOException {
-        List doubles = new ArrayList();
+    public List<Double> readDoublesArray(JsonReader reader) throws IOException {
+        List<Double> doubles = new ArrayList();
 
         reader.beginArray();
         while (reader.hasNext()) {
