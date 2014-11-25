@@ -26,18 +26,22 @@ public class Graph {
         vertexMap.put(name, v);
     }
 
-    public void printPath(Vertex dest) {
-        if (dest.prev != null) {
-            printPath(dest.prev);
-            System.out.print(" -> ");
+    public String printPath(Vertex dest) {
+//        if (dest.prev != null) {
+//            printPath(dest.prev);
+//            System.out.print(" -> ");
+//        }
+//        System.out.print(dest.name);
+
+        if(dest.prev != null){
+            return printPath(dest.prev) + " -> ";
         }
-        System.out.print(dest.name);
+        return dest.name;
     }
 
     public void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
-        printPath(dest);
-        System.out.println("");
+        Log.i("PATH", printPath(dest));
     }
 
     private void clearAll() {
