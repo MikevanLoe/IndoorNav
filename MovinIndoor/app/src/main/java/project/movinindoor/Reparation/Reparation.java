@@ -13,8 +13,8 @@ package project.movinindoor.Reparation;
 public class Reparation {
 
     public enum PriorityType {
-        VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTENT(5), URGENT(6);
-        private final int value;
+        VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTANT(5), URGENT(6);
+        public final int value;
 
         private PriorityType(int value) {
             this.value = value;
@@ -28,7 +28,7 @@ public class Reparation {
     public enum BuildingEnum {
     A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
     }
-    
+
     private static int CountID = 1;
     public int Id;
     public BuildingEnum Building;
@@ -36,7 +36,7 @@ public class Reparation {
     public int Location;
     public PriorityType Priority;
     public String Description;
-    
+
     public Reparation(BuildingEnum building, int floor, int location, PriorityType priority, String desc) {
         this.Id = CountID++;
         this.Building = building;

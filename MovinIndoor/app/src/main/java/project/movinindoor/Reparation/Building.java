@@ -23,21 +23,21 @@ public class Building {
         floorList = new HashMap<Integer, Floor>();
 
         for (int i = 0; i <= totalFloors; i++) {
-            Floor floor = new Floor(); 
+            Floor floor = new Floor();
             floorList.put(i, floor);
-        }  
+        }
     }
-    
+
     public Building(int totalFloors) {
         floorList = new HashMap<Integer, Floor>();
 
         for (int i = 0; i <= totalFloors; i++) {
-            Floor floor = new Floor(); 
+            Floor floor = new Floor();
             floorList.put(i, floor);
         }
-         
+
     }
-    
+
     public void Add(int name, Floor obj) {
         floorList.put(name, obj);
     }
