@@ -12,9 +12,8 @@ public class StartGraph {
         Graph g = new Graph();
         NodeReader r = new NodeReader();
 
-
         try {
-            Log.i("groep3", r.jsonList.toString());
+
             for (Node n : r.jsonList.values()) {
                 g.addVertex(n.nodeId);
             }
@@ -22,6 +21,7 @@ public class StartGraph {
             for (Node n : r.jsonList.values()) {
                 for (ToNode t : n.toNode) {
                     g.addEdge(n.nodeId, t.toNodeID, t.cost);
+                    Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
                 }
             }
 
