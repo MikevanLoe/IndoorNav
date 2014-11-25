@@ -42,7 +42,7 @@ public class StartGraph {
 //        g.printPath("6");
         }catch(Exception e){
 //            Log.i("FAILED", e.toString());
-            Log.i("groep1", e.getMessage());
+            e.printStackTrace();
         }
     }
 }
