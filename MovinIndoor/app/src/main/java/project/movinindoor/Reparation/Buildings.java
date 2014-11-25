@@ -46,7 +46,7 @@ public class Buildings {
         buildingList.remove(obj);
     }
  
-    public void setRepairs(Reparation.BuildingEnum building, int floor, Reparation reparation) {
+    public void addRepair(Reparation.BuildingEnum building, int floor, Reparation reparation) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(Integer.toString(floor));
         floorR.Add(reparation.Location, reparation);
@@ -63,14 +63,16 @@ public class Buildings {
         return floorR.repairList;
     }
 
+    /*
+    duplicate from getRepairs
     public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(Integer.toString(floor));
         return floorR.repairList.get(location);
     }
+    */
 
-
-    public Reparation getRepairsFromLocation(Reparation.BuildingEnum building, int floor, int location) {
+    public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
         Map<Integer, Reparation> getFloor = getRepairsFromFloor(building, floor);
         Reparation reparationR = getFloor.get(location);
         return reparationR;
@@ -92,7 +94,7 @@ public class Buildings {
          floorR.priority = priority;
     }
 
-    public Reparation.PriorityType setPriorityFloor(Reparation.BuildingEnum building, int floor) {
+    public Reparation.PriorityType getPriorityFloor(Reparation.BuildingEnum building, int floor) {
          Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
          Floor floorR = getBuilding.get(floor);
          return floorR.priority;
