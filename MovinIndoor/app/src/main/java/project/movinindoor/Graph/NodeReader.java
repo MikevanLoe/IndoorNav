@@ -18,12 +18,14 @@ import java.util.List;
  */
 public class NodeReader {
 
+    HashMap<String, Node> jsonList;
+
     public NodeReader() {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream("WTCNavMesh.json");
             HashMap<String, Node> read = readJsonStream(inputStream);
-            HashMap<String, Node> t = calculate(read);
+            jsonList = calculate(read);
 
 
         } catch (FileNotFoundException e) {
@@ -31,10 +33,6 @@ public class NodeReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public HashMap<String, Node> addVertexes() {
-        
     }
 
     public HashMap<String, Node> calculate(HashMap<String, Node> read ) {
