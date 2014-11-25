@@ -132,7 +132,7 @@ public class Buildings {
                 setPriorityFloor(building, floor, Reparation.PriorityType.HIGH);
                 break;
             case 5:
-                setPriorityFloor(building, floor, Reparation.PriorityType.IMPORTENT);
+                setPriorityFloor(building, floor, Reparation.PriorityType.IMPORTANT);
                 break;
             case 6:
                 setPriorityFloor(building, floor, Reparation.PriorityType.URGENT);
@@ -181,7 +181,7 @@ public class Buildings {
                 setPriorityBuilding(building, Reparation.PriorityType.HIGH);
                 break;
             case 5:
-                setPriorityBuilding(building, Reparation.PriorityType.IMPORTENT);
+                setPriorityBuilding(building, Reparation.PriorityType.IMPORTANT);
                 break;
             case 6:
                 setPriorityBuilding(building, Reparation.PriorityType.URGENT);
