@@ -99,6 +99,98 @@ public class Buildings {
          Floor floorR = getBuilding.get(floor);
          return floorR.priority;
     }
+
+    /*
+     * Calculates and sets the average priority of the given floor.
+     *
+     * @param Reparation.BuildingEnum building
+     * @param int floor
+     */
+    public void calculatePriorityFloor(Reparation.BuildingEnum building, int floor){
+        Map<Integer, Reparation> prioFloor = getRepairsFromFloor(building, floor);
+        int prioSom = 0;
+        int count = 0;
+
+        for(Reparation rep : prioFloor.values()) {
+            prioSom += rep.Priority.getValue();
+            count++;
+        }
+
+        int prio = prioSom/count;
+
+        switch(prio) {
+            case 1:
+                setPriorityFloor(building, floor, Reparation.PriorityType.VERYLOW);
+                break;
+            case 2:
+                setPriorityFloor(building, floor, Reparation.PriorityType.LOW);
+                break;
+            case 3:
+                setPriorityFloor(building, floor, Reparation.PriorityType.AVERAGE);
+                break;
+            case 4:
+                setPriorityFloor(building, floor, Reparation.PriorityType.HIGH);
+                break;
+            case 5:
+                setPriorityFloor(building, floor, Reparation.PriorityType.IMPORTENT);
+                break;
+            case 6:
+                setPriorityFloor(building, floor, Reparation.PriorityType.URGENT);
+                break;
+            default:
+                setPriorityFloor(building, floor, null);
+                break;
+        }
+    }
+
+    /*
+     * Calculates and sets the average priority of the given building.
+     *
+     * @param Reparation.BuildingEnum building
+     * @param int floor
+     */
+    public void calculatePriorityBuilding(Reparation.BuildingEnum building) {
+        Map<Integer, Floor> prioFloor = getRepairsFromBuilding(building);
+        int prioSom = 0;
+        int count = 0;
+
+        for(Floor rep : prioFloor.values()) {
+            prioSom += rep.priority.getValue();
+            count++;
+        }
+
+        int prio;
+        if(prioSom != 0 && count != 0) {
+            prio = prioSom / count;
+        }
+        else {
+            prio = 0;
+        }
+
+        switch(prio) {
+            case 1:
+                setPriorityBuilding(building, Reparation.PriorityType.VERYLOW);
+                break;
+            case 2:
+                setPriorityBuilding(building, Reparation.PriorityType.LOW);
+                break;
+            case 3:
+                setPriorityBuilding(building, Reparation.PriorityType.AVERAGE);
+                break;
+            case 4:
+                setPriorityBuilding(building, Reparation.PriorityType.HIGH);
+                break;
+            case 5:
+                setPriorityBuilding(building, Reparation.PriorityType.IMPORTENT);
+                break;
+            case 6:
+                setPriorityBuilding(building, Reparation.PriorityType.URGENT);
+                break;
+            default:
+                setPriorityBuilding(building, null);
+                break;
+        }
+    }
 }
 
 
