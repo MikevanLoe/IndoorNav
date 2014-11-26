@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
@@ -181,5 +183,23 @@ public class MapsActivity extends FragmentActivity {
 
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2));
+
+        // Get back the mutable Polyline
+        Polyline polyline = mMap.addPolyline(rectOptions);
+    }
+
+    public static void addMarker(double lat1, double long1, String name) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+    }
+
+    public static void addMarker(double lat1, double long1) {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 }
