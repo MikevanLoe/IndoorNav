@@ -3,16 +3,11 @@ package project.movinindoor;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -83,11 +78,14 @@ public class MapsActivity extends FragmentActivity {
         return context;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        // Test om defecten op te halen uit db
+        new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php");
+
         setUpMapIfNeeded();
         context = getApplicationContext();
 
@@ -95,33 +93,25 @@ public class MapsActivity extends FragmentActivity {
 //        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
-        //mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setIndoorEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
-
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 15.0f;
                 LatLng position = cameraPosition.target;
-
-              /*  if (cameraPosition.zoom < minZoom) {
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
-                }
-                // If the camera is not between the bounderies anymore it moves the camera to the center of the campus
-                else if(!(position.latitude > bounds.southwest.latitude) || !(position.latitude < bounds.northeast.latitude) || !(position.longitude > bounds.southwest.longitude) || !(position.longitude < bounds.northeast.longitude))
-                {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), cameraPosition.zoom));
-                }*/
             }
         });
 
         StartGraph.runGraphs();
     }
 
-    private void _initMenu() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.maps_activity_actions, menu);
+        return true;
     }
-
 
     @Override
     protected void onResume() {
@@ -149,6 +139,7 @@ public class MapsActivity extends FragmentActivity {
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
+
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
@@ -175,6 +166,7 @@ public class MapsActivity extends FragmentActivity {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 15.0f;
@@ -182,6 +174,44 @@ public class MapsActivity extends FragmentActivity {
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(minZoom));
             }
         });
+
+        TileProvider tileProvider = new UrlTileProvider(256, 256) {
+            @Override
+            public URL getTileUrl(int x, int y, int zoom) {
+
+    /* Define the URL pattern for the tile images */
+                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
+                        zoom, x, y);
+                if (!checkTileExists(x, y, zoom)) {
+                    return null;
+                }
+
+                try {
+                    System.out.println(s);
+                    return new URL(s);
+                } catch (MalformedURLException e) {
+                    throw new AssertionError(e);
+                }
+            }
+
+            /*
+             * Check that the tile server supports the requested x, y and zoom.
+             * Complete this stub according to the tile range you support.
+             * If you support a limited range of tiles at different zoom levels, then you
+             * need to define the supported x, y range at each zoom level.
+             */
+            private boolean checkTileExists(int x, int y, int zoom) {
+
+                int minZoom = 12;
+                int maxZoom = 22;
+
+                if ((zoom < minZoom || zoom > maxZoom)) {
+                    return false;
+                }
+
+                return true;
+            }
+        };
 
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
