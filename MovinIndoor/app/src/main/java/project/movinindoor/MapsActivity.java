@@ -108,16 +108,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         btnNav = (Button) findViewById(R.id.btnNav);
         editStart = (EditText) findViewById(R.id.btnStart);
         editEnd = (EditText) findViewById(R.id.btnEnd);
+        StartGraph.runGraphs();
 
         btnNav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                //editEnd.getText();
-                //editStart.getText();
                 Log.i("Start", editStart.getText().toString());
                 Log.i("End", editEnd.getText().toString());
 
-                StartGraph.runGraphs();
             }
         });
 

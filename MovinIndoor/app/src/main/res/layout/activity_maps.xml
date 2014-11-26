@@ -40,34 +40,33 @@
     </android.support.v4.widget.DrawerLayout>
 
     <EditText
-        android:layout_width="@dimen/abc_search_view_text_min_width"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/btnStart"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:background="#66FFFFFF"
         android:height="60dp"
-        android:width="100dp"
+        android:layout_marginRight="10dp"
         android:autoText="false" />
 
     <EditText
-        android:layout_width="@dimen/abc_search_view_text_min_width"
+        android:layout_width="100dp"
         android:background="#66FFFFFF"
         android:layout_height="wrap_content"
         android:id="@+id/btnEnd"
         android:layout_alignParentTop="true"
         android:height="60dp"
-        android:width="100dp"
+        android:layout_marginRight="10dp"
         android:layout_toEndOf="@+id/btnStart" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:background="#66FFFFFF"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="New Button"
-        android:height="50dp"
-        android:width="70dp"
+        android:height="60dp"
         android:id="@+id/btnNav"
         android:layout_alignBottom="@+id/btnEnd"
         android:layout_alignParentEnd="true"
