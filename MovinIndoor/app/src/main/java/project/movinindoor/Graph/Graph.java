@@ -20,6 +20,7 @@ public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+    private int Cost;
 
     public void addEdge(String sourcename, String destname, double cost) {
         Vertex v = vertexMap.get(sourcename);
@@ -63,9 +64,10 @@ public class Graph {
         return l;
     }
 
-//    private void drawPath(String destname){
-//        drawPath(vertexMap.get(destname));
-//    }
+    public double getCost(String destName){
+        Vertex v =  vertexMap.get(destName);
+        return v.dist;
+    }
 
     private void drawPath(Vertex v){
         MapsActivity.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
@@ -73,6 +75,7 @@ public class Graph {
             drawPath(v.prev);
         }
     }
+
 
     public void drawPath(String startName, String destName){
         dijkstra(startName);
