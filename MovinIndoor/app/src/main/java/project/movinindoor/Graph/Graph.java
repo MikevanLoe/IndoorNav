@@ -38,9 +38,8 @@ public class Graph {
         }
     }
 
-    public void printPath(String destname) {
+    private void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
-        Log.i("PATH", printPath(dest));
     }
 
     private String printPath(Vertex dest) {
@@ -50,7 +49,7 @@ public class Graph {
         return dest.name;
     }
 
-    public LinkedList getPath(String destname) {
+    private LinkedList getPath(String destname) {
         LinkedList a = new LinkedList();
         a = getPath(vertexMap.get(destname), a);
         return a;
@@ -64,18 +63,21 @@ public class Graph {
         return l;
     }
 
-    public void drawPath(String destname){
-        drawPath(vertexMap.get(destname));
-    }
+//    private void drawPath(String destname){
+//        drawPath(vertexMap.get(destname));
+//    }
 
     private void drawPath(Vertex v){
-        Log.i("COORD", v.name);
         MapsActivity.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
         if(v.prev.prev != null){
             drawPath(v.prev);
         }
     }
 
+    public void drawPath(String startName, String destName){
+        dijkstra(startName);
+        drawPath(vertexMap.get(destName));
+    }
 
     public void dijkstra(String startName) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
@@ -109,7 +111,7 @@ public class Graph {
                 }
             }
         } else {
-            System.out.println("start vertex was not found");
+            Log.i("FAILED", "start vertex was not found");
         }
     }
 }

@@ -49,7 +49,8 @@ public class StartGraph {
             g.dijkstra("70");
 //            g.printPath("68");
 //            List l = g.getPath("68");
-            g.drawPath("36");
+//            g.drawPath("36");
+            g.drawPath("70", "36");
 
 
 
