@@ -1,8 +1,18 @@
 package project.movinindoor;
 
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,15 +29,47 @@ import com.google.android.gms.maps.model.UrlTileProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
+
+    // Layout
+    private DrawerLayout drawerLayout;
+    private ListView listView;
+    private ActionBarDrawerToggle drawerListener;
+    private String[] pages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        // Layout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        listView = (ListView) findViewById(R.id.drawer_list);
+
+        pages = getResources().getStringArray(R.array.nav_drawer_items);
+
+        listView = (ListView) findViewById(R.id.drawer_list);
+        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pages));
+        listView.setOnItemClickListener(this);
+
+        drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close)
+        {
+            @Override
+            public void onDrawerClosed(View drawerView){
+                Toast.makeText(MapsActivity.this, "Drawer Closed ", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView){
+                Toast.makeText(MapsActivity.this, "Drawer Opened ", Toast.LENGTH_SHORT).show();
+            }
+        };
+        drawerLayout.setDrawerListener(drawerListener);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Test om defecten op te halen uit db
         new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php");
@@ -44,6 +86,34 @@ public class MapsActivity extends FragmentActivity {
                 LatLng position = cameraPosition.target;
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        drawerListener.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (drawerListener.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        drawerListener.syncState();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(this, pages[position] + " was selected ", Toast.LENGTH_LONG).show();
     }
 
     @Override
