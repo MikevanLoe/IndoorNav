@@ -83,6 +83,10 @@ public class MapsActivity extends FragmentActivity {
         return context;
     }
 
+    public static GoogleMap getMap() {
+        return m1Map;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,14 +198,14 @@ public class MapsActivity extends FragmentActivity {
                 .add(new LatLng(lat2, long2));
 
         // Get back the mutable Polyline
-        Polyline polyline = m1Map.addPolyline(rectOptions);
+        Polyline polyline = getMap().addPolyline(rectOptions);
     }
 
     public static void addMarker(double lat1, double long1, String name) {
-        m1Map.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
     }
 
     public static void addMarker(double lat1, double long1) {
-        m1Map.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 }
