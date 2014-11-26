@@ -78,8 +78,14 @@ public class Graph {
 
     public double drawPath(String startName, String destName){
         dijkstra(startName);
-        drawPath(vertexMap.get(destName));
-        return vertexMap.get(destName).dist;
+        Vertex v = vertexMap.get(destName);
+        if(v != null) {
+            drawPath(v);
+            return v.dist;
+        }else{
+            Log.i("PathError", "end vertex was not found");
+        }
+        return 0.0;
     }
 
 
@@ -115,7 +121,7 @@ public class Graph {
                 }
             }
         } else {
-            Log.i("FAILED", "start vertex was not found");
+            Log.i("PathError", "start vertex was not found");
         }
     }
 
