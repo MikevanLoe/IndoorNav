@@ -157,7 +157,6 @@ public class MapsActivity extends FragmentActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            m1Map = mMap;
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
