@@ -29,7 +29,7 @@ public class StartGraph {
                 lat1 = (double) n.location.get(0);
                 long1 = (double) n.location.get(1);
                 g.addVertex(n.nodeId, lat1, long1);
-                MapsActivity.addMarker(lat1, long1, n.nodeId);
+                //MapsActivity.addMarker(lat1, long1, n.nodeId);
             }
 
             for (Node n : r.jsonList.values()) {
@@ -41,7 +41,7 @@ public class StartGraph {
 
                     MapsActivity.addPolyline(lat1, long1, lat2, long2);
                     g.addEdge(n.nodeId, t.toNodeID, t.cost);
-                    Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
+                    //Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
                 }
             }
 

@@ -1,34 +1,75 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!-- Framelayout to display Fragments -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <fragment
-            android:id="@+id/map"
+
+        <!-- Framelayout to display Fragments -->
+        <!-- <FrameLayout
+            android:id="@+id/frame_container"
             android:layout_width="match_parent"
+            android:layout_height="match_parent" > -->
+
+            <fragment
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+        <!-- </FrameLayout> -->
+        <!-- The navigation drawer -->
+
+        <ListView
+            android:id="@+id/drawer_list"
+            android:entries="@array/nav_drawer_items"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:name="com.google.android.gms.maps.SupportMapFragment" />
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="1dp"
+            android:textFilterEnabled="false"></ListView>
 
-    </FrameLayout>
-    <!-- The navigation drawer -->
+    </android.support.v4.widget.DrawerLayout>
 
-    <ListView
-        android:id="@+id/drawer_list"
-        android:entries="@array/nav_drawer_items"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#FFFFFF"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        android:textFilterEnabled="false"></ListView>
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnStart"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:background="#66FFFFFF"
+        android:height="60dp"
+        android:layout_marginRight="10dp"
+        android:autoText="false" />
 
-</android.support.v4.widget.DrawerLayout>
+    <EditText
+        android:layout_width="100dp"
+        android:background="#66FFFFFF"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnEnd"
+        android:layout_alignParentTop="true"
+        android:height="60dp"
+        android:layout_marginRight="10dp"
+        android:layout_toEndOf="@+id/btnStart" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:background="#66FFFFFF"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:height="60dp"
+        android:id="@+id/btnNav"
+        android:layout_alignBottom="@+id/btnEnd"
+        android:layout_alignParentEnd="true"
+        android:clickable="true" />
+
+</RelativeLayout>
