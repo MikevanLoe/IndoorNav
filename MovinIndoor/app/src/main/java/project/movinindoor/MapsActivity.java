@@ -2,22 +2,21 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.support.v7.app.ActionBarActivity;
-import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -33,6 +32,9 @@ import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import project.movinindoor.Graph.StartGraph;
 
 public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
@@ -94,10 +96,22 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     private ActionBarDrawerToggle drawerListener;
     private String[] pages;
 
+    public Button btnNav;
+    public EditText editStart;
+    public EditText editEnd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        //onButtonClick
+        btnNav = (Button) findViewById(R.id.btnNav);
+        editStart = (EditText) findViewById(R.id.btnStart);
+        editEnd = (EditText) findViewById(R.id.btnEnd);
+
+
+
 
         // Layout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,6 +160,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         });
 
         StartGraph.runGraphs();
+
+        btnNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removePolylines();
+                StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -188,7 +210,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        StartGraph.runGraphs();
+        //StartGraph.runGraphs();
     }
 
     /**
@@ -227,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
@@ -286,6 +308,9 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 .tileProvider(tileProvider));
     }
 
+
+    public static List<Polyline> polylines = new ArrayList<Polyline>();
+
     public static void addPolyline(double lat1, double long1, double lat2, double long2){
         // Instantiates a new Polyline object and adds points to define a rectangle
         PolylineOptions rectOptions = new PolylineOptions()
@@ -294,6 +319,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
         // Get back the mutable Polyline
         Polyline polyline = getMap().addPolyline(rectOptions);
+        polylines.add(polyline);
     }
 
     public static void addPolyline(double lat1, double long1, double lat2, double long2, int color){
@@ -304,13 +330,29 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
         // Get back the mutable Polyline
         Polyline polyline = getMap().addPolyline(rectOptions);
+        polylines.add(polyline);
     }
 
+
     public static void addMarker(double lat1, double long1, String name) {
+
         getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
     }
 
     public static void addMarker(double lat1, double long1) {
         getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
+    }
+
+
+
+
+
+    public static void removePolylines() {
+        for(Polyline p : polylines)
+        {
+            if(p.getColor() != Color.BLACK) {
+                p.remove();
+            }
+        }
     }
 }

@@ -63,7 +63,7 @@
     <Button
         style="?android:attr/buttonStyleSmall"
         android:background="#66FFFFFF"
-        android:layout_width="100dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:text="New Button"
         android:height="60dp"
@@ -71,6 +71,6 @@
         android:layout_alignBottom="@+id/btnEnd"
         android:layout_alignParentEnd="true"
         android:clickable="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/btnEnd" />
 
 </RelativeLayout>

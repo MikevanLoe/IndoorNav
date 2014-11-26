@@ -13,9 +13,9 @@ import project.movinindoor.MapsActivity;
  */
 public class StartGraph {
 
-
+    public static Graph g;
     public static void runGraphs() {
-        Graph g = new Graph();
+        g = new Graph();
         NodeReader r = new NodeReader();
 
         try {
@@ -46,11 +46,11 @@ public class StartGraph {
             }
 
 
-            g.dijkstra("70");
+            //g.dijkstra("70");
 //            g.printPath("68");
 //            List l = g.getPath("68");
 //            g.drawPath("36");
-            g.drawPath("70", "36");
+            //g.drawPath("70", "36");
 
 
 
