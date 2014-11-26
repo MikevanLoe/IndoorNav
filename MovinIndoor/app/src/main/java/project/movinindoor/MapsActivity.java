@@ -195,7 +195,17 @@ public class MapsActivity extends FragmentActivity {
         // Instantiates a new Polyline object and adds points to define a rectangle
         PolylineOptions rectOptions = new PolylineOptions()
                 .add(new LatLng(lat1, long1))
-                .add(new LatLng(lat2, long2));
+                .add(new LatLng(lat2, long2)).zIndex(100);
+
+        // Get back the mutable Polyline
+        Polyline polyline = getMap().addPolyline(rectOptions);
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2, int color){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(100).color(color);
 
         // Get back the mutable Polyline
         Polyline polyline = getMap().addPolyline(rectOptions);
