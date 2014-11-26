@@ -6,9 +6,12 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -93,11 +96,30 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     private ListView listView;
     private ActionBarDrawerToggle drawerListener;
     private String[] pages;
+    public Button btnNav;
+    public EditText editStart;
+    public EditText editEnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        btnNav = (Button) findViewById(R.id.btnNav);
+        editStart = (EditText) findViewById(R.id.btnStart);
+        editEnd = (EditText) findViewById(R.id.btnEnd);
+
+        btnNav.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                //editEnd.getText();
+                //editStart.getText();
+                Log.i("Start", editStart.getText().toString());
+                Log.i("End", editEnd.getText().toString());
+
+                StartGraph.runGraphs();
+            }
+        });
 
         // Layout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             }
         });
 
-        StartGraph.runGraphs();
+
     }
 
     @Override
@@ -188,7 +210,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        StartGraph.runGraphs();
+        //StartGraph.runGraphs();
     }
 
     /**
