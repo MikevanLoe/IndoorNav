@@ -20,7 +20,7 @@ public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
-    private int Cost;
+    private static int Cost;
 
     public void addEdge(String sourcename, String destname, double cost) {
         Vertex v = vertexMap.get(sourcename);
@@ -80,6 +80,17 @@ public class Graph {
     public void drawPath(String startName, String destName){
         dijkstra(startName);
         drawPath(vertexMap.get(destName));
+    }
+
+    public static String calculateWalkingSpeed() {
+        int walkingSpeed = 4000; //Walking speed in meters per hour
+        int minuteInSec = 3600;
+        float walkingspeedPerSecond = ((float)walkingSpeed)/ minuteInSec;
+        double time;
+        time = (Cost / walkingspeedPerSecond);
+        int minute =  (int) time /60;
+        int second = (int) time % 60;
+        return String.format("%d:%02d", minute, second);
     }
 
     public void dijkstra(String startName) {

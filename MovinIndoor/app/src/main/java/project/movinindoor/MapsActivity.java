@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -166,6 +167,8 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             public void onClick(View v) {
                 removePolylines();
                 StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
+                String walkingSpeed = StartGraph.g.calculateWalkingSpeed();
+                Log.i("walking speed:", walkingSpeed);
             }
         });
     }
