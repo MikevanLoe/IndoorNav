@@ -37,7 +37,7 @@ public class StartGraph {
 //        g.addEdge("6", "2", 3.0);
 
 
-        g.getShortestPath("18", "70");
+        g.getShortestPath("18");
         g.printPath("70");
 //        g.printPath("6");
         }catch(Exception e){
