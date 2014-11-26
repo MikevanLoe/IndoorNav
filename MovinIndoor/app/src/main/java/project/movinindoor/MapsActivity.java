@@ -300,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         // Instantiates a new Polyline object and adds points to define a rectangle
         PolylineOptions rectOptions = new PolylineOptions()
                 .add(new LatLng(lat1, long1))
-                .add(new LatLng(lat2, long2)).zIndex(100).color(color);
+                .add(new LatLng(lat2, long2)).zIndex(101).color(color);
 
         // Get back the mutable Polyline
         Polyline polyline = getMap().addPolyline(rectOptions);
