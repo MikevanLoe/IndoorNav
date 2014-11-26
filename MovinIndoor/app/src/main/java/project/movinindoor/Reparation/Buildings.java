@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class Buildings {
     
-    Map<Reparation.BuildingEnum, Building> buildingList;
+    public Map<Reparation.BuildingEnum, Building> buildingList;
     
     public Buildings() {
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
