@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
@@ -33,7 +35,8 @@ import project.movinindoor.Graph.StartGraph;
 public class MapsActivity extends FragmentActivity {
 
     public static Context context;
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    //public static GoogleMap m1Map;
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
 
@@ -78,6 +81,11 @@ public class MapsActivity extends FragmentActivity {
     public static Context getContext() {
         return context;
     }
+
+    public static GoogleMap getMap() {
+        return mMap;
+    }
+
 
 
     @Override
@@ -180,5 +188,33 @@ public class MapsActivity extends FragmentActivity {
 
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(100);
+
+        // Get back the mutable Polyline
+        Polyline polyline = getMap().addPolyline(rectOptions);
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2, int color){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(100).color(color);
+
+        // Get back the mutable Polyline
+        Polyline polyline = getMap().addPolyline(rectOptions);
+    }
+
+    public static void addMarker(double lat1, double long1, String name) {
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+    }
+
+    public static void addMarker(double lat1, double long1) {
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 }
