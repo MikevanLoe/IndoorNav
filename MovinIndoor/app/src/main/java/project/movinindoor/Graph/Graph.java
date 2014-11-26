@@ -26,18 +26,22 @@ public class Graph {
         vertexMap.put(name, v);
     }
 
-    public void printPath(Vertex dest) {
-        if (dest.prev != null) {
-            printPath(dest.prev);
-            System.out.print(" -> ");
+    public String printPath(Vertex dest) {
+//        if (dest.prev != null) {
+//            printPath(dest.prev);
+//            System.out.print(" -> ");
+//        }
+//        System.out.print(dest.name);
+
+        if(dest.prev != null){
+            return printPath(dest.prev) +  " -> " + dest.name;
         }
-        System.out.print(dest.name);
+        return dest.name;
     }
 
     public void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
-        printPath(dest);
-        System.out.println("");
+        Log.i("PATH", printPath(dest));
     }
 
     private void clearAll() {
@@ -92,19 +96,18 @@ public class Graph {
 //            System.out.println("start vertex was not found");
 //        }
 //    }
-    public void getShortestPath(String startName, String destName) {
+    public void getShortestPath(String startName) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
 
         Vertex start = vertexMap.get(startName);
-        Vertex end = vertexMap.get(destName);
 
-        if (start != null && end != null) {
+        if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
             start.dist = 0;
 
             int nodesSeen = 0;
-            while (!pq.isEmpty() && nodesSeen < vertexMap.size() || !end.scratch) {
+            while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
                 if (v.scratch) // already processed v

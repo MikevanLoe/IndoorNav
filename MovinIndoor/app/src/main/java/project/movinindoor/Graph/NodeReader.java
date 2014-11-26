@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import project.movinindoor.MapsActivity;
+
 /**
  * Created by Davey on 25-11-2014.
  */
@@ -23,17 +25,18 @@ public class NodeReader {
     public NodeReader() {
         InputStream inputStream = null;
         try {
-            inputStream = new FileInputStream("WTCNavMesh.json");
+            inputStream = MapsActivity.getContext().getAssets().open("WTCNavMesh.json");
+
+
             HashMap<String, Node> read = readJsonStream(inputStream);
+
             jsonList = calculate(read);
 
 
-        } catch (FileNotFoundException e) {
-            Log.i("FILENOTFOUND", e.getMessage());
-        } catch (IOException e) {
-            Log.i("IOEXCEPTION", e.getMessage());
-        }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public HashMap<String, Node> calculate(HashMap<String, Node> read ) {
@@ -71,13 +74,14 @@ public class NodeReader {
 
     public HashMap<String, Node> readJsonStream(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
+
+        //try {
             return readMessagesArray(reader);
 
 
-        } finally {
-            reader.close();
-        }
+        //} finally {
+         //   reader.close();
+       // }
     }
 
 
@@ -86,8 +90,8 @@ public class NodeReader {
 
         reader.beginArray();
         while (reader.hasNext()) {
-            Log.i("JSON", reader.toString());
-            nodes.put(readNodes(reader).nodeId, readNodes(reader));
+            Node n = readNodes(reader);
+            nodes.put(n.nodeId, n);
         }
         reader.endArray();
         return nodes;
@@ -95,7 +99,6 @@ public class NodeReader {
 
 
     public Node readNodes(JsonReader reader) throws IOException {
-
         String nodeID = null;
         List<Double> position = null;
         String floor = null;
@@ -111,10 +114,12 @@ public class NodeReader {
             } else if (name.equals("floor")) {
                 floor =  reader.nextString();
             } else if (name.equals("nodeLinks")) {
-                nodeLinks.add(readNodeLinks(reader));
+                List<ToNode> r = readNodeLinks(reader);
+                nodeLinks = r;
             } else {
                 reader.skipValue();
             }
+
         }
         reader.endObject();
         return new Node(nodeID,position,floor,nodeLinks);
@@ -135,20 +140,26 @@ public class NodeReader {
 
 
 
-    public ToNode readNodeLinks(JsonReader reader) throws IOException {
+    public List<ToNode> readNodeLinks(JsonReader reader) throws IOException {
+        List<ToNode> list = new ArrayList<ToNode>();
         String toNodeID = null;
 
 
-        reader.beginObject();
+        reader.beginArray();
         while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("toNodeID")) {
-                toNodeID  = reader.nextString();
-            } else {
-                reader.skipValue();
+            reader.beginObject();
+            while(reader.hasNext()) {
+                String name = reader.nextName();
+                if (name.equals("toNodeID")) {
+                    toNodeID = reader.nextString();
+                } else {
+                    reader.skipValue();
+                }
             }
+            reader.endObject();
+            list.add(new ToNode(toNodeID, 0));
         }
-        reader.endObject();
-        return new ToNode(toNodeID, 0);
+        reader.endArray();
+        return list;
     }
 }

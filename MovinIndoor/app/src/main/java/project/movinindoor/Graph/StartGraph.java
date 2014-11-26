@@ -12,8 +12,8 @@ public class StartGraph {
         Graph g = new Graph();
         NodeReader r = new NodeReader();
 
-
         try {
+
             for (Node n : r.jsonList.values()) {
                 g.addVertex(n.nodeId);
             }
@@ -21,6 +21,7 @@ public class StartGraph {
             for (Node n : r.jsonList.values()) {
                 for (ToNode t : n.toNode) {
                     g.addEdge(n.nodeId, t.toNodeID, t.cost);
+                    Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
                 }
             }
 
@@ -36,12 +37,12 @@ public class StartGraph {
 //        g.addEdge("6", "2", 3.0);
 
 
-//        g.getShortestPath("77", "87");
-//        g.printPath("87");
+        g.getShortestPath("18");
+        g.printPath("70");
 //        g.printPath("6");
         }catch(Exception e){
 //            Log.i("FAILED", e.toString());
-            Log.i("exception", e.getMessage());
+            e.printStackTrace();
         }
     }
 }
