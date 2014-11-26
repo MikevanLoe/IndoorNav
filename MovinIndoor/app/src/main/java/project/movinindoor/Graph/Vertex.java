@@ -16,9 +16,13 @@ public class Vertex {
     protected Vertex prev;
     protected boolean scratch;
     protected Reparation rep;
+    protected double lat1;
+    protected double long1;
 
-    public Vertex(String name) {
+    public Vertex(String name, double lat1, double long1) {
         this.name = name;
+        this.lat1 = lat1;
+        this.long1 = long1;
         adj = new LinkedList<Edge>() ;
         reset();
     }
@@ -36,6 +40,5 @@ public class Vertex {
 //        pos = null;
         scratch = false;
     }
-
 
 }

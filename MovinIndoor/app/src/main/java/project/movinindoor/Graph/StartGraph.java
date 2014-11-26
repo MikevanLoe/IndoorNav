@@ -2,6 +2,8 @@ package project.movinindoor.Graph;
 
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Created by Wietse on 24-11-2014.
  */
@@ -15,7 +17,7 @@ public class StartGraph {
         try {
 
             for (Node n : r.jsonList.values()) {
-                g.addVertex(n.nodeId);
+                g.addVertex(n.nodeId, n.location.get(0), n.location.get(1));
             }
 
             for (Node n : r.jsonList.values()) {
@@ -25,20 +27,14 @@ public class StartGraph {
                 }
             }
 
+        g.printPath("68");
+        List l = g.getPath("68");
 
-//        g.addVertex("77");
-//        g.addVertex("87");
-//        g.addVertex("4");
-//        g.addVertex("6");
-//        g.addVertex("2");
-//        g.addEdge("77", "2", 7.0);
-//        g.addEdge("2", "87", 3.0);
-//        g.addEdge("77", "87", 11.0);
-//        g.addEdge("6", "2", 3.0);
+            for(Object v : l){
+                Log.i("coord", String.valueOf(((Vertex) v).lat1));
+                Log.i("coord", String.valueOf(((Vertex) v).long1));
+            }
 
-
-        g.getShortestPath("18");
-        g.printPath("70");
 //        g.printPath("6");
         }catch(Exception e){
 //            Log.i("FAILED", e.toString());

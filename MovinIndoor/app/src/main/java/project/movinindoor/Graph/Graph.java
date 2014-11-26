@@ -4,6 +4,8 @@ import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -21,18 +23,12 @@ public class Graph {
         v.adj.add(new Edge(v2, cost));
     }
 
-    public void addVertex(String name) {
-        Vertex v = new Vertex(name);
+    public void addVertex(String name, double lat1, double long1) {
+        Vertex v = new Vertex(name, lat1, long1);
         vertexMap.put(name, v);
     }
 
     public String printPath(Vertex dest) {
-//        if (dest.prev != null) {
-//            printPath(dest.prev);
-//            System.out.print(" -> ");
-//        }
-//        System.out.print(dest.name);
-
         if(dest.prev != null){
             return printPath(dest.prev) +  " -> " + dest.name;
         }
@@ -42,6 +38,20 @@ public class Graph {
     public void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
         Log.i("PATH", printPath(dest));
+    }
+
+    public List getPath(String destname){
+        Vertex dest = vertexMap.get(destname);
+        List l = new LinkedList();
+        return getPath(dest, l);
+    }
+
+    public List getPath(Vertex dest, List l){
+        l.add(dest.name);
+        if(dest != null){
+            l.add(0, getPath(dest.prev, l));
+        }
+        return l;
     }
 
     private void clearAll() {
