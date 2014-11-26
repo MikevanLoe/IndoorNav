@@ -36,6 +36,7 @@ public class MapsActivity extends FragmentActivity {
 
     public static Context context;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    public static GoogleMap m1Map;
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
 
@@ -151,6 +152,7 @@ public class MapsActivity extends FragmentActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
+            m1Map = mMap;
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
@@ -192,14 +194,14 @@ public class MapsActivity extends FragmentActivity {
                 .add(new LatLng(lat2, long2));
 
         // Get back the mutable Polyline
-        Polyline polyline = mMap.addPolyline(rectOptions);
+        Polyline polyline = m1Map.addPolyline(rectOptions);
     }
 
     public static void addMarker(double lat1, double long1, String name) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+        m1Map.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
     }
 
     public static void addMarker(double lat1, double long1) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
+        m1Map.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 }
