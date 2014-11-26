@@ -48,7 +48,8 @@
         android:background="#66FFFFFF"
         android:height="60dp"
         android:layout_marginRight="10dp"
-        android:autoText="false" />
+        android:autoText="false"
+        android:text="70" />
 
     <EditText
         android:layout_width="100dp"
@@ -58,7 +59,8 @@
         android:layout_alignParentTop="true"
         android:height="60dp"
         android:layout_marginRight="10dp"
-        android:layout_toEndOf="@+id/btnStart" />
+        android:layout_toEndOf="@+id/btnStart"
+        android:text="6" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -72,5 +74,14 @@
         android:layout_alignParentEnd="true"
         android:clickable="true"
         android:layout_toEndOf="@+id/btnEnd" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/TextSpeed"
+        android:background="#FFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/btnNav" />
 
 </RelativeLayout>

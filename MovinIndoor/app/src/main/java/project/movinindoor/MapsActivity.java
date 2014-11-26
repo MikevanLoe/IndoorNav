@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,6 +101,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     public Button btnNav;
     public EditText editStart;
     public EditText editEnd;
+    public TextView textSpeed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         btnNav = (Button) findViewById(R.id.btnNav);
         editStart = (EditText) findViewById(R.id.btnStart);
         editEnd = (EditText) findViewById(R.id.btnEnd);
+        textSpeed = (TextView) findViewById(R.id.TextSpeed);
 
 
 
@@ -161,14 +164,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         });
 
         StartGraph.runGraphs();
-
+        textSpeed.setText("");
         btnNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 removePolylines();
-                StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
-                String walkingSpeed = StartGraph.g.calculateWalkingSpeed();
-                Log.i("walking speed:", walkingSpeed);
+                double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
+                String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
+                textSpeed.setText("Estimate Duration:  " + walkingSpeed + " min");
             }
         });
     }
