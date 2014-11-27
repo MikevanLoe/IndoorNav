@@ -35,63 +35,24 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="1dp"
-            android:textFilterEnabled="false"></ListView>
+            android:textFilterEnabled="false"
+            android:fastScrollAlwaysVisible="false"></ListView>
 
     </android.support.v4.widget.DrawerLayout>
-
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnStart"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:background="#90FFFFFF"
-        android:height="60dp"
-        android:layout_marginRight="10dp"
-        android:autoText="false"
-        android:text="70"
-        android:textAlignment="center" />
-
-    <EditText
-        android:layout_width="100dp"
-        android:background="#90FFFFFF"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnEnd"
-        android:layout_alignParentTop="true"
-        android:height="60dp"
-        android:layout_marginRight="10dp"
-        android:layout_toEndOf="@+id/btnStart"
-        android:text="6"
-        android:textAlignment="center" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:background="#90FFFFFF"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:text="Navigate"
-        android:height="60dp"
-        android:id="@+id/btnNav"
-        android:layout_alignBottom="@+id/btnEnd"
-        android:layout_alignParentEnd="true"
-        android:clickable="true"
-        android:layout_toEndOf="@+id/btnEnd" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
         android:id="@+id/TextSpeed"
-        android:background="#FFFFFF"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/btnNav" />
+        android:layout_alignParentBottom="true" />
 
     <LinearLayout android:layout_width="fill_parent"
         android:orientation="horizontal"
         android:id="@+id/linearLayout2"
         android:layout_gravity="bottom"
         android:layout_height="fill_parent"
-        android:layout_alignBottom="@+id/btnStart">
+        android:weightSum="1">
 
 
 
@@ -109,24 +70,25 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="top"
-            android:clickable="true">
+            android:clickable="true"
+            android:onClick="menuOpen">
         </Button>
 
 
         <Button
-            android:text="Cancel"
+            android:text="Navigate"
             android:background="#ffffff"
             android:height="14dp"
             android:textSize="15sp"
             android:textColor="#000000"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_drawer"
+            android:drawableRight="@drawable/ic_launcher"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:id="@+id/CancelButtonDialog"
             android:layout_gravity="top"
-            android:onClick="btnNavigate"
+            android:onClick="btnNavBar"
             android:clickable="true">
         </Button>
     </LinearLayout>
@@ -138,15 +100,6 @@
         android:layout_centerHorizontal="true"
         android:background="#FFFFFF"
         android:id="@+id/Ooverlay">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Close"
-            android:id="@+id/closeButton"
-            android:layout_gravity="right|top"
-            android:onClick="btnClose"
-            android:nestedScrollingEnabled="false" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -164,6 +117,33 @@
             android:textColor="#ff0000"
             android:id="@+id/textView2"
             android:layout_gravity="left|center_vertical" />
+
+        <ImageButton
+            android:layout_width="71dp"
+            android:layout_height="71dp"
+            android:id="@+id/closeButton"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/abc_btn_check_to_on_mtrl_000"
+            android:onClick="btnCloseNavigate"
+            android:background="#ffffff" />
     </FrameLayout>
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="project.movinindoor.NavigationBar"
+        android:id="@+id/fragment2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:name="project.movinindoor.Fragement_FromToDislay"
+        android:id="@+id/fragment3"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/fragment2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -5,7 +5,6 @@
     <string name="title_activity_maps">MovinIndoor</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Settings</string>
-
     <string name="drawer_open">Open Navigation Drawer</string>
     <string name="drawer_close">Close Navigaion Drawer</string>
 
@@ -19,7 +18,8 @@
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
-    <!-- Keep them in order as the titles are in
+    <!--
+    Keep them in order as the titles are in
     <array name="nav_drawer_icons">
         <item>@drawable/ic_home</item>
         <item>@drawable/ic_people</item>
@@ -27,8 +27,12 @@
         <item>@drawable/ic_communities</item>
         <item>@drawable/ic_pages</item>
         <item>@drawable/ic_whats_hot</item>
-    </array> -->
+    </array>
+    -->
+
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
