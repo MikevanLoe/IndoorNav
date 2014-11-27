@@ -6,8 +6,11 @@
 
 package project.movinindoor.Reparation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  *
@@ -17,10 +20,12 @@ public class Building implements Comparable<Building>{
     
     public Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
+    public Queue order;
 
     public Building() {
         int totalFloors = 10;
         floorList = new HashMap<Integer, Floor>();
+        order = new PriorityQueue(10, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();
@@ -30,6 +35,7 @@ public class Building implements Comparable<Building>{
 
     public Building(int totalFloors) {
         floorList = new HashMap<Integer, Floor>();
+        order = new PriorityQueue(totalFloors, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();

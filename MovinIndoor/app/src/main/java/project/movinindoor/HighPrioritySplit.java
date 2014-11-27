@@ -20,11 +20,18 @@ public class HighPrioritySplit {
             buildingQ.offer(B);
         }
 
-        Building A = (Building) buildingQ.poll();
-
-        Queue floorQ = new PriorityQueue(200, Collections.reverseOrder());
-        for(Floor B : A.floorList.values()){
-            floorQ.offer(B);
+        Queue floorQ = new PriorityQueue(450, Collections.reverseOrder());
+        boolean time = true;
+        while(time) {
+            Building B = (Building) buildingQ.poll();
+            if(B != null)
+                for (Floor F : B.floorList.values())
+                    floorQ.offer(F);
+            else
+                time = false;
         }
+
+
+
     }
 }
