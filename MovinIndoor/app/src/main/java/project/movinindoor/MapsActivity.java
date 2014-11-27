@@ -32,6 +32,9 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -96,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     private DrawerLayout drawerLayout;
     private ListView listView;
     private ActionBarDrawerToggle drawerListener;
-    private String[] pages;
+    private HttpJson httpjson;
 
     public Button btnNav;
     public EditText editStart;
@@ -121,10 +124,29 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         listView = (ListView) findViewById(R.id.drawer_list);
 
-        pages = getResources().getStringArray(R.array.nav_drawer_items);
+        // Navigation drawer items
+        ArrayAdapter<String> items = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
+        try
+        {
+            JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+
+            //Loop though my JSONArray
+            for(Integer i=0; i< jitems.length(); i++){
+                    //Get My JSONObject and grab the String Value that I want.
+                    String obj = jitems.getJSONObject(i).getString("Title");
+
+                    //Add the string to the list
+                    items.add(obj);
+            }
+            listView.setAdapter(items);
+
+        }
+        catch(Exception e)
+        {
+            Log.e("items_error: ",  e.toString());
+        }
 
         listView = (ListView) findViewById(R.id.drawer_list);
-        listView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pages));
         listView.setOnItemClickListener(this);
 
         drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close)
@@ -142,9 +164,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         drawerLayout.setDrawerListener(drawerListener);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Test om defecten op te halen uit db
-        new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php");
 
         setUpMapIfNeeded();
         context = getApplicationContext();
@@ -201,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, pages[position] + " was selected ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, items.get(position) + " was selected ", Toast.LENGTH_LONG).show();
     }
 
     @Override
