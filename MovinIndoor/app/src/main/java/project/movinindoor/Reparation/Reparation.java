@@ -45,11 +45,20 @@ public class  Reparation implements Comparable<Reparation>{
         this.Priority = priority;
         this.Description = desc;
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public int getFloor() {
         return this.Floor;
     }
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     @Override
     public int compareTo(Reparation b) {
 

@@ -24,17 +24,30 @@ public class Floor implements Comparable<Floor>{
     
     public Floor() {
         repairList = new HashMap<Integer, Reparation>();
-        order = new PriorityQueue(200, Collections.reverseOrder());
     }
-    
+
+    /**
+     *
+     * @param name
+     * @param obj
+     */
     public void Add(int name, Reparation obj) {
         repairList.put(name, obj);
     }
-    
+
+    /**
+     *
+     * @param obj
+     */
     public void Remove(Reparation obj) {
         repairList.remove(obj);
     }
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     @Override
     public int compareTo(Floor b) {
 

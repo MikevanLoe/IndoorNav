@@ -21,11 +21,11 @@ public class Building implements Comparable<Building>{
     public Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
     public Queue order;
+    public int totalFloors;
 
     public Building() {
-        int totalFloors = 10;
+        totalFloors = 10;
         floorList = new HashMap<Integer, Floor>();
-        order = new PriorityQueue(10, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();
@@ -34,8 +34,8 @@ public class Building implements Comparable<Building>{
     }
 
     public Building(int totalFloors) {
+        this.totalFloors = totalFloors;
         floorList = new HashMap<Integer, Floor>();
-        order = new PriorityQueue(totalFloors, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();
@@ -44,14 +44,28 @@ public class Building implements Comparable<Building>{
 
     }
 
+    /**
+     *
+     * @param name
+     * @param obj
+     */
     public void Add(int name, Floor obj) {
         floorList.put(name, obj);
     }
-    
+
+    /**
+     *
+     * @param obj
+     */
     public void Remove(Floor obj) {
         floorList.remove(obj);
     }
 
+    /**
+     *
+     * @param b
+     * @return
+     */
     @Override
     public int compareTo(Building b) {
 

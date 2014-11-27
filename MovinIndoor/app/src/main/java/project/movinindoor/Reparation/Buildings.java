@@ -23,9 +23,8 @@ public class Buildings {
     
     public Buildings() {
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
-        order = new PriorityQueue(15, Collections.reverseOrder());
     }
-    
+
     public Buildings(List<Reparation.BuildingEnum> buildings) {
         order = new PriorityQueue(buildings.size(), Collections.reverseOrder());
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
@@ -34,7 +33,12 @@ public class Buildings {
             buildingList.put(buildingEnum, building);
         }
     }
-    
+
+    /**
+     *
+     * @param buildings
+     * @param totalFloors
+     */
     public Buildings(List<Reparation.BuildingEnum> buildings, int totalFloors) {
         order = new PriorityQueue(buildings.size(), Collections.reverseOrder());
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
@@ -43,74 +47,127 @@ public class Buildings {
             buildingList.put(buildingEnum, building);
         }
     }
-    
+
+    /**
+     *
+     * @param name
+     * @param obj
+     */
     public void Add(Reparation.BuildingEnum name, Building obj) {
         buildingList.put(name, obj);
     }
-    
+
+    /**
+     *
+     * @param obj
+     */
     public void Remove(Building obj) {
         buildingList.remove(obj);
     }
- 
+
+    /**
+     *
+     * @param building
+     * @param floor
+     * @param reparation
+     */
     public void addRepair(Reparation.BuildingEnum building, int floor, Reparation reparation) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(Integer.toString(floor));
         floorR.Add(reparation.Location, reparation);
     }
 
+    /**
+     *
+     * @param building
+     * @return
+     */
     public Map<Integer, Floor> getRepairsFromBuilding(Reparation.BuildingEnum building) {
         Building buildingR = buildingList.get(building);
         return buildingR.floorList;
     }
 
+    /**
+     *
+     * @param building
+     * @param floor
+     * @return
+     */
     public Map<Integer, Reparation> getRepairsFromFloor(Reparation.BuildingEnum building, int floor) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(floor);
         return floorR.repairList;
     }
 
-    /*
-    duplicate from getRepairs
+
+    /*duplicate from getRepairs
     public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(Integer.toString(floor));
         return floorR.repairList.get(location);
-    }
-    */
+    }*/
 
+    /**
+     *
+     * @param building
+     * @param floor
+     * @param location
+     * @return
+     */
     public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
         Map<Integer, Reparation> getFloor = getRepairsFromFloor(building, floor);
         Reparation reparationR = getFloor.get(location);
         return reparationR;
     }
 
+    /**
+     *
+     * @param building
+     * @param priority
+     */
     public void setPriorityBuilding(Reparation.BuildingEnum building, Reparation.PriorityType priority) {
         Building buildingR = buildingList.get(building);
         buildingR.priority = priority;
     }
 
+    /**
+     *
+     * @param building
+     * @return
+     */
     public Reparation.PriorityType getPriorityBuilding(Reparation.BuildingEnum building) {
         Building buildingR = buildingList.get(building);
         return buildingR.priority;
     }
 
+    /**
+     *
+     * @param building
+     * @param floor
+     * @param priority
+     */
     public void setPriorityFloor(Reparation.BuildingEnum building, int floor, Reparation.PriorityType priority) {
          Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
          Floor floorR = getBuilding.get(floor);
          floorR.priority = priority;
     }
 
+    /**
+     *
+     * @param building
+     * @param floor
+     * @return
+     */
     public Reparation.PriorityType getPriorityFloor(Reparation.BuildingEnum building, int floor) {
          Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
          Floor floorR = getBuilding.get(floor);
          return floorR.priority;
     }
 
-    /*
-     * Calculates and sets the average priority of the given floor.
+    /**
      *
-     * @param Reparation.BuildingEnum building
-     * @param int floor
+     * @param building
+     * @param floor
      */
     public void calculatePriorityFloor(Reparation.BuildingEnum building, int floor){
         Map<Integer, Reparation> prioFloor = getRepairsFromFloor(building, floor);
@@ -149,10 +206,9 @@ public class Buildings {
         }
     }
 
-    /*
-     * Calculates and sets the average priority of the given building.
+    /**
      *
-     * @param Reparation.BuildingEnum building
+     * @param building
      */
     public void calculatePriorityBuilding(Reparation.BuildingEnum building) {
         Map<Integer, Floor> prioFloor = getRepairsFromBuilding(building);
