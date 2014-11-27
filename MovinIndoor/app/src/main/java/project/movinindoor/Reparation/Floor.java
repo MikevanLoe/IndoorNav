@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Floor {
     
-    Map<Integer, Reparation> repairList;
+    public Map<Integer, Reparation> repairList;
     public Reparation.PriorityType priority;
     
     public Floor() {

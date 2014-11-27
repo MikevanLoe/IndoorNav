@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class Building implements Comparable<Building>{
     
-    Map<Integer, Floor> floorList;
+    public Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
 
     public Building() {
