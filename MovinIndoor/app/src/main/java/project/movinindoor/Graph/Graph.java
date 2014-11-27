@@ -78,8 +78,14 @@ public class Graph {
 
     public double drawPath(String startName, String destName){
         dijkstra(startName);
-        drawPath(vertexMap.get(destName));
-        return vertexMap.get(destName).dist;
+        Vertex v = vertexMap.get(destName);
+        if(v != null) {
+            drawPath(v);
+            return v.dist;
+        }else{
+            Log.i("PathError", "end vertex was not found");
+        }
+        return 0.0;
     }
 
 
@@ -115,21 +121,21 @@ public class Graph {
                 }
             }
         } else {
-            Log.i("FAILED", "start vertex was not found");
+            Log.i("PathError", "start vertex was not found");
         }
     }
 
 
 
     public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = 4000; //Walking speed in meters per hour
+        int walkingSpeed = 5000; //Walking speed in meters per hour
         int minuteInSec = 3600;
         float walkingspeedPerSecond = ((float)walkingSpeed)/ minuteInSec;
         double time;
         time = (cost / walkingspeedPerSecond);
         int minute =  (int) time /60;
         int second = (int) time % 60;
-        return String.format("%d:%02d", minute, second);
+        return String.format("%dm%02ds", minute, second);
     }
 
 }
