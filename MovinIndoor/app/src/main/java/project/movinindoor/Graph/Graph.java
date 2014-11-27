@@ -128,14 +128,14 @@ public class Graph {
 
 
     public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = 4000; //Walking speed in meters per hour
+        int walkingSpeed = 5000; //Walking speed in meters per hour
         int minuteInSec = 3600;
         float walkingspeedPerSecond = ((float)walkingSpeed)/ minuteInSec;
         double time;
         time = (cost / walkingspeedPerSecond);
         int minute =  (int) time /60;
         int second = (int) time % 60;
-        return String.format("%d:%02d", minute, second);
+        return String.format("%dm%02ds", minute, second);
     }
 
 }

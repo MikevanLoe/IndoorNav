@@ -16,11 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" > -->
 
-            <fragment
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="com.google.android.gms.maps.SupportMapFragment" />
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
 
         <!-- </FrameLayout> -->
         <!-- The navigation drawer -->
@@ -45,29 +45,31 @@
         android:id="@+id/btnStart"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:background="#66FFFFFF"
+        android:background="#90FFFFFF"
         android:height="60dp"
         android:layout_marginRight="10dp"
         android:autoText="false"
-        android:text="70" />
+        android:text="70"
+        android:textAlignment="center" />
 
     <EditText
         android:layout_width="100dp"
-        android:background="#66FFFFFF"
+        android:background="#90FFFFFF"
         android:layout_height="wrap_content"
         android:id="@+id/btnEnd"
         android:layout_alignParentTop="true"
         android:height="60dp"
         android:layout_marginRight="10dp"
         android:layout_toEndOf="@+id/btnStart"
-        android:text="6" />
+        android:text="6"
+        android:textAlignment="center" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:background="#66FFFFFF"
+        android:background="#90FFFFFF"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Navigate"
         android:height="60dp"
         android:id="@+id/btnNav"
         android:layout_alignBottom="@+id/btnEnd"
@@ -83,5 +85,85 @@
         android:background="#FFFFFF"
         android:layout_alignParentBottom="true"
         android:layout_alignEnd="@+id/btnNav" />
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
+        android:layout_gravity="bottom"
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@+id/btnStart">
+
+
+
+
+        <Button
+            android:height="14dp"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:background="#ffffff"
+            android:drawableLeft="@drawable/abc_btn_check_to_on_mtrl_000"
+            android:paddingLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/UseButtonDialog"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top"
+            android:clickable="true">
+        </Button>
+
+
+        <Button
+            android:text="Cancel"
+            android:background="#ffffff"
+            android:height="14dp"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_drawer"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/CancelButtonDialog"
+            android:layout_gravity="top"
+            android:onClick="btnNavigate"
+            android:clickable="true">
+        </Button>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignBottom="@+id/TextSpeed"
+        android:layout_centerHorizontal="true"
+        android:background="#FFFFFF"
+        android:id="@+id/Ooverlay">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:id="@+id/closeButton"
+            android:layout_gravity="right|top"
+            android:onClick="btnClose"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/textView"
+            android:layout_gravity="left|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Large Text"
+            android:textColor="#ff0000"
+            android:id="@+id/textView2"
+            android:layout_gravity="left|center_vertical" />
+    </FrameLayout>
 
 </RelativeLayout>

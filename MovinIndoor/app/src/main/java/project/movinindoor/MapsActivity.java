@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +104,9 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     public EditText editStart;
     public EditText editEnd;
     public TextView textSpeed;
+    public TextView textSpeedCost;
+    public FrameLayout oOverlay;
+    public LinearLayout linearLayout2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +117,15 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         btnNav = (Button) findViewById(R.id.btnNav);
         editStart = (EditText) findViewById(R.id.btnStart);
         editEnd = (EditText) findViewById(R.id.btnEnd);
-        textSpeed = (TextView) findViewById(R.id.TextSpeed);
+        textSpeed = (TextView) findViewById(R.id.textView);
+        textSpeedCost = (TextView) findViewById(R.id.textView2);
 
+        oOverlay = (FrameLayout) findViewById(R.id.Ooverlay);
+        linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
+
+
+
+        oOverlay.setVisibility(View.INVISIBLE);
 
 
 
@@ -165,15 +177,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
         StartGraph.runGraphs();
         textSpeed.setText("");
-        btnNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removePolylines();
-                double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
-                String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
-                textSpeed.setText("Estimate Duration:  " + walkingSpeed + " min");
-            }
-        });
     }
 
     @Override
@@ -181,6 +184,23 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     {
         super.onConfigurationChanged(newConfig);
         drawerListener.onConfigurationChanged(newConfig);
+    }
+
+    public void btnClose(View view) {
+        removePolylines();
+        linearLayout2.setVisibility(View.VISIBLE);
+        oOverlay.setVisibility(View.INVISIBLE);
+    }
+
+    public void btnNavigate(View view) {
+        oOverlay.setVisibility(View.INVISIBLE);
+        removePolylines();
+        double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
+        String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
+        textSpeed.setText("Estimate duration: " + walkingSpeed);
+        textSpeedCost.setText("("+String.valueOf(Math.round(cost))+"m)");
+        oOverlay.setVisibility(View.VISIBLE);
+        linearLayout2.setVisibility(View.INVISIBLE);
     }
 
     @Override
