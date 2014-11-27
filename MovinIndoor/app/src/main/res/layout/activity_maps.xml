@@ -17,11 +17,11 @@
             android:name="com.google.android.gms.maps.SupportMapFragment" />
 
     </FrameLayout>
+
     <!-- The navigation drawer -->
 
     <ListView
         android:id="@+id/drawer_list"
-        android:entries="@array/nav_drawer_items"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
