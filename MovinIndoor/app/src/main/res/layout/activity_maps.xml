@@ -3,13 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/map"
+
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:layout_height="match_parent" >
 
 
+        <!-- Framelayout to display Fragments -->
+        <!-- <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" > -->
+
+        <fragment
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+        <!-- </FrameLayout> -->
+        <!-- The navigation drawer -->
+
+
+
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="1dp"
+            android:textFilterEnabled="false"></ListView>
+
+
+    </android.support.v4.widget.DrawerLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,39 +148,5 @@
         android:layout_alignBottom="@+id/fragment2"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
-
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-
-        <!-- Framelayout to display Fragments -->
-        <!-- <FrameLayout
-            android:id="@+id/frame_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" > -->
-
-
-
-        <!-- </FrameLayout> -->
-        <!-- The navigation drawer -->
-
-
-
-        <ListView
-            android:id="@+id/drawer_list"
-            android:layout_width="300dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#FFFFFF"
-            android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="1dp"
-            android:textFilterEnabled="false"></ListView>
-
-
-    </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
