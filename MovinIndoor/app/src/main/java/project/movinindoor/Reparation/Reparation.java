@@ -20,6 +20,7 @@ public class  Reparation implements Comparable<Reparation>{
             this.value = value;
         }
 
+
         public int getValue() {
             return value;
         }

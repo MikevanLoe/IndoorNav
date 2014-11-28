@@ -75,14 +75,22 @@
             android:layout_column="12" />
     </GridLayout>
 
-    <ExpandableListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/expandableListView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.01"
-        android:layout_margin="10dp"
-        android:background="#FFFFFF"
-        android:choiceMode="singleChoice" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/relat">
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/expandableListView"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.01"
+            android:background="#FFFFFF"
+            android:choiceMode="singleChoice"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
 
 </LinearLayout>

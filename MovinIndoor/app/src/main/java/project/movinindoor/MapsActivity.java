@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import project.movinindoor.Graph.StartGraph;
+import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener, Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
@@ -188,22 +189,27 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
 
             //Loop though my JSONArray
-            for(Integer i=0; i< jitems.length(); i++){
+            for (int  j=0; j< 10; j++) {
+                for (Integer i = 0; i < jitems.length(); i++) {
                     //Get My JSONObject and grab the String Value that I want.
                     String title = jitems.getJSONObject(i).getString("Title");
                     String building = jitems.getJSONObject(i).getString("Building");
                     String floor = jitems.getJSONObject(i).getString("Floor");
                     String priority = jitems.getJSONObject(i).getString("Priority");
                     String description = jitems.getJSONObject(i).getString("Description");
+                    String status = jitems.getJSONObject(i).getString("Status");
+                    String node = jitems.getJSONObject(i).getString("ID");
 
-                List<String> subList = new ArrayList<String>();
-                    listDataHeader.add(title);
-                    subList.add(building + "" + floor + ".12");
-                    subList.add(priority);
-                    subList.add(description);
-                    listDataChild.put(title, subList);
+                    List<String> subList = new ArrayList<String>();
+                    listDataHeader.add(j +"-" + i + ": " + title);
+                    subList.add("Location:      " + building + "" + floor + "." + node);
+                    subList.add("Priority:         " + Reparation.PriorityType.values()[Integer.valueOf(6 - 1)]);
+                    subList.add("Status:          " + status);
+                    subList.add("Description: " + description);
+                    listDataChild.put(j +"-" + i + ": " + title, subList);
 
 
+                }
             }
             listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
             expListView.setAdapter(listAdapter);
