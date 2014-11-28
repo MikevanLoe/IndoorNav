@@ -34,11 +34,6 @@ public class Buildings {
         }
     }
 
-    /**
-     *
-     * @param buildings
-     * @param totalFloors
-     */
     public Buildings(List<Reparation.BuildingEnum> buildings, int totalFloors) {
         order = new PriorityQueue(buildings.size(), Collections.reverseOrder());
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();

@@ -47,17 +47,19 @@ public class  Reparation implements Comparable<Reparation>{
     }
 
     /**
+     * Gets the floor the reparation is on.
      *
-     * @return
+     * @return the floor the reparation is on.
      */
     public int getFloor() {
         return this.Floor;
     }
 
     /**
+     * Compare two reparations with eachother.
      *
-     * @param b
-     * @return
+     * @param b the reparations you compare to.
+     * @return an int to define the largest or smallest.
      */
     @Override
     public int compareTo(Reparation b) {

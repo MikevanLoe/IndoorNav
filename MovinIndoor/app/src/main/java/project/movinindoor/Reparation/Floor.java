@@ -27,26 +27,29 @@ public class Floor implements Comparable<Floor>{
     }
 
     /**
+     * Adds a floor to the building.
      *
-     * @param name
-     * @param obj
+     * @param name the name of the floor being added.
+     * @param obj the floor being added.
      */
     public void Add(int name, Reparation obj) {
         repairList.put(name, obj);
     }
 
     /**
+     * Removes a reparation from the floor.
      *
-     * @param obj
+     * @param obj the object to remove.
      */
     public void Remove(Reparation obj) {
         repairList.remove(obj);
     }
 
     /**
+     * Compare two floors with eachother.
      *
-     * @param b
-     * @return
+     * @param b the floor you compare to.
+     * @return an int to define the largest or smallest.
      */
     @Override
     public int compareTo(Floor b) {
