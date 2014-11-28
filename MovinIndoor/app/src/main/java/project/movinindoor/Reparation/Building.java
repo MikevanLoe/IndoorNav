@@ -6,10 +6,8 @@
 
 package project.movinindoor.Reparation;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -45,26 +43,29 @@ public class Building implements Comparable<Building>{
     }
 
     /**
+     * Adds a floor to the building.
      *
-     * @param name
-     * @param obj
+     * @param name the name of the floor being added.
+     * @param obj the floor being added.
      */
     public void Add(int name, Floor obj) {
         floorList.put(name, obj);
     }
 
     /**
+     * Removes a floor from the building.
      *
-     * @param obj
+     * @param obj the object to remove.
      */
     public void Remove(Floor obj) {
         floorList.remove(obj);
     }
 
     /**
+     * Compare two buildings with eachother.
      *
-     * @param b
-     * @return
+     * @param b the building you compare to.
+     * @return an int to define the largest or smallest.
      */
     @Override
     public int compareTo(Building b) {
