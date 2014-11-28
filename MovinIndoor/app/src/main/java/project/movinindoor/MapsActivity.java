@@ -241,7 +241,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 }
 
                 try {
-                    System.out.println(s);
                     return new URL(s);
                 } catch (MalformedURLException e) {
                     throw new AssertionError(e);
