@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author Davey
  */
-public class Building {
+public class Building implements Comparable<Building>{
     
     Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
@@ -44,5 +44,17 @@ public class Building {
     
     public void Remove(Floor obj) {
         floorList.remove(obj);
+    }
+
+    @Override
+    public int compareTo(Building b) {
+
+        if(this.priority.getValue() < b.priority.getValue()){
+            return -1;
+        }else if(this.priority.getValue() > b.priority.getValue()){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 }

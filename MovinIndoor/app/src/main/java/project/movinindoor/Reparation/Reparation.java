@@ -10,11 +10,11 @@ package project.movinindoor.Reparation;
  *
  * @author Davey
  */
-public class Reparation {
+public class  Reparation {
 
     public enum PriorityType {
-        VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTENT(5), URGENT(6);
-        private final int value;
+        VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTANT(5), URGENT(6);
+        public final int value;
 
         private PriorityType(int value) {
             this.value = value;

@@ -1,5 +1,6 @@
 package project.movinindoor;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -7,6 +8,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -22,24 +26,36 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
+import project.movinindoor.Graph.StartGraph;
 
 public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available
+    public static Context context;
+    private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    //public static GoogleMap m1Map;
+    public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
+
+    ArrayAdapter<String> items; // Items voor de navigatio drawer
+
+    public static Context getContext() {
+        return context;
+    }
+    
+    public static GoogleMap getMap() {
+        return mMap;
+    }
 
     // Layout
     private DrawerLayout drawerLayout;
@@ -57,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         listView = (ListView) findViewById(R.id.drawer_list);
 
         // Navigation drawer items
-        ArrayAdapter<String> items = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
+        items = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         try
         {
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
@@ -98,6 +114,10 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         setUpMapIfNeeded();
+        context = getApplicationContext();
+
+
+//        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(true);
@@ -109,6 +129,8 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 LatLng position = cameraPosition.target;
             }
         });
+
+        StartGraph.runGraphs();
     }
 
     @Override
@@ -136,7 +158,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(this, items.get(position) + " was selected ", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, items.getItem(position) + " was selected ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -150,6 +172,8 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+
+        StartGraph.runGraphs();
     }
 
     /**
@@ -245,5 +269,33 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
         TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                 .tileProvider(tileProvider));
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(100);
+
+        // Get back the mutable Polyline
+        Polyline polyline = getMap().addPolyline(rectOptions);
+    }
+
+    public static void addPolyline(double lat1, double long1, double lat2, double long2, int color){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(100).color(color);
+
+        // Get back the mutable Polyline
+        Polyline polyline = getMap().addPolyline(rectOptions);
+    }
+
+    public static void addMarker(double lat1, double long1, String name) {
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+    }
+
+    public static void addMarker(double lat1, double long1) {
+        getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 }
