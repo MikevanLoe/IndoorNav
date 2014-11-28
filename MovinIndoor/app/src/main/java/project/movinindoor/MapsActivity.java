@@ -202,10 +202,10 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
                     List<String> subList = new ArrayList<String>();
                     listDataHeader.add(j +"-" + i + ": " + title);
-                    subList.add("Location:      " + building + "" + floor + "." + node);
-                    subList.add("Priority:         " + Reparation.PriorityType.values()[Integer.valueOf(6 - 1)]);
-                    subList.add("Status:          " + status);
-                    subList.add("Description: " + description);
+                    subList.add("Location:       " + building + "" + floor + "." + node);
+                    subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(6 - 1)]);
+                    subList.add("Status:           " + status);
+                    subList.add("Description:  " + description);
                     listDataChild.put(j +"-" + i + ": " + title, subList);
 
 
