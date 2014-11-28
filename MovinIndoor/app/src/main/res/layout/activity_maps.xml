@@ -25,9 +25,10 @@
         <!-- </FrameLayout> -->
         <!-- The navigation drawer -->
 
+
+
         <ListView
             android:id="@+id/drawer_list"
-            android:entries="@array/nav_drawer_items"
             android:layout_width="300dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -35,8 +36,8 @@
             android:choiceMode="singleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="1dp"
-            android:textFilterEnabled="false"
-            android:fastScrollAlwaysVisible="false"></ListView>
+            android:textFilterEnabled="false"></ListView>
+
 
     </android.support.v4.widget.DrawerLayout>
 
@@ -83,7 +84,7 @@
             android:textColor="#000000"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@drawable/ic_launcher"
+            android:drawableLeft="@drawable/ic_launcher"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:id="@+id/CancelButtonDialog"

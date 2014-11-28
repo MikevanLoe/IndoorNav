@@ -6,23 +6,28 @@
 
 package project.movinindoor.Reparation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  *
  * @author Davey
  */
 public class Buildings {
-    
-    Map<Reparation.BuildingEnum, Building> buildingList;
+    public Queue order;
+    public Map<Reparation.BuildingEnum, Building> buildingList;
     
     public Buildings() {
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
+        order = new PriorityQueue(15, Collections.reverseOrder());
     }
     
     public Buildings(List<Reparation.BuildingEnum> buildings) {
+        order = new PriorityQueue(buildings.size(), Collections.reverseOrder());
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
         for (Reparation.BuildingEnum buildingEnum : buildings) {
             Building building = new Building();
@@ -31,6 +36,7 @@ public class Buildings {
     }
     
     public Buildings(List<Reparation.BuildingEnum> buildings, int totalFloors) {
+        order = new PriorityQueue(buildings.size(), Collections.reverseOrder());
         buildingList = new HashMap<Reparation.BuildingEnum, Building>();
         for (Reparation.BuildingEnum buildingEnum : buildings) {
             Building building = new Building(totalFloors);
