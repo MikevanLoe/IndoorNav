@@ -185,31 +185,17 @@ public class Buildings {
             count++;
         }
 
-        int prio = prioSom/count;
-
-        switch(prio) {
-            case 1:
-                setPriorityFloor(building, floor, Reparation.PriorityType.VERYLOW);
-                break;
-            case 2:
-                setPriorityFloor(building, floor, Reparation.PriorityType.LOW);
-                break;
-            case 3:
-                setPriorityFloor(building, floor, Reparation.PriorityType.AVERAGE);
-                break;
-            case 4:
-                setPriorityFloor(building, floor, Reparation.PriorityType.HIGH);
-                break;
-            case 5:
-                setPriorityFloor(building, floor, Reparation.PriorityType.IMPORTANT);
-                break;
-            case 6:
-                setPriorityFloor(building, floor, Reparation.PriorityType.URGENT);
-                break;
-            default:
-                setPriorityFloor(building, floor, null);
-                break;
+        int prio;
+        if(prioSom != 0 && count != 0) {
+            prio = prioSom / count;
+            setPriorityFloor(building, floor, Reparation.PriorityType.values()[prio - 1]);
         }
+        else {
+            prio = 0;
+            setPriorityFloor(building, floor, Reparation.PriorityType.values()[prio]);
+        }
+
+
     }
 
     /**
@@ -230,34 +216,13 @@ public class Buildings {
         int prio;
         if(prioSom != 0 && count != 0) {
             prio = prioSom / count;
+            setPriorityBuilding(building, Reparation.PriorityType.values()[prio - 1]);
         }
         else {
             prio = 0;
+            setPriorityBuilding(building, Reparation.PriorityType.values()[prio]);
         }
 
-        switch(prio) {
-            case 1:
-                setPriorityBuilding(building, Reparation.PriorityType.VERYLOW);
-                break;
-            case 2:
-                setPriorityBuilding(building, Reparation.PriorityType.LOW);
-                break;
-            case 3:
-                setPriorityBuilding(building, Reparation.PriorityType.AVERAGE);
-                break;
-            case 4:
-                setPriorityBuilding(building, Reparation.PriorityType.HIGH);
-                break;
-            case 5:
-                setPriorityBuilding(building, Reparation.PriorityType.IMPORTANT);
-                break;
-            case 6:
-                setPriorityBuilding(building, Reparation.PriorityType.URGENT);
-                break;
-            default:
-                setPriorityBuilding(building, null);
-                break;
-        }
     }
 }
 
