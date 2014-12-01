@@ -4,46 +4,55 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <FrameLayout
+    <GridLayout
         android:layout_width="fill_parent"
-        android:layout_height="73dp"
+        android:layout_height="wrap_content"
         android:background="#ff423fcc"
-        android:paddingTop="0dp"
+        android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:paddingLeft="100dp"
-        android:paddingRight="100dp">
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:rowCount="1"
+        android:columnCount="4">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="van:"
+            android:id="@+id/textView5"
+            android:textColor="#FFFFFF"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:paddingRight="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/fromText"
-            android:layout_gravity="center"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="naar:"
+            android:id="@+id/textView6"
+            android:textColor="#FFFFFF"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:paddingRight="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/toText"
-            android:layout_gravity="center_horizontal|bottom"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="van"
-            android:id="@+id/textView5"
-            android:layout_gravity="left|center_vertical"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="naar"
-            android:id="@+id/textView6"
-            android:layout_gravity="left|bottom"
-            android:textColor="#FFFFFF" />
-    </FrameLayout>
+            android:textColor="#FFFFFF"
+            android:layout_row="0"
+            android:layout_column="3" />
+    </GridLayout>
 
 </FrameLayout>

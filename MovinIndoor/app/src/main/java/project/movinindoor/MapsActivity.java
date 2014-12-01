@@ -57,44 +57,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
 
-    TileProvider tileProvider = new UrlTileProvider(256, 256) {
-        @Override
-        public URL getTileUrl(int x, int y, int zoom) {
-    /* Define the URL pattern for the tile images */
-            String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
-                    zoom, x, y);
-            //Log.d("value of y", Integer.toString(y));
-            //Log.d("value of zoom", Integer.toString(zoom));
-            if (!checkTileExists(x, y, zoom)) {
-                return null;
-            }
-
-            try {
-                return new URL(s);
-            } catch (MalformedURLException e) {
-                throw new AssertionError(e);
-            }
-        }
-
-        /*
-         * Check that the tile server supports the requested x, y and zoom.
-         * Complete this stub according to the tile range you support.
-         * If you support a limited range of tiles at different zoom levels, then you
-         * need to define the supported x, y range at each zoom level.
-         */
-        private boolean checkTileExists(int x, int y, int zoom) {
-
-            int minZoom = 12;
-            int maxZoom = 22;
-
-            if ((zoom < minZoom || zoom > maxZoom)) {
-                return false;
-            }
-
-            return true;
-        }
-    };
-
     public static Context getContext() {
         return context;
     }
@@ -105,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     // Layout
     private DrawerLayout drawerLayout;
 
+    //ExpandableListView
     ExpandableListAdapterNew listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -415,7 +378,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        //StartGraph.runGraphs();
+        StartGraph.runGraphs();
     }
 
     /**
@@ -476,14 +439,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             public URL getTileUrl(int x, int y, int zoom) {
 
     /* Define the URL pattern for the tile images */
-                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
+                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=Default&TileMatrix=%d&TileCol=%d&TileRow=%d",
                         zoom, x, y);
                 if (!checkTileExists(x, y, zoom)) {
                     return null;
                 }
 
                 try {
-                    //System.out.println(s);
+                    Log.i("MAP_LOG1", s);
                     return new URL(s);
                 } catch (MalformedURLException e) {
                     throw new AssertionError(e);
