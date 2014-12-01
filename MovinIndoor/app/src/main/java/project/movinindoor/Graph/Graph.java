@@ -89,18 +89,24 @@ public class Graph {
         return 0.0;
     }
 
-    //runs dijkstra from the paraMeter startname.
+    //runs dijkstra from the parameter startname.
     //
     public void dijkstra(String startName) {
+        //creating a priorityqueue path so we can always continue creating new paths from the shortest unchecked path
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
 
+        //resetting all the variables that are made by a previous pathing algorithm
+        //also add the given start vertex to the queue
         Vertex start = vertexMap.get(startName);
         if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
             start.dist = 0;
-
             int nodesSeen = 0;
+
+            //for every vertex on the queue we calculate the distances to connected vertices.
+            //if this is shorter than the already set distance we replace the cost.
+            //for every connected edge to the vertex we place them on the queue.
             while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
