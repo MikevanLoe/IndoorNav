@@ -50,14 +50,13 @@ import java.util.List;
 import project.movinindoor.Graph.StartGraph;
 import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener, Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     public static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
 
-    ArrayAdapter<String> items; // Items voor de navigatio drawer
 
     public static Context getContext() {
         return context;
@@ -70,6 +69,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     // Layout
     private DrawerLayout drawerLayout;
 
+    //ExpandableListView
     ExpandableListAdapterNew listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -363,11 +363,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, items.getItem(position) + " was selected ", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.maps_activity_actions, menu);
@@ -379,7 +374,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        //StartGraph.runGraphs();
+        StartGraph.runGraphs();
     }
 
     /**
@@ -440,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             public URL getTileUrl(int x, int y, int zoom) {
 
     /* Define the URL pattern for the tile images */
-                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
+                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=Default&TileMatrix=%d&TileCol=%d&TileRow=%d",
                         zoom, x, y);
                 if (!checkTileExists(x, y, zoom)) {
                     return null;
