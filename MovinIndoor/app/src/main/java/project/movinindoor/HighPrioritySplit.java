@@ -21,17 +21,25 @@ public class HighPrioritySplit {
         }
 
         Queue floorQ = new PriorityQueue(450, Collections.reverseOrder());
+        Queue temp = buildingQ;
         boolean time = true;
         while(time) {
-            Building B = (Building) buildingQ.poll();
-            if(B != null)gi
+            Building B = (Building) temp.poll();
+            if(B != null)
                 for (Floor F : B.floorList.values())
                     floorQ.offer(F);
             else
                 time = false;
         }
 
-
+        /*
+        * maak per gebouw een prioQueue met verdiepingen                                            queue.size == Building.totalFloors
+        * kijk van hoog naar laag                                                                   prioQ(int, Collections.reverseOrder)
+        * kijk in de Queue of er prio 5/6 op de verdieping is                                       foreach(REP : floor)
+        * sla prio 5/6 op in prioQueue                                                              if(REP.prio.value == 5 || 6) tmpFloor.add(REP) 5<=tmpFloor.prio<=6
+        * herbereken verdieping prio na het verwijderen van de prio 5/6                             (voor) 0/null<=floor.prio<=6 (na) 0/null<=floor.prio<=4
+        * plaats verdiepingen weer in prioQueue                                                     END
+        */
 
     }
 }
