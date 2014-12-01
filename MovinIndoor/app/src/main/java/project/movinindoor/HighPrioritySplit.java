@@ -24,7 +24,7 @@ public class HighPrioritySplit {
         boolean time = true;
         while(time) {
             Building B = (Building) buildingQ.poll();
-            if(B != null)
+            if(B != null)gi
                 for (Floor F : B.floorList.values())
                     floorQ.offer(F);
             else
