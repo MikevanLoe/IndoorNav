@@ -1,6 +1,10 @@
 package project.movinindoor;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
@@ -300,6 +304,8 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         mMap.setIndoorEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
 
+        sendPushNotification("He mooie titel", "Goede text man");
+
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
 
             @Override
@@ -388,9 +394,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     }
 
 
-
-
-
     public static void removePolylines() {
         for(Polyline p : polylines)
         {
@@ -398,5 +401,18 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 p.remove();
             }
         }
+    }
+
+    public void sendPushNotification(String title, String text)
+    {
+        context = getApplicationContext();
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification.Builder(context)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.movin_push)
+                .build();
+        notificationManager.notify(0, notification);
     }
 }
