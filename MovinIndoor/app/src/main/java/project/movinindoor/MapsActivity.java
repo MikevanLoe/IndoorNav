@@ -43,6 +43,9 @@ import com.google.android.gms.maps.model.UrlTileProvider;
 import org.json.JSONArray;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import project.movinindoor.Graph.StartGraph;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +59,6 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
-
 
     public static Context getContext() {
         return context;
@@ -121,8 +123,6 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
         fragment.getView().setVisibility(View.INVISIBLE);
         fragment2.getView().setVisibility(View.INVISIBLE);
 
-
-
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
         editEnd = (EditText) findViewById(R.id.editText2);
@@ -134,11 +134,7 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
         oOverlay = (FrameLayout) findViewById(R.id.Ooverlay);
         linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
 
-
-
         oOverlay.setVisibility(View.INVISIBLE);
-
-
 
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
@@ -171,8 +167,6 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     listDataChild.put(j +"-" + i + ": " + title, subList);
-
-
                 }
             }
             listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
