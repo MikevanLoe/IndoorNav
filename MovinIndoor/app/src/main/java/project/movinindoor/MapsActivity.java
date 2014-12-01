@@ -18,14 +18,14 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,18 +51,18 @@ import org.json.JSONArray;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import project.movinindoor.Graph.StartGraph;
+import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener, Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     public static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
-
-    ArrayAdapter<String> items; // Items voor de navigatio drawer
 
     public static Context getContext() {
         return context;
@@ -74,8 +74,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
     // Layout
     private DrawerLayout drawerLayout;
-    private ListView listView;
-    private ActionBarDrawerToggle drawerListener;
+
+    //ExpandableListView
+    ExpandableListAdapterNew listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
+   // private ActionBarDrawerToggle drawerListener;
     private HttpJson httpjson;
 
     public EditText editStart;
@@ -135,24 +141,95 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         oOverlay.setVisibility(View.INVISIBLE);
 
         // Layout
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        listView = (ListView) findViewById(R.id.drawer_list);
+        expListView = (ExpandableListView) findViewById(R.id.expandableListView);
+
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+
 
         // Navigation drawer items
-        items = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
         try
         {
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
 
             //Loop though my JSONArray
-            for(Integer i=0; i< jitems.length(); i++){
+            for (int  j=0; j< 10; j++) {
+                for (Integer i = 0; i < jitems.length(); i++) {
                     //Get My JSONObject and grab the String Value that I want.
-                    String obj = jitems.getJSONObject(i).getString("Title");
+                    String title = jitems.getJSONObject(i).getString("Title");
+                    String building = jitems.getJSONObject(i).getString("Building");
+                    String floor = jitems.getJSONObject(i).getString("Floor");
+                    String priority = jitems.getJSONObject(i).getString("Priority");
+                    String description = jitems.getJSONObject(i).getString("Description");
+                    String status = jitems.getJSONObject(i).getString("Status");
+                    String node = jitems.getJSONObject(i).getString("ID");
 
-                    //Add the string to the list
-                    items.add(obj);
+                    List<String> subList = new ArrayList<String>();
+                    listDataHeader.add(j +"-" + i + ": " + title);
+                    subList.add("Location:       " + building + "" + floor + "." + node);
+                    subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(6 - 1)]);
+                    subList.add("Status:           " + status);
+                    subList.add("Description:  " + description);
+                    listDataChild.put(j +"-" + i + ": " + title, subList);
+                }
             }
-            listView.setAdapter(items);
+            listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+
+            // Listview Group click listener
+            expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v,
+                                            int groupPosition, long id) {
+                    // Toast.makeText(getApplicationContext(),
+                    // "Group Clicked " + listDataHeader.get(groupPosition),
+                    // Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
+            // Listview Group expanded listener
+            expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+                @Override
+                public void onGroupExpand(int groupPosition) {
+                    Toast.makeText(getApplicationContext(),
+                            listDataHeader.get(groupPosition) + " Expanded",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Listview Group collasped listener
+            expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+                @Override
+                public void onGroupCollapse(int groupPosition) {
+                    Toast.makeText(getApplicationContext(),
+                            listDataHeader.get(groupPosition) + " Collapsed",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            // Listview on child click listener
+            expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(
+                            getApplicationContext(),
+                            listDataHeader.get(groupPosition)
+                                    + " : "
+                                    + listDataChild.get(
+                                    listDataHeader.get(groupPosition)).get(
+                                    childPosition), Toast.LENGTH_SHORT)
+                            .show();
+                    return false;
+                }
+            });
 
         }
         catch(Exception e)
@@ -160,24 +237,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             Log.e("items_error: ", e.toString());
         }
 
-        listView = (ListView) findViewById(R.id.drawer_list);
-        listView.setOnItemClickListener(this);
-
-        drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close)
-        {
-            @Override
-            public void onDrawerClosed(View drawerView){
-                Toast.makeText(MapsActivity.this, "Drawer Closed ", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView){
-                Toast.makeText(MapsActivity.this, "Drawer Opened ", Toast.LENGTH_SHORT).show();
-            }
-        };
-        drawerLayout.setDrawerListener(drawerListener);
-       //getActionBar().setHomeButtonEnabled(true);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().hide();
 
         setUpMapIfNeeded();
@@ -211,7 +270,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        drawerListener.onConfigurationChanged(newConfig);
+        //drawerListener.onConfigurationChanged(newConfig);
     }
 
     public void btnCloseNavigate(View view) {
@@ -286,9 +345,11 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        /*
         if (drawerListener.onOptionsItemSelected(item)) {
             return true;
         }
+        */
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);
     }
@@ -296,12 +357,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
         super.onPostCreate(savedInstanceState);
-        drawerListener.syncState();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, items.getItem(position) + " was selected ", Toast.LENGTH_LONG).show();
+        //drawerListener.syncState();
     }
 
     @Override
@@ -316,7 +372,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        //StartGraph.runGraphs();
+        StartGraph.runGraphs();
     }
 
     /**
@@ -384,6 +440,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 }
 
                 try {
+                    Log.i("MAP_LOG1", s);
                     return new URL(s);
                 } catch (MalformedURLException e) {
                     throw new AssertionError(e);
