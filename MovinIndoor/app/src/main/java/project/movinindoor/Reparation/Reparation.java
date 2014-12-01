@@ -10,7 +10,7 @@ package project.movinindoor.Reparation;
  *
  * @author Davey
  */
-public class  Reparation {
+public class  Reparation implements Comparable<Reparation>{
 
     public enum PriorityType {
         VERYLOW(1), LOW(2), AVERAGE(3), HIGH(4), IMPORTANT(5), URGENT(6);
@@ -48,5 +48,17 @@ public class  Reparation {
     
     public int getFloor() {
         return this.Floor;
+    }
+
+    @Override
+    public int compareTo(Reparation b) {
+
+        if(this.Priority.getValue() < b.Priority.getValue()){
+            return -1;
+        }else if(this.Priority.getValue() > b.Priority.getValue()){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 }

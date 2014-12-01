@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.util.Log;
 
 import java.util.List;
+import java.util.ListIterator;
+
 import project.movinindoor.MapsActivity;
 
 /**
@@ -11,9 +13,9 @@ import project.movinindoor.MapsActivity;
  */
 public class StartGraph {
 
-
+    public static Graph g;
     public static void runGraphs() {
-        Graph g = new Graph();
+        g = new Graph();
         NodeReader r = new NodeReader();
 
         try {
@@ -27,7 +29,7 @@ public class StartGraph {
                 lat1 = (double) n.location.get(0);
                 long1 = (double) n.location.get(1);
                 g.addVertex(n.nodeId, lat1, long1);
-                MapsActivity.addMarker(lat1, long1, n.nodeId);
+                //MapsActivity.addMarker(lat1, long1, n.nodeId);
             }
 
             for (Node n : r.jsonList.values()) {
@@ -37,24 +39,24 @@ public class StartGraph {
                     lat2 = (double) r.jsonList.get(t.toNodeID).location.get(0);
                     long2 = (double) r.jsonList.get(t.toNodeID).location.get(1);
 
-                    MapsActivity.addPolyline(lat1, long1, lat2, long2, Color.BLACK);
+                    MapsActivity.addPolyline(lat1, long1, lat2, long2);
                     g.addEdge(n.nodeId, t.toNodeID, t.cost);
-                    Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
+                    //Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
                 }
             }
 
-        g.printPath("68");
-        List l = g.getPath("68");
 
-            for(Object v : l){
-                Log.i("coord", String.valueOf(((Vertex) v).lat1));
-                Log.i("coord", String.valueOf(((Vertex) v).long1));
-            }
+            //g.dijkstra("70");
+//            g.printPath("68");
+//            List l = g.getPath("68");
+//            g.drawPath("36");
+            //g.drawPath("70", "36");
 
-//        g.printPath("6");
-        }catch(Exception e){
-//            Log.i("FAILED", e.toString());
-            e.printStackTrace();
+
+
+
+        } catch (Exception e) {
+            Log.i("FAILED", e.toString());
         }
     }
 }

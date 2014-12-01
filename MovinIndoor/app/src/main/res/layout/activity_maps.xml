@@ -1,14 +1,22 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!-- Framelayout to display Fragments -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+
+
+    <android.support.v4.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
+
+
+        <!-- Framelayout to display Fragments -->
+        <!-- <FrameLayout
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" > -->
 
         <fragment
             android:id="@+id/map"
@@ -16,19 +24,125 @@
             android:layout_height="match_parent"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
 
+        <!-- </FrameLayout> -->
+        <!-- The navigation drawer -->
+
+
+
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#FFFFFF"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="1dp"
+            android:textFilterEnabled="false"></ListView>
+
+
+    </android.support.v4.widget.DrawerLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/TextSpeed"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
+        android:layout_gravity="bottom"
+        android:layout_height="fill_parent"
+        android:weightSum="1">
+
+        <Button
+            android:height="14dp"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:background="#ffffff"
+            android:drawableLeft="@drawable/abc_btn_check_to_on_mtrl_000"
+            android:paddingLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/UseButtonDialog"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top"
+            android:clickable="true"
+            android:onClick="menuOpen">
+        </Button>
+
+        <Button
+            android:text="Navigate"
+            android:background="#ffffff"
+            android:height="14dp"
+            android:textSize="15sp"
+            android:textColor="#000000"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_launcher"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/CancelButtonDialog"
+            android:layout_gravity="top"
+            android:onClick="btnNavBar"
+            android:clickable="true">
+        </Button>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignBottom="@+id/TextSpeed"
+        android:layout_centerHorizontal="true"
+        android:background="#FFFFFF"
+        android:id="@+id/Ooverlay">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/textView"
+            android:layout_gravity="left|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Large Text"
+            android:textColor="#ff0000"
+            android:id="@+id/textView2"
+            android:layout_gravity="left|center_vertical" />
+
+        <ImageButton
+            android:layout_width="71dp"
+            android:layout_height="71dp"
+            android:id="@+id/closeButton"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/abc_btn_check_to_on_mtrl_000"
+            android:onClick="btnCloseNavigate"
+            android:background="#ffffff" />
     </FrameLayout>
 
-    <!-- The navigation drawer -->
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="project.movinindoor.NavigationBar"
+        android:id="@+id/fragment2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 
-    <ListView
-        android:id="@+id/drawer_list"
-        android:layout_width="300dp"
+    <fragment
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#FFFFFF"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
-        android:textFilterEnabled="false"></ListView>
+        android:name="project.movinindoor.Fragement_FromToDislay"
+        android:id="@+id/fragment3"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/fragment2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>
