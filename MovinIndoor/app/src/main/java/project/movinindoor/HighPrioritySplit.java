@@ -13,7 +13,7 @@ import project.movinindoor.Reparation.Floor;
  */
 public class HighPrioritySplit {
 
-    public void split(Buildings input){
+    public void highSplit(Buildings input){
 
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {

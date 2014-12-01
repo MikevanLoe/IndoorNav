@@ -31,6 +31,8 @@ public class HttpJson extends AsyncTask<String, String, JSONArray> {
 
         try {
             JSONArray jsonobj = new JSONArray();
+
+            // Setup connection
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpPost httppostreq = new HttpPost(url[0]);
             StringEntity se = new StringEntity(jsonobj.toString());
@@ -39,56 +41,16 @@ public class HttpJson extends AsyncTask<String, String, JSONArray> {
             httppostreq.setEntity(se);
             HttpResponse httpresponse = httpclient.execute(httppostreq);
 
+            // Retrieve json information
             String responseText = null;
             responseText = EntityUtils.toString(httpresponse.getEntity());
             json = new JSONArray(responseText);
-
-            /* Code to read the json data
-            int id;
-            String description;
-            int floor;
-            int priority;
-            String title;
-            String status;
-            String building;
-
-            for (int i = 0; i < json.length(); i++) {
-                JSONObject row = json.getJSONObject(i);
-                id = row.getInt("ID");
-                description = row.getString("Description");
-                title = row.getString("Title");
-                floor = row.getInt("Floor");
-                priority = row.getInt("Priority");
-                status = row.getString("Status");
-                building = row.getString("Building");
-
-                Log.e("log_tag", "ID: " + id);
-                Log.e("log_tag", "Title: " + title);
-            } */
         }
         catch(Exception e)
         {
             Log.e("json_error", "Error: " + e.toString());
         }
         return json;
-    }
-
-    public JSONArray getJsonArray(){
-        return this.json;
-    }
-
-    public List jsonArrayToList(JSONArray jsonarray){
-        List<String> jsonlist = new ArrayList<String>();
-
-        try{
-            for(int i = 0; i < jsonarray.length(); i++){
-                jsonlist.add(jsonarray.getJSONObject(i).getString("Title"));
-            }
-        }
-        catch(JSONException e){
-            Log.e("json_error", "Error: " + e.toString());
-        }
-        return jsonlist;
     }
 
     protected void onPreExecute(){

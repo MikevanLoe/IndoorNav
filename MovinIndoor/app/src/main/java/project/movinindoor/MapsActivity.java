@@ -48,6 +48,9 @@ import com.google.android.gms.maps.model.UrlTileProvider;
 import org.json.JSONArray;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import project.movinindoor.Graph.StartGraph;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,7 +58,7 @@ import java.util.List;
 import project.movinindoor.Graph.StartGraph;
 import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener, Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     public static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -69,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     public static GoogleMap getMap() {
         return mMap;
     }
+
     // Layout
     private DrawerLayout drawerLayout;
 
@@ -124,8 +128,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         fragment.getView().setVisibility(View.INVISIBLE);
         fragment2.getView().setVisibility(View.INVISIBLE);
 
-
-
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
         editEnd = (EditText) findViewById(R.id.editText2);
@@ -137,11 +139,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         oOverlay = (FrameLayout) findViewById(R.id.Ooverlay);
         linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
 
-
-
         oOverlay.setVisibility(View.INVISIBLE);
-
-
 
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
@@ -151,7 +149,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
 
         // Navigation drawer items
-
         try
         {
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
@@ -175,8 +172,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     listDataChild.put(j +"-" + i + ": " + title, subList);
-
-
                 }
             }
             listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
@@ -367,11 +362,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(this, items.get(position) + " was selected ", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.maps_activity_actions, menu);
@@ -453,7 +443,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
                 }
 
                 try {
-                    Log.i("MAP_LOG1", s);
                     return new URL(s);
                 } catch (MalformedURLException e) {
                     throw new AssertionError(e);
