@@ -7,23 +7,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,60 +46,21 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import project.movinindoor.Graph.StartGraph;
+import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener {
+public class MapsActivity extends FragmentActivity implements AdapterView.OnItemClickListener, Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     public static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    //public static GoogleMap m1Map;
     public final String TAG = "MapsActivity";
     private LatLngBounds bounds = new LatLngBounds( new LatLng(52.496262, 6.072961), new LatLng(52.501134, 6.087896));
-
-    TileProvider tileProvider = new UrlTileProvider(256, 256) {
-        @Override
-        public URL getTileUrl(int x, int y, int zoom) {
-    /* Define the URL pattern for the tile images */
-            String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
-                    zoom, x, y);
-            //Log.d("value of y", Integer.toString(y));
-            //Log.d("value of zoom", Integer.toString(zoom));
-            if (!checkTileExists(x, y, zoom)) {
-                return null;
-            }
-
-            try {
-                return new URL(s);
-            } catch (MalformedURLException e) {
-                throw new AssertionError(e);
-            }
-        }
-
-        /*
-         * Check that the tile server supports the requested x, y and zoom.
-         * Complete this stub according to the tile range you support.
-         * If you support a limited range of tiles at different zoom levels, then you
-         * need to define the supported x, y range at each zoom level.
-         */
-        private boolean checkTileExists(int x, int y, int zoom) {
-
-            int minZoom = 12;
-            int maxZoom = 22;
-
-            if ((zoom < minZoom || zoom > maxZoom)) {
-                return false;
-            }
-
-            return true;
-        }
-    };
 
     public static Context getContext() {
         return context;
@@ -103,28 +71,68 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     }
     // Layout
     private DrawerLayout drawerLayout;
-    private ListView listView;
-    private ActionBarDrawerToggle drawerListener;
+
+    //ExpandableListView
+    ExpandableListAdapterNew listAdapter;
+    ExpandableListView expListView;
+    List<String> listDataHeader;
+    HashMap<String, List<String>> listDataChild;
+
+   // private ActionBarDrawerToggle drawerListener;
     private HttpJson httpjson;
 
-    public Button btnNav;
     public EditText editStart;
     public EditText editEnd;
     public TextView textSpeed;
     public TextView textSpeedCost;
+    public TextView textFrom;
+    public TextView textTo;
     public FrameLayout oOverlay;
     public LinearLayout linearLayout2;
+    public FragmentManager fm;
+    public FragmentManager fm2;
+    android.support.v4.app.Fragment fragment;
+    android.support.v4.app.Fragment fragment2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        // id: fragement2
+        fm       = getSupportFragmentManager();
+        fragment = fm.findFragmentById(R.id.fragment2);
+
+        if (fragment == null) {
+            FragmentTransaction ft2 = fm.beginTransaction();
+            ft2.add(R.id.fragment2, new NavigationBar());
+            ft2.commit();
+        }
+        //end id: fragement2
+
+        //id: fragement3
+        fm2       = getSupportFragmentManager();
+        fragment2 = fm2.findFragmentById(R.id.fragment3);
+
+        if (fragment2 == null) {
+            FragmentTransaction ft2 = fm2.beginTransaction();
+            ft2.add(R.id.fragment2, new Fragement_FromToDislay());
+            ft2.commit();
+        }
+        //end id: fragement3
+
+        fragment.getView().setVisibility(View.INVISIBLE);
+        fragment2.getView().setVisibility(View.INVISIBLE);
+
+
+
         //onButtonClick
-        editStart = (EditText) findViewById(R.id.btnStart);
-        editEnd = (EditText) findViewById(R.id.btnEnd);
+        editStart = (EditText) findViewById(R.id.editText);
+        editEnd = (EditText) findViewById(R.id.editText2);
         textSpeed = (TextView) findViewById(R.id.textView);
         textSpeedCost = (TextView) findViewById(R.id.textView2);
+        textFrom = (TextView) findViewById(R.id.fromText);
+        textTo = (TextView) findViewById(R.id.toText);
 
         oOverlay = (FrameLayout) findViewById(R.id.Ooverlay);
         linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
@@ -136,49 +144,106 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
 
         // Layout
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        listView = (ListView) findViewById(R.id.drawer_list);
+        expListView = (ExpandableListView) findViewById(R.id.expandableListView);
+
+        listDataHeader = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+
 
         // Navigation drawer items
-        ArrayAdapter<String> items = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
+
         try
         {
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
 
             //Loop though my JSONArray
-            for(Integer i=0; i< jitems.length(); i++){
+            for (int  j=0; j< 10; j++) {
+                for (Integer i = 0; i < jitems.length(); i++) {
                     //Get My JSONObject and grab the String Value that I want.
-                    String obj = jitems.getJSONObject(i).getString("Title");
+                    String title = jitems.getJSONObject(i).getString("Title");
+                    String building = jitems.getJSONObject(i).getString("Building");
+                    String floor = jitems.getJSONObject(i).getString("Floor");
+                    String priority = jitems.getJSONObject(i).getString("Priority");
+                    String description = jitems.getJSONObject(i).getString("Description");
+                    String status = jitems.getJSONObject(i).getString("Status");
+                    String node = jitems.getJSONObject(i).getString("ID");
 
-                    //Add the string to the list
-                    items.add(obj);
+                    List<String> subList = new ArrayList<String>();
+                    listDataHeader.add(j +"-" + i + ": " + title);
+                    subList.add("Location:       " + building + "" + floor + "." + node);
+                    subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(6 - 1)]);
+                    subList.add("Status:           " + status);
+                    subList.add("Description:  " + description);
+                    listDataChild.put(j +"-" + i + ": " + title, subList);
+
+
+                }
             }
-            listView.setAdapter(items);
+            listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+
+            // Listview Group click listener
+            expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+                @Override
+                public boolean onGroupClick(ExpandableListView parent, View v,
+                                            int groupPosition, long id) {
+                    // Toast.makeText(getApplicationContext(),
+                    // "Group Clicked " + listDataHeader.get(groupPosition),
+                    // Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
+            // Listview Group expanded listener
+            expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+                @Override
+                public void onGroupExpand(int groupPosition) {
+                    Toast.makeText(getApplicationContext(),
+                            listDataHeader.get(groupPosition) + " Expanded",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Listview Group collasped listener
+            expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+                @Override
+                public void onGroupCollapse(int groupPosition) {
+                    Toast.makeText(getApplicationContext(),
+                            listDataHeader.get(groupPosition) + " Collapsed",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+            // Listview on child click listener
+            expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(
+                            getApplicationContext(),
+                            listDataHeader.get(groupPosition)
+                                    + " : "
+                                    + listDataChild.get(
+                                    listDataHeader.get(groupPosition)).get(
+                                    childPosition), Toast.LENGTH_SHORT)
+                            .show();
+                    return false;
+                }
+            });
 
         }
         catch(Exception e)
         {
-            Log.e("items_error: ",  e.toString());
+            Log.e("items_error: ", e.toString());
         }
 
-        listView = (ListView) findViewById(R.id.drawer_list);
-        listView.setOnItemClickListener(this);
-
-        drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close)
-        {
-            @Override
-            public void onDrawerClosed(View drawerView){
-                Toast.makeText(MapsActivity.this, "Drawer Closed ", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView){
-                Toast.makeText(MapsActivity.this, "Drawer Opened ", Toast.LENGTH_SHORT).show();
-            }
-        };
-        drawerLayout.setDrawerListener(drawerListener);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().hide();
 
         setUpMapIfNeeded();
         context = getApplicationContext();
@@ -199,38 +264,98 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
 
         StartGraph.runGraphs();
         textSpeed.setText("");
+
+
+    }
+
+    public void menuOpen(View view) {
+        drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)
     {
         super.onConfigurationChanged(newConfig);
-        drawerListener.onConfigurationChanged(newConfig);
+        //drawerListener.onConfigurationChanged(newConfig);
     }
 
-    public void btnClose(View view) {
+    public void btnCloseNavigate(View view) {
         removePolylines();
         linearLayout2.setVisibility(View.VISIBLE);
+        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
+        oOverlay.startAnimation(hideBottom);
         oOverlay.setVisibility(View.INVISIBLE);
+
+        fragment2.getView().startAnimation(hideTop);
+        fragment2.getView().setVisibility(View.INVISIBLE);
+
+
+    }
+
+    public void btnCloseNavBar(View view) {
+        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+
+        linearLayout2.startAnimation(showTop);
+        linearLayout2.setVisibility(View.VISIBLE);
+
+        fragment.getView().startAnimation(hideTop);
+        fragment.getView().setVisibility(View.INVISIBLE);
+
+    }
+
+    public void btnNavBar(View view) {
+        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+
+        linearLayout2.startAnimation(hideTop);
+        linearLayout2.setVisibility(View.INVISIBLE);
+
+        fragment.getView().startAnimation(showTop);
+        fragment.getView().setVisibility(View.VISIBLE);
     }
 
     public void btnNavigate(View view) {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
         oOverlay.setVisibility(View.INVISIBLE);
         removePolylines();
         double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
         String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
         textSpeed.setText("Estimate duration: " + walkingSpeed);
-        textSpeedCost.setText("("+String.valueOf(Math.round(cost))+"m)");
+        textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
+
+        textFrom.setText(editStart.getText());
+        textTo.setText(editEnd.getText());
+
+        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+        Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
+
+        oOverlay.startAnimation(showBottom);
         oOverlay.setVisibility(View.VISIBLE);
-        linearLayout2.setVisibility(View.INVISIBLE);
+
+
+        fragment.getView().startAnimation(hideTop);
+        fragment.getView().setVisibility(View.INVISIBLE);
+
+        fragment2.getView().startAnimation(showTop);
+        fragment2.getView().setVisibility(View.VISIBLE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        /*
         if (drawerListener.onOptionsItemSelected(item)) {
             return true;
         }
+        */
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);
     }
@@ -238,7 +363,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
         super.onPostCreate(savedInstanceState);
-        drawerListener.syncState();
+        //drawerListener.syncState();
     }
 
     @Override
@@ -258,7 +383,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         super.onResume();
         setUpMapIfNeeded();
 
-        //StartGraph.runGraphs();
+        StartGraph.runGraphs();
     }
 
     /**
@@ -302,7 +427,7 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 17));
 
         sendPushNotification("He mooie titel", "Goede text man");
 
@@ -321,14 +446,14 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
             public URL getTileUrl(int x, int y, int zoom) {
 
     /* Define the URL pattern for the tile images */
-                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=GisConference&TileMatrix=%d&TileCol=%d&TileRow=%d",
+                String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=Default&TileMatrix=%d&TileCol=%d&TileRow=%d",
                         zoom, x, y);
                 if (!checkTileExists(x, y, zoom)) {
                     return null;
                 }
 
                 try {
-                    System.out.println(s);
+                    Log.i("MAP_LOG1", s);
                     return new URL(s);
                 } catch (MalformedURLException e) {
                     throw new AssertionError(e);
@@ -393,7 +518,6 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         getMap().addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
     }
 
-
     public static void removePolylines() {
         for(Polyline p : polylines)
         {
@@ -403,16 +527,22 @@ public class MapsActivity extends FragmentActivity implements AdapterView.OnItem
         }
     }
 
-    public void sendPushNotification(String title, String text)
-    {
+
+    public void sendPushNotification(String title, String text) {
         context = getApplicationContext();
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(context.NOTIFICATION_SERVICE);
         Notification notification = new Notification.Builder(context)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.movin_push)
                 .build();
+
         notificationManager.notify(0, notification);
+    }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+
     }
 }

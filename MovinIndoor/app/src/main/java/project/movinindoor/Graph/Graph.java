@@ -73,6 +73,8 @@ public class Graph {
         MapsActivity.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
         if(v.prev.prev != null){
             drawPath(v.prev);
+        } else {
+            MapsActivity.addMarker(v.prev.lat1, v.prev.long1, "End");
         }
     }
 
@@ -80,6 +82,7 @@ public class Graph {
         dijkstra(startName);
         Vertex v = vertexMap.get(destName);
         if(v != null) {
+            MapsActivity.addMarker(v.lat1, v.long1, "Start");
             drawPath(v);
             return v.dist;
         }else{
