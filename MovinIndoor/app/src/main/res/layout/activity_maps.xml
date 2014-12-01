@@ -49,40 +49,49 @@
             </Button>
         </LinearLayout>
 
-        <FrameLayout
+        <GridLayout
             android:layout_width="fill_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:layout_alignBottom="@+id/TextSpeed"
             android:layout_centerHorizontal="true"
             android:background="#FFFFFF"
-            android:id="@+id/Ooverlay">
+            android:id="@+id/Ooverlay"
+            android:rowCount="1"
+            android:columnCount="3"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
+                android:text="Estimate duration: 0m00s"
                 android:id="@+id/textView"
-                android:layout_gravity="left|top" />
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_marginRight="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Large Text"
+                android:text="10m"
                 android:textColor="#ff0000"
                 android:id="@+id/textView2"
-                android:layout_gravity="left|center_vertical" />
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_marginRight="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
             <ImageButton
-                android:layout_width="71dp"
-                android:layout_height="71dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/closeButton"
-                android:layout_gravity="right|center_vertical"
-                android:src="@drawable/abc_btn_check_to_on_mtrl_000"
+                android:src="@drawable/ic_close_black_48dp"
                 android:onClick="btnCloseNavigate"
-                android:background="#ffffff" />
-        </FrameLayout>
+                android:background="#ffffff"
+                android:layout_row="0"
+                android:layout_column="2"
+                android:layout_gravity="left" />
+        </GridLayout>
 
         <fragment
             android:layout_width="wrap_content"

@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.ListIterator;
 
+import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 
 /**
@@ -39,7 +40,7 @@ public class StartGraph {
                     lat2 = (double) r.jsonList.get(t.toNodeID).location.get(0);
                     long2 = (double) r.jsonList.get(t.toNodeID).location.get(1);
 
-                    MapsActivity.addPolyline(lat1, long1, lat2, long2);
+                    MapDrawer.addPolyline(lat1, long1, lat2, long2);
                     g.addEdge(n.nodeId, t.toNodeID, t.cost);
                     //Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
                 }

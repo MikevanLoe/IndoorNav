@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 
 /**
@@ -70,11 +71,11 @@ public class Graph {
     }
 
     private void drawPath(Vertex v){
-        MapsActivity.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
+        MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
         if(v.prev.prev != null){
             drawPath(v.prev);
         } else {
-            MapsActivity.addMarker(v.prev.lat1, v.prev.long1, "End");
+            MapDrawer.addMarker(v.prev.lat1, v.prev.long1, "End");
         }
     }
 
@@ -82,7 +83,7 @@ public class Graph {
         dijkstra(startName);
         Vertex v = vertexMap.get(destName);
         if(v != null) {
-            MapsActivity.addMarker(v.lat1, v.long1, "Start");
+            MapDrawer.addMarker(v.lat1, v.long1, "Start");
             drawPath(v);
             return v.dist;
         }else{
