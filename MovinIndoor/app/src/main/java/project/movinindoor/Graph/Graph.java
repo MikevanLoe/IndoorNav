@@ -27,29 +27,39 @@ public class Graph {
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
     private int Cost;
 
+
+
     //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
-    //the edge will be added to the vertex.adj list.
+    //the edge will be added to the vertex.adj list of the sourcename vertex.
     public void addEdge(String sourcename, String destname, double cost) {
         Vertex v = vertexMap.get(sourcename);
         Vertex v2 = vertexMap.get(destname);
         v.adj.add(new Edge(v2, cost));
     }
 
-    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1) {
         Vertex v = new Vertex(name, lat1, long1);
         vertexMap.put(name, v);
     }
 
-    //function to reset all vertices of their 'prev' 'dist' and 'scratch' value (dist gets set to INFINITY)
     private void clearAll() {
         for (Vertex v : vertexMap.values()) {
             v.reset();
         }
     }
 
-    //function that you can run after running dijkstra, to get a list of the shortest path to that destination
-    public LinkedList getPath(String destname) {
+    private void printPath(String destname) {
+        Vertex dest = vertexMap.get(destname);
+    }
+
+    private String printPath(Vertex dest) {
+        if (dest.prev != null) {
+            return printPath(dest.prev) + " -> " + dest.name;
+        }
+        return dest.name;
+    }
+
+    private LinkedList getPath(String destname) {
         LinkedList a = new LinkedList();
         a = getPath(vertexMap.get(destname), a);
         return a;
@@ -63,12 +73,10 @@ public class Graph {
         return l;
     }
 
-    //function to get the cost of a dest
     public double getCost(String destName){
         Vertex v =  vertexMap.get(destName);
         return v.dist;
     }
-
 
     private void drawPath(Vertex v){
         MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
@@ -80,8 +88,6 @@ public class Graph {
         }
     }
 
-    //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
-    //returns the cost of the path.
     public double drawPath(String startName, String destName){
         if(!startName.equals(destName)) {
             dijkstra(startName);
@@ -103,24 +109,17 @@ public class Graph {
 
     }
 
-    //runs dijkstra from the parameter startname.
-    //
+
     public void dijkstra(String startName) {
-        //creating a priorityqueue path so we can always continue creating new paths from the shortest unchecked path
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
 
-        //resetting all the variables that are made by a previous pathing algorithm
-        //also add the given start vertex to the queue
         Vertex start = vertexMap.get(startName);
         if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
             start.dist = 0;
-            int nodesSeen = 0;
 
-            //for every vertex on the queue we calculate the distances to connected vertices.
-            //if this is shorter than the already set distance we replace the cost.
-            //for every connected edge to the vertex we place them on the queue.
+            int nodesSeen = 0;
             while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
