@@ -171,26 +171,28 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
         oOverlay.setVisibility(View.INVISIBLE);
         MapDrawer.removePolylines();
         double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
-        String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
-        textSpeed.setText("Estimate duration: " + walkingSpeed);
-        textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
+        if(cost != 0.0) {
+            String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
+            textSpeed.setText("Estimate duration: " + walkingSpeed);
+            textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
 
-        textFrom.setText(editStart.getText());
-        textTo.setText(editEnd.getText());
+            textFrom.setText(editStart.getText());
+            textTo.setText(editEnd.getText());
 
-        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
-        Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
+            Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+            Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+            Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
 
-        oOverlay.startAnimation(showBottom);
-        oOverlay.setVisibility(View.VISIBLE);
+            oOverlay.startAnimation(showBottom);
+            oOverlay.setVisibility(View.VISIBLE);
 
 
-        fragment.getView().startAnimation(hideTop);
-        fragment.getView().setVisibility(View.INVISIBLE);
+            fragment.getView().startAnimation(hideTop);
+            fragment.getView().setVisibility(View.INVISIBLE);
 
-        fragment2.getView().startAnimation(showTop);
-        fragment2.getView().setVisibility(View.VISIBLE);
+            fragment2.getView().startAnimation(showTop);
+            fragment2.getView().setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
