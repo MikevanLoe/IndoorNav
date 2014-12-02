@@ -36,24 +36,12 @@ public class NodeReader {
     public NodeReader() {
         InputStream inputStream = null;
         try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet get = new HttpGet("http://wrs.movinsoftware.nl/?service=wrs&version=1.0.0&request=GetNavigationGrid&mapid=00W");
-
-                HttpResponse httpResponse = httpClient.execute(get);
-                String json = EntityUtils.toString(httpResponse.getEntity());
-               Log.i("JSON_URL0", json);
+            inputStream = MapsActivity.getContext().getAssets().open("WindesheimNavMesh.json");
 
 
-
-            //inputStream = IOUtils.toInputStream(json, "UTF-8");
-
-
-            HashMap<String, Node> read = readJsonStream(json);
-
-
+            HashMap<String, Node> read = readJsonStream(inputStream);
 
             jsonList = calculate(read);
-
 
 
         } catch (Exception e) {
@@ -94,20 +82,12 @@ public class NodeReader {
         return d * 1000; // meters
     }
 
-    public HashMap<String, Node> readJsonStream(String in) throws IOException {
-        JsonReader reader = new JsonReader(new StringReader(in));
+    public HashMap<String, Node> readJsonStream(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
         //try {
 
 
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String name = reader.nextName();
-            if (name.equals("nodes")) {
-                return readMessagesArray(reader);
-            }
-        }
-        reader.beginObject();
         return readMessagesArray(reader);
 
 
