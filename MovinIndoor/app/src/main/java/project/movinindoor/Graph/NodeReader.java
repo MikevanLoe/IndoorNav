@@ -4,11 +4,22 @@ package project.movinindoor.Graph;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,10 +36,21 @@ public class NodeReader {
     public NodeReader() {
         InputStream inputStream = null;
         try {
-            inputStream = MapsActivity.getContext().getAssets().open("WTCNavMesh.json");
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet get = new HttpGet("http://wrs.movinsoftware.nl/?service=wrs&version=1.0.0&request=GetNavigationGrid&mapid=00W");
+
+                HttpResponse httpResponse = httpClient.execute(get);
+                String json = EntityUtils.toString(httpResponse.getEntity());
+               Log.i("JSON_URL0", json);
 
 
-            HashMap<String, Node> read = readJsonStream(inputStream);
+
+            //inputStream = IOUtils.toInputStream(json, "UTF-8");
+
+
+            HashMap<String, Node> read = readJsonStream(json);
+
+
 
             jsonList = calculate(read);
 
@@ -72,11 +94,21 @@ public class NodeReader {
         return d * 1000; // meters
     }
 
-    public HashMap<String, Node> readJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+    public HashMap<String, Node> readJsonStream(String in) throws IOException {
+        JsonReader reader = new JsonReader(new StringReader(in));
 
         //try {
-            return readMessagesArray(reader);
+
+
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("nodes")) {
+                return readMessagesArray(reader);
+            }
+        }
+        reader.beginObject();
+        return readMessagesArray(reader);
 
 
         //} finally {

@@ -109,11 +109,8 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 //        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
-        mMap.setIndoorEnabled(true);
-
-        LatLngBounds Windesheim = new LatLngBounds(
-                new LatLng(52.501729, 6.078551), new LatLng(52.501729, 6.081641));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Windesheim.getCenter(), 14));
+        mMap.setIndoorEnabled(false);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
 
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.500075, 6.080817), 15));
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
