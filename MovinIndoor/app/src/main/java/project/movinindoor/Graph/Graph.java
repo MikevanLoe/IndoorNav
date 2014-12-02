@@ -109,7 +109,7 @@ public class Graph {
                     return 0.0;
                 }
             } else {
-                Log.i("PathError", "end vertex was not found");
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "end vertex was not found", Toast.LENGTH_LONG).show();
                 return 0.0;
             }
         } else {
@@ -151,7 +151,7 @@ public class Graph {
                 }
             }
         } else {
-            Log.i("PathError", "start vertex was not found");
+            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
         }
     }
 
