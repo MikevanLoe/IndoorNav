@@ -2,6 +2,10 @@ package project.movinindoor.Graph;
 
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 
 /**
@@ -66,27 +71,36 @@ public class Graph {
 
 
     private void drawPath(Vertex v){
-        MapsActivity.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
+        MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
         if(v.prev.prev != null){
             drawPath(v.prev);
         } else {
-            MapsActivity.addMarker(v.prev.lat1, v.prev.long1, "End");
+            MapDrawer.addMarker(v.prev.lat1, v.prev.long1, "End");
+            MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
     public double drawPath(String startName, String destName){
-        dijkstra(startName);
-        Vertex v = vertexMap.get(destName);
-        if(v != null) {
-            MapsActivity.addMarker(v.lat1, v.long1, "Start");
-            drawPath(v);
-            return v.dist;
-        }else{
-            Log.i("PathError", "end vertex was not found");
+        if(!startName.equals(destName)) {
+            dijkstra(startName);
+            Vertex v = vertexMap.get(destName);
+            if (v != null) {
+                MapDrawer.addMarker(v.lat1, v.long1, "End");
+                drawPath(v);
+                return v.dist;
+            } else {
+
+                Log.i("PathError", "end vertex was not found");
+                return 0.0;
+            }
+        } else {
+
+            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Start and End is equal", Toast.LENGTH_SHORT).show();
+            return 0.0;
         }
-        return 0.0;
+
     }
 
     //runs dijkstra from the parameter startname.
