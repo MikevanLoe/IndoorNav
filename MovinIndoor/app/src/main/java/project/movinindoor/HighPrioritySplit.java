@@ -19,15 +19,17 @@ public class HighPrioritySplit {
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
         }
+        Queue tempQ = buildingQ;
 
-        Queue floorQ = new PriorityQueue(450, Collections.reverseOrder());
-        Queue temp = buildingQ;
         boolean time = true;
         while(time) {
-            Building B = (Building) temp.poll();
-            if(B != null)
-                for (Floor F : B.floorList.values())
-                    floorQ.offer(F);
+            Building temp = (Building) tempQ.poll();
+            if(time) {
+                temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
+                for (Floor f : temp.floorList.values()) {
+                    temp.order.add(f);
+                }
+            }
             else
                 time = false;
         }
@@ -40,6 +42,7 @@ public class HighPrioritySplit {
         * herbereken verdieping prio na het verwijderen van de prio 5/6                             (voor) 0/null<=floor.prio<=6 (na) 0/null<=floor.prio<=4
         * plaats verdiepingen weer in prioQueue                                                     END
         */
+
 
     }
 }
