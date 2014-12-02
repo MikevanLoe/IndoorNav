@@ -25,6 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ import java.util.List;
 import project.movinindoor.Graph.StartGraph;
 import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements Fragement_FromToDislay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -75,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
 
         if (fragment2 == null) {
             FragmentTransaction ft2 = fm2.beginTransaction();
-            ft2.add(R.id.fragment2, new Fragement_FromToDislay());
+            ft2.add(R.id.fragment2, new Fragment_FromToDisplay());
             ft2.commit();
         }
         //end id: fragement3
@@ -108,7 +110,12 @@ public class MapsActivity extends FragmentActivity implements Fragement_FromToDi
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 15));
+
+        LatLngBounds Windesheim = new LatLngBounds(
+                new LatLng(52.501729, 6.078551), new LatLng(52.501729, 6.081641));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Windesheim.getCenter(), 14));
+
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.500075, 6.080817), 15));
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {

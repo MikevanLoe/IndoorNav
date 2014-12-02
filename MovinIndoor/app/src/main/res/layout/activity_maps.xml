@@ -104,7 +104,7 @@
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="project.movinindoor.Fragement_FromToDislay"
+            android:name="project.movinindoor.Fragment_FromToDisplay"
             android:id="@+id/fragment3"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/fragment2"
