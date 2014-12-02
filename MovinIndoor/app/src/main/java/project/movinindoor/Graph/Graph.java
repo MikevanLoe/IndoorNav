@@ -28,7 +28,6 @@ public class Graph {
     private int Cost;
 
 
-
     //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
     //the edge will be added to the vertex.adj list of the sourcename vertex.
     public void addEdge(String sourcename, String destname, double cost) {
@@ -76,17 +75,17 @@ public class Graph {
         return l;
     }
 
-    public double getCost(String destName){
-        Vertex v =  vertexMap.get(destName);
+    public double getCost(String destName) {
+        Vertex v = vertexMap.get(destName);
         return v.dist;
     }
 
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    private void drawPath(Vertex v){
+    private void drawPath(Vertex v) {
         MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
-        if(v.prev.prev != null){
+        if (v.prev.prev != null) {
             drawPath(v.prev);
         } else {
             MapDrawer.addMarker(v.prev.lat1, v.prev.long1, "End");
@@ -96,25 +95,27 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    public double drawPath(String startName, String destName){
-        if(!startName.equals(destName)) {
+    public double drawPath(String startName, String destName) {
+        if (!startName.equals(destName)) {
             dijkstra(startName);
             Vertex v = vertexMap.get(destName);
             if (v != null) {
-                MapDrawer.addMarker(v.lat1, v.long1, "End");
-                drawPath(v);
-                return v.dist;
+                if (v.prev != null) {
+                    MapDrawer.addMarker(v.lat1, v.long1, "End");
+                    drawPath(v);
+                    return v.dist;
+                }else{
+                    Toast.makeText(MapsActivity.getContext().getApplicationContext(), "couldn't find a path to the destination", Toast.LENGTH_LONG).show();
+                    return 0.0;
+                }
             } else {
-
                 Log.i("PathError", "end vertex was not found");
                 return 0.0;
             }
         } else {
-
             Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Start and end are equal", Toast.LENGTH_SHORT).show();
             return 0.0;
         }
-
     }
 
 
@@ -155,14 +156,13 @@ public class Graph {
     }
 
 
-
     public static String calculateWalkingSpeed(double cost) {
         int walkingSpeed = 5000; //Walking speed in meters per hour
         int minuteInSec = 3600;
-        float walkingspeedPerSecond = ((float)walkingSpeed)/ minuteInSec;
+        float walkingspeedPerSecond = ((float) walkingSpeed) / minuteInSec;
         double time;
         time = (cost / walkingspeedPerSecond);
-        int minute =  (int) time /60;
+        int minute = (int) time / 60;
         int second = (int) time % 60;
         return String.format("%dm%02ds", minute, second);
     }
