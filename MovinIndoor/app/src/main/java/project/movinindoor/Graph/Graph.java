@@ -37,17 +37,20 @@ public class Graph {
         v.adj.add(new Edge(v2, cost));
     }
 
+    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1) {
         Vertex v = new Vertex(name, lat1, long1);
         vertexMap.put(name, v);
     }
 
+    //function to reset all vertices of their 'prev' 'dist' and 'scratch' value (dist gets set to INFINITY)
     private void clearAll() {
         for (Vertex v : vertexMap.values()) {
             v.reset();
         }
     }
 
+    //function that you can run after running dijkstra, to get a list of the shortest path to that destination
     private void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
     }
@@ -78,6 +81,9 @@ public class Graph {
         return v.dist;
     }
 
+
+    //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
+    //returns the cost of the path.
     private void drawPath(Vertex v){
         MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
         if(v.prev.prev != null){
@@ -88,6 +94,8 @@ public class Graph {
         }
     }
 
+    //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
+    //returns the cost of the path.
     public double drawPath(String startName, String destName){
         if(!startName.equals(destName)) {
             dijkstra(startName);
@@ -103,7 +111,7 @@ public class Graph {
             }
         } else {
 
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Start and End is equal", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Start and end are equal", Toast.LENGTH_SHORT).show();
             return 0.0;
         }
 
