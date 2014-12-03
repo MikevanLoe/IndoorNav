@@ -37,7 +37,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import project.movinindoor.Graph.Graph;
 import project.movinindoor.Graph.StartGraph;
+import project.movinindoor.Graph.Vertex;
 import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
