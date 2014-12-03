@@ -72,7 +72,7 @@ public class HighPrioritySplit {
     }
 
     public void lowSplit(Buildings input){
-        Queue buildingQ = new PriorityQueue(15);
+        Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
         }
@@ -83,7 +83,7 @@ public class HighPrioritySplit {
         while(time) {
             Building temp = (Building) tempQ.poll();
             if(time) {
-                temp.order = new PriorityQueue(temp.totalFloors);
+                temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
                 for (Floor f : temp.floorList.values()) {
                     temp.order.add(f);
                 }
@@ -97,8 +97,8 @@ public class HighPrioritySplit {
 
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
-            tempF.highOrder = new PriorityQueue(100);
-            tempF.lowOrder = new PriorityQueue(100);
+            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
 
             if(tempF != null) {
                 for (Reparation rep : tempF.repairList.values()) {
