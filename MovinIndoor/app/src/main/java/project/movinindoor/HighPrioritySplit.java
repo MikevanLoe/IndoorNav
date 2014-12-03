@@ -17,7 +17,6 @@ import project.movinindoor.Reparation.Reparation;
 public class HighPrioritySplit {
 
     public void highSplit(Buildings input){
-
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
@@ -57,6 +56,61 @@ public class HighPrioritySplit {
                         }
                     }
                     else if (tempF.priority.value <=4 ){
+                        tempF.lowOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                }
+            }
+            else {
+                time = false;
+            }
+        }
+    }
+
+    public void lowSplit(Buildings input){
+        Queue buildingQ = new PriorityQueue(15);
+        for(Building B : input.buildingList.values()) {
+            buildingQ.offer(B);
+        }
+
+        Queue tempQ = buildingQ;
+        boolean time = true;
+
+        while(time) {
+            Building temp = (Building) tempQ.poll();
+            if(time) {
+                temp.order = new PriorityQueue(temp.totalFloors);
+                for (Floor f : temp.floorList.values()) {
+                    temp.order.add(f);
+                }
+            }
+            else
+                time = false;
+        }
+
+        tempQ = buildingQ;
+        time = true;
+
+        while (time) {
+            Floor tempF = (Floor) tempQ.poll();
+            tempF.highOrder = new PriorityQueue(100);
+            tempF.lowOrder = new PriorityQueue(100);
+
+            if(tempF != null) {
+                for (Reparation rep : tempF.repairList.values()) {
+                    if(rep.Priority.value >= 3) {
+                        tempF.highOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                    else if (tempF.priority.value <=2 ){
                         tempF.lowOrder.add(rep);
                         tempF.repairList.remove(rep);
                         input.calculatePriorityFloor(rep.Building, rep.Floor);
