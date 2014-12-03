@@ -15,7 +15,6 @@ public class Vertex {
     protected double dist;
     protected Vertex prev;
     protected boolean scratch;
-    protected Reparation rep;
     protected double lat1;
     protected double long1;
 
@@ -27,17 +26,9 @@ public class Vertex {
         reset();
     }
 
-    public Vertex(String name, Reparation rep) {
-        this.name = name;
-        this.rep = rep;
-        adj = new LinkedList<Edge>() ;
-        reset();
-    }
-
     public void reset(){
         dist = Graph.INFINITY;
         prev = null;
-//        pos = null;
         scratch = false;
     }
 

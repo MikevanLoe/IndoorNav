@@ -30,7 +30,7 @@ public class StartGraph {
                 lat1 = (double) n.location.get(0);
                 long1 = (double) n.location.get(1);
                 g.addVertex(n.nodeId, lat1, long1);
-                //MapsActivity.addMarker(lat1, long1, n.nodeId);
+//                MapDrawer.addMarker(lat1, long1, n.nodeId);
             }
 
             for (Node n : r.jsonList.values()) {
