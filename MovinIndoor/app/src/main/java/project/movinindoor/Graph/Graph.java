@@ -97,7 +97,12 @@ public class Graph {
     //returns the cost of the path.
     public double drawPath(String startName, String destName) {
         if (!startName.equals(destName)) {
-            dijkstra(startName);
+            Vertex start = vertexMap.get(startName);
+            if(start == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
+                return 0.0;
+            }
+            dijkstra(start);
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
@@ -119,10 +124,9 @@ public class Graph {
     }
 
 
-    public void dijkstra(String startName) {
+    public void dijkstra(Vertex start) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
 
-        Vertex start = vertexMap.get(startName);
         if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
@@ -150,8 +154,6 @@ public class Graph {
                     }
                 }
             }
-        } else {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
         }
     }
 
