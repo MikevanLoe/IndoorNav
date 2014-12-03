@@ -43,21 +43,32 @@ public class HighPrioritySplit {
 
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
+            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
+
             if(tempF != null) {
                 for (Reparation rep : tempF.repairList.values()) {
                     if(rep.Priority.value >= 5) {
-                        tempF.order = new PriorityQueue(100, Collections.reverseOrder());
-                        tempF.order.add(rep);
+                        tempF.highOrder.add(rep);
                         tempF.repairList.remove(rep);
                         input.calculatePriorityFloor(rep.Building, rep.Floor);
-                        tempQ.add(tempF);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                    else if (tempF.priority.value <=4 ){
+                        tempF.lowOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
                     }
                 }
             }
-            else
+            else {
                 time = false;
+            }
         }
-
-
     }
 }
