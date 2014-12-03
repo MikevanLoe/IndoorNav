@@ -1,5 +1,7 @@
 package project.movinindoor;
 
+import android.renderscript.RenderScript;
+
 import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -43,7 +45,8 @@ public class HighPrioritySplit {
             Floor tempF = (Floor) tempQ.poll();
             if(tempF != null) {
                 for (Reparation rep : tempF.repairList.values()) {
-                    if (rep.Priority.value >= 5) {
+                    if(rep.Priority.value >= 5) {
+                        tempF.order = new PriorityQueue(100, Collections.reverseOrder());
                         tempF.order.add(rep);
                         tempF.repairList.remove(rep);
                         input.calculatePriorityFloor(rep.Building, rep.Floor);
@@ -54,12 +57,6 @@ public class HighPrioritySplit {
             else
                 time = false;
         }
-        /*
-        * kijk in de Queue of er prio 5/6 op de verdieping is                                       foreach(REP : floor)
-        * sla prio 5/6 op in prioQueue                                                              if(REP.prio.value == 5 || 6) tmpFloor.add(REP) 5<=tmpFloor.prio<=6
-        * herbereken verdieping prio na het verwijderen van de prio 5/6                             (voor) 0/null<=floor.prio<=6 (na) 0/null<=floor.prio<=4
-        * plaats verdiepingen weer in prioQueue                                                     END
-        */
 
 
     }
