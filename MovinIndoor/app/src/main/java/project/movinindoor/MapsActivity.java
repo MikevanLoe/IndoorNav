@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridLayout;
@@ -34,7 +35,7 @@ import java.util.List;
 import project.movinindoor.Graph.SetupGraph;
 import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -51,9 +52,10 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     private EditText editStart, editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private GridLayout oOverlay;
+    private Button btnCurrentFloor;
     private LinearLayout linearLayout2;
-    private FragmentManager fm, fm2;
-    private android.support.v4.app.Fragment fragment, fragment2;
+    private FragmentManager fm, fm2, fmFloorNavigator;
+    private android.support.v4.app.Fragment fragment, fragment2, fFloorNavigator2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,16 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 
         setupGraph = new SetupGraph();
 
+        // id: fFloorNavigator
+        fmFloorNavigator       = getSupportFragmentManager();
+        fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
 
+        if (fFloorNavigator2 == null) {
+            FragmentTransaction ft2 = fmFloorNavigator.beginTransaction();
+            ft2.add(R.id.fFloorNavigator, new NavigationBar());
+            ft2.commit();
+        }
+        //end id: fFloorNavigator
 
         // id: fragement2
         fm       = getSupportFragmentManager();
@@ -91,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 
         fragment.getView().setVisibility(View.INVISIBLE);
         fragment2.getView().setVisibility(View.INVISIBLE);
+        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
 
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
@@ -99,6 +111,8 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
         textSpeedCost = (TextView) findViewById(R.id.textView2);
         textFrom = (TextView) findViewById(R.id.fromText);
         textTo = (TextView) findViewById(R.id.toText);
+
+        btnCurrentFloor = (Button) findViewById(R.id.currentFloor);
 
         oOverlay = (GridLayout) findViewById(R.id.Ooverlay);
         linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
@@ -135,34 +149,66 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
         super.onConfigurationChanged(newConfig);
     }
 
+    public void btnFloorUp(View view) {
+       int currentFloor = MapDrawer.getFloor();
+        if(currentFloor < 10) {
+            MapDrawer.setFloor(currentFloor + 1);
+            btnCurrentFloor.setText(String.valueOf(currentFloor + 1));
+            MapDrawer.hidePolylinesFloor(currentFloor);
+            MapDrawer.showPolylinesFloor(currentFloor + 1);
+        }
+    }
+
+    public void btnFloorDown(View view) {
+        int currentFloor = MapDrawer.getFloor();
+        if(currentFloor > 0) {
+            MapDrawer.setFloor(currentFloor - 1);
+            btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
+            MapDrawer.hidePolylinesFloor(currentFloor);
+            MapDrawer.showPolylinesFloor(currentFloor - 1);
+        }
+    }
+
     public void btnCloseNavigate(View view) {
         MapDrawer.removePolylines();
         linearLayout2.setVisibility(View.VISIBLE);
         Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
         Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
+        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
         oOverlay.startAnimation(hideBottom);
         oOverlay.setVisibility(View.INVISIBLE);
 
         fragment2.getView().startAnimation(hideTop);
         fragment2.getView().setVisibility(View.INVISIBLE);
+
+        fFloorNavigator2.getView().startAnimation(showRight);
+        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
     }
 
     public void btnCloseNavBar(View view) {
         Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
         Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
         linearLayout2.startAnimation(showTop);
         linearLayout2.setVisibility(View.VISIBLE);
         fragment.getView().startAnimation(hideTop);
         fragment.getView().setVisibility(View.INVISIBLE);
+
+        fFloorNavigator2.getView().startAnimation(showRight);
+        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
     }
 
     public void btnNavBar(View view) {
         Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
         Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+        Animation hideRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_out);
         linearLayout2.startAnimation(hideTop);
         linearLayout2.setVisibility(View.INVISIBLE);
         fragment.getView().startAnimation(showTop);
         fragment.getView().setVisibility(View.VISIBLE);
+
+        fFloorNavigator2.getView().startAnimation(hideRight);
+        fFloorNavigator2.getView().setVisibility(View.INVISIBLE);
     }
 
     public void btnNavigate(View view) {
@@ -184,6 +230,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
             Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
             Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
             Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
+            Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
 
             oOverlay.startAnimation(showBottom);
             oOverlay.setVisibility(View.VISIBLE);
@@ -193,6 +240,9 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 
             fragment2.getView().startAnimation(showTop);
             fragment2.getView().setVisibility(View.VISIBLE);
+
+            fFloorNavigator2.getView().startAnimation(showRight);
+            fFloorNavigator2.getView().setVisibility(View.VISIBLE);
         }
     }
 

@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="project.movinindoor.FloorDisplayFragment" >
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:id="@+id/currentFloor"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/button_material_light" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floorUp"
+        android:src="@drawable/ic_arrow_drop_up_black_36dp"
+        android:layout_alignEnd="@+id/currentFloor"
+        android:layout_above="@+id/currentFloor"
+        android:nestedScrollingEnabled="false"
+        android:onClick="btnFloorUp"
+        android:background="@color/button_material_light"
+        android:padding="14dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floorDown"
+        android:src="@drawable/ic_arrow_drop_down_black_36dp"
+        android:layout_below="@+id/currentFloor"
+        android:layout_alignEnd="@+id/currentFloor"
+        android:onClick="btnFloorDown"
+        android:background="@color/button_material_light"
+        android:padding="14dp" />
+</RelativeLayout>

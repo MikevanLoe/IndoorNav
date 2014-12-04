@@ -99,12 +99,13 @@ public class SetupGraph  {
                 final double t2 = long1;
                 final double t3 = lat2;
                 final double t4 = long2;
+                final Node nNew = n;
 
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        MapDrawer.addPolyline(t1, t2, t3, t4);
+                        MapDrawer.addPolyline(t1, t2, t3, t4, Color.BLACK, Integer.parseInt(nNew.floor));
                     }
                 });
 
@@ -147,6 +148,7 @@ public class SetupGraph  {
 
     //From Room -> To Room
     public boolean navigateRoute(String startPosition, String endPosition) {
+        double extraCost = 0.0;
         Room startRoom = rooms.getRoom(startPosition);
         if(startRoom == null) {
             Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To" + startPosition + " not found (Format B0.14)", Toast.LENGTH_SHORT).show();
@@ -158,10 +160,16 @@ public class SetupGraph  {
             return false;
         }
         Node startNode = FindClosestNodeInsideRoom(startRoom);
-        if(startNode == null) { startNode = findNearestNode(startRoom.getLatLngBoundsCenter()); }
+        if(startNode == null) {
+            startNode = findNearestNode(startRoom.getLatLngBoundsCenter());
+            extraCost = measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+        }
 
         Node endNode = FindClosestNodeInsideRoom(endRoom);
-        if(endNode == null) { endNode = findNearestNode(endRoom.getLatLngBoundsCenter()); }
+        if(endNode == null) {
+            endNode = findNearestNode(endRoom.getLatLngBoundsCenter());
+            extraCost = measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+        }
 
         if(startNode == null || endNode == null) {
             Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation not found", Toast.LENGTH_SHORT).show();
@@ -172,6 +180,7 @@ public class SetupGraph  {
 
         double cost = g.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString());
         if(cost != 0.0) {
+            cost += extraCost;
             String walkingSpeed = g.calculateWalkingSpeed(cost);
             MapsActivity.textSpeed.setText("Estimate duration: " + walkingSpeed);
             MapsActivity.textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
