@@ -7,7 +7,7 @@
     <GridLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ff423fcc"
+        android:background="#F08714"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:paddingLeft="50dp"
