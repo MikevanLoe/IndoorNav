@@ -266,9 +266,14 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
      */
     private void setUpMap() {
         sendPushNotification("He mooie titel", "Goede text man");
-
         MapDrawer mapDrawer = new MapDrawer();
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        MapDrawer mapDrawer = new MapDrawer();
+    }
+
 
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
@@ -379,9 +384,5 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 
         notificationManager.notify(0, notification);
     }
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-
-    }
 }
+
