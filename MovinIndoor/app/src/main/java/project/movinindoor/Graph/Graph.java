@@ -82,7 +82,6 @@ public class Graph {
         if (v.prev.prev != null) {
             drawPath(v.prev);
         } else {
-            MapDrawer.addMarker(v.prev.lat1, v.prev.long1, "End");
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
@@ -100,7 +99,6 @@ public class Graph {
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
-                    MapDrawer.addMarker(v.lat1, v.long1, "End");
                     drawPath(v);
                     return v.dist;
                 } else {
