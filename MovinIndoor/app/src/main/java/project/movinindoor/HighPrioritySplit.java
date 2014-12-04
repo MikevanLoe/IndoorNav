@@ -1,5 +1,7 @@
 package project.movinindoor;
 
+import android.renderscript.RenderScript;
+
 import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -7,6 +9,7 @@ import java.util.Queue;
 import project.movinindoor.Reparation.Building;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Floor;
+import project.movinindoor.Reparation.Reparation;
 
 /**
  * Created by 5736z454 on 24-11-2014.
@@ -14,14 +17,14 @@ import project.movinindoor.Reparation.Floor;
 public class HighPrioritySplit {
 
     public void highSplit(Buildings input){
-
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
         }
-        Queue tempQ = buildingQ;
 
+        Queue tempQ = buildingQ;
         boolean time = true;
+
         while(time) {
             Building temp = (Building) tempQ.poll();
             if(time) {
@@ -34,15 +37,92 @@ public class HighPrioritySplit {
                 time = false;
         }
 
-        /*
-        * maak per gebouw een prioQueue met verdiepingen                                            queue.size == Building.totalFloors
-        * kijk van hoog naar laag                                                                   prioQ(int, Collections.reverseOrder)
-        * kijk in de Queue of er prio 5/6 op de verdieping is                                       foreach(REP : floor)
-        * sla prio 5/6 op in prioQueue                                                              if(REP.prio.value == 5 || 6) tmpFloor.add(REP) 5<=tmpFloor.prio<=6
-        * herbereken verdieping prio na het verwijderen van de prio 5/6                             (voor) 0/null<=floor.prio<=6 (na) 0/null<=floor.prio<=4
-        * plaats verdiepingen weer in prioQueue                                                     END
-        */
+        tempQ = buildingQ;
+        time = true;
 
+        while (time) {
+            Floor tempF = (Floor) tempQ.poll();
+            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
 
+            if(tempF != null) {
+                for (Reparation rep : tempF.repairList.values()) {
+                    if(rep.Priority.value >= 5) {
+                        tempF.highOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                    else if (tempF.priority.value <=4 ){
+                        tempF.lowOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                }
+            }
+            else {
+                time = false;
+            }
+        }
+    }
+
+    public void lowSplit(Buildings input){
+        Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
+        for(Building B : input.buildingList.values()) {
+            buildingQ.offer(B);
+        }
+
+        Queue tempQ = buildingQ;
+        boolean time = true;
+
+        while(time) {
+            Building temp = (Building) tempQ.poll();
+            if(time) {
+                temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
+                for (Floor f : temp.floorList.values()) {
+                    temp.order.add(f);
+                }
+            }
+            else
+                time = false;
+        }
+
+        tempQ = buildingQ;
+        time = true;
+
+        while (time) {
+            Floor tempF = (Floor) tempQ.poll();
+            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
+
+            if(tempF != null) {
+                for (Reparation rep : tempF.repairList.values()) {
+                    if(rep.Priority.value >= 3) {
+                        tempF.highOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                    else if (tempF.priority.value <=2 ){
+                        tempF.lowOrder.add(rep);
+                        tempF.repairList.remove(rep);
+                        input.calculatePriorityFloor(rep.Building, rep.Floor);
+                        if (rep.Priority.value > 0) {
+                            tempQ.add(tempF);
+                        }
+                    }
+                }
+            }
+            else {
+                time = false;
+            }
+        }
     }
 }

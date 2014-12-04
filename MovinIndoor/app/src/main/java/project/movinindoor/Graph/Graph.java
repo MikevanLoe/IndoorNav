@@ -1,17 +1,13 @@
 package project.movinindoor.Graph;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -25,8 +21,6 @@ public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
-    private int Cost;
-
 
     //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
     //the edge will be added to the vertex.adj list of the sourcename vertex.
@@ -96,13 +90,18 @@ public class Graph {
     //returns the cost of the path.
     public double drawPath(String startName, String destName) {
         if (!startName.equals(destName)) {
-            dijkstra(startName);
+            Vertex start = vertexMap.get(startName);
+            if (start == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
+                return 0.0;
+            }
+            dijkstra(start);
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
                     drawPath(v);
                     return v.dist;
-                }else{
+                } else {
                     Toast.makeText(MapsActivity.getContext().getApplicationContext(), "couldn't find a path to the destination", Toast.LENGTH_LONG).show();
                     return 0.0;
                 }
@@ -117,10 +116,9 @@ public class Graph {
     }
 
 
-    public void dijkstra(String startName) {
+    public void dijkstra(Vertex start) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
 
-        Vertex start = vertexMap.get(startName);
         if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
@@ -148,8 +146,6 @@ public class Graph {
                     }
                 }
             }
-        } else {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
         }
     }
 

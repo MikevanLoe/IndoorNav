@@ -33,7 +33,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 import project.movinindoor.Graph.SetupGraph;
+
+import project.movinindoor.Graph.Graph;
+import project.movinindoor.Graph.Vertex;
+
 import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
@@ -265,12 +270,15 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+        MapDrawer mapDrawer = new MapDrawer();
     }
+
 
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
@@ -368,6 +376,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
             Log.e("items_error: ", e.toString());
         }
     }
+
     public void sendPushNotification(String title, String text) {
         context = getApplicationContext();
 
@@ -381,3 +390,4 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
         notificationManager.notify(0, notification);
     }
 }
+
