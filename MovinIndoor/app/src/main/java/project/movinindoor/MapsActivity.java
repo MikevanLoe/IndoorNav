@@ -25,14 +25,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import project.movinindoor.Graph.StartGraph;
+import project.movinindoor.Graph.SetupGraph;
 import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
@@ -41,6 +40,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public static Context getContext() { return context; }
     public static GoogleMap getMap() { return mMap; }
+    public SetupGraph setupGraph;
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -49,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     private HashMap<String, List<String>> listDataChild;
 
     private EditText editStart, editEnd;
-    private TextView textSpeed, textSpeedCost, textFrom, textTo;
+    public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private GridLayout oOverlay;
     private LinearLayout linearLayout2;
     private FragmentManager fm, fm2;
@@ -59,6 +59,13 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        setUpMapIfNeeded();
+        context = getApplicationContext();
+
+        setupGraph = new SetupGraph();
+
+
 
         // id: fragement2
         fm       = getSupportFragmentManager();
@@ -103,8 +110,7 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
 
         getActionBar().hide();
 
-        setUpMapIfNeeded();
-        context = getApplicationContext();
+
 
 //        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -112,7 +118,6 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
         mMap.setIndoorEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
 
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.500075, 6.080817), 15));
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -121,7 +126,6 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
             }
         });
 
-        StartGraph.runGraphs();
         textSpeed.setText("");
     }
 
@@ -162,30 +166,27 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     }
 
     public void btnNavigate(View view) {
-        InputMethodManager inputManager = (InputMethodManager)
-                getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
-
+        //Hide keyboard on navigate
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        //Removes From -> To Fragement;
         oOverlay.setVisibility(View.INVISIBLE);
+        //Removes existing Polylines
         MapDrawer.removePolylines();
-        double cost = StartGraph.g.drawPath(editStart.getText().toString(), editEnd.getText().toString());
-        if(cost != 0.0) {
-            String walkingSpeed = StartGraph.g.calculateWalkingSpeed(cost);
-            textSpeed.setText("Estimate duration: " + walkingSpeed);
-            textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
+        MapDrawer.removeMarkers();
 
-            textFrom.setText(editStart.getText());
-            textTo.setText(editEnd.getText());
+        //Get Start position
+        String startPosition = editStart.getText().toString();
+        String endPosition = editEnd.getText().toString();
 
+        boolean sucess = setupGraph.navigateRoute(startPosition, endPosition);
+        if(sucess) {
             Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
             Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
             Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
 
             oOverlay.startAnimation(showBottom);
             oOverlay.setVisibility(View.VISIBLE);
-
 
             fragment.getView().startAnimation(hideTop);
             fragment.getView().setVisibility(View.INVISIBLE);
@@ -217,7 +218,13 @@ public class MapsActivity extends FragmentActivity implements Fragment_FromToDis
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
-        StartGraph.runGraphs();
+        setUpGraphIfNeeded();
+    }
+
+    private void setUpGraphIfNeeded() {
+        if (setupGraph == null) {
+            setupGraph = new SetupGraph();
+        }
     }
 
     /**

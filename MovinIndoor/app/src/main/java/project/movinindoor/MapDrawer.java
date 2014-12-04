@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -91,6 +92,7 @@ public class MapDrawer {
     };
 
     public static List<Polyline> polylines = new ArrayList<Polyline>();
+    public static List<Marker> markers = new ArrayList<Marker>();
 
     public static void addPolyline(double lat1, double long1, double lat2, double long2){
         // Instantiates a new Polyline object and adds points to define a rectangle
@@ -116,12 +118,23 @@ public class MapDrawer {
 
 
     public static void addMarker(double lat1, double long1, String name) {
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name)));
+    }
 
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name));
+    public static void addMarker(LatLng latLng, String name) {
+
+        markers.add(mMap.addMarker(new MarkerOptions().position(latLng).title(name)));
     }
 
     public static void addMarker(double lat1, double long1) {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker"));
+        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker")));
+    }
+
+    public static void removeMarkers() {
+        for(Marker m : markers)
+        {
+                m.remove();
+        }
     }
 
     public static void removePolylines() {
