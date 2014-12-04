@@ -127,7 +127,7 @@ public class MapDrawer {
         // Instantiates a new Polyline object and adds points to define a rectangle
         PolylineOptions rectOptions = new PolylineOptions()
                 .add(new LatLng(lat1, long1))
-                .add(new LatLng(lat2, long2)).zIndex(101).color(color);
+                .add(new LatLng(lat2, long2)).zIndex(500).color(color);
 
         // Get back the mutable Polyline
         Polyline polyline =  mMap.addPolyline(rectOptions);
