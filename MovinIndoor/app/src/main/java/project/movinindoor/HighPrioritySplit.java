@@ -15,7 +15,13 @@ import project.movinindoor.Reparation.Reparation;
  * Created by 5736z454 on 24-11-2014.
  */
 public class HighPrioritySplit {
-
+    /**
+     * Splits the input based on the priority of repairs.
+     * Takes the high repairs, and follows with the medium and low priority
+     *  repairs.
+     *
+     * @param input the buildings object you want to split
+     */
     public void highSplit(Buildings input){
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
@@ -71,6 +77,13 @@ public class HighPrioritySplit {
         }
     }
 
+    /**
+     * Splits the input based on the priority of repairs.
+     * Takes the high and medium repairs, and follows with the low priority
+     *  repairs.
+     *
+     * @param input the buildings object you want to split
+     */
     public void lowSplit(Buildings input){
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
