@@ -13,7 +13,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import project.movinindoor.LoadRooms;
 import project.movinindoor.MapDrawer;
@@ -149,34 +152,99 @@ public class SetupGraph  {
     //From Room -> To Room
     public boolean navigateRoute(String startPosition, String endPosition) {
         double extraCost = 0.0;
-        Room startRoom = rooms.getRoom(startPosition);
-        if(startRoom == null) {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To" + startPosition + " not found (Format B0.14)", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        Room endRoom = rooms.getRoom(endPosition);
-        if(endRoom == null) {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From " + endPosition + " not found (Format B0.14)", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        Node startNode = FindClosestNodeInsideRoom(startRoom);
-        if(startNode == null) {
-            startNode = findNearestNode(startRoom.getLatLngBoundsCenter());
-            extraCost = measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+        LatLng startPositionLatLng;
+        LatLng endPositionLatLng;
+        Node endNode, startNode;
+        Room startRoom, endRoom;
+
+        //if not a custom location
+        if(MapsActivity.customStartPos == null) {
+            startRoom = rooms.getRoom(startPosition);
+
+            if (startRoom == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            startNode = FindClosestNodeInsideRoom(startRoom);
+            if(startNode == null) {
+                startNode = findNearestNode(startRoom.getLatLngBoundsCenter());
+                extraCost = measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+            }
+
+            startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
+        } else {
+            startNode = findNearestNode(MapsActivity.customStartPos);
+            extraCost = measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.location.get(0), startNode.location.get(1));
+            startPositionLatLng = MapsActivity.customStartPos;
         }
 
-        Node endNode = FindClosestNodeInsideRoom(endRoom);
-        if(endNode == null) {
-            endNode = findNearestNode(endRoom.getLatLngBoundsCenter());
-            extraCost = measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+        //if not a custom location
+        if(MapsActivity.customEndPos == null) {
+            String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
+            String re2="(\\d+)";	// Integer Number 1
+            String re3="(.)";	// Any Single Character 1
+            String re4="(\\d)";	// Any Single Digit 1
+            String re5="(\\d)";	// Any Single Digit 2
+
+            Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            Matcher m = p.matcher(endPosition);
+            if (m.matches()) {
+                endRoom = rooms.getRoom(endPosition);
+            } else {
+                List<Room> roomsWithName = rooms.getAllRoomsWithName(endPosition);
+                if(roomsWithName.size() != 1) {
+                    double tempCost = 0.0;
+                    Room tempRoom = null;
+                    for (Room room : roomsWithName) {
+                        Node node = FindClosestNodeInsideRoom(room);
+                        //find shortest route to position
+                        if(node != null) {
+                            double cost = g.drawPath(startNode.nodeId.toString(), node.nodeId.toString());
+                            if(tempCost == 0.0 && tempRoom == null) {
+                                tempCost = cost;
+                                tempRoom = room;
+                            }
+
+                            if (cost <= tempCost) {
+                                tempCost = cost;
+                                tempRoom = room;
+                            }
+                        }
+
+                    }
+                    MapDrawer.removePolylines();
+                    endRoom = tempRoom;
+                } else {
+                    endRoom = rooms.getRoom(endPosition);
+                }
+            }
+
+            if (endRoom == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To " + endPosition + " not found", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            endNode = FindClosestNodeInsideRoom(endRoom);
+            if (endNode == null) {
+                endNode = findNearestNode(endRoom.getLatLngBoundsCenter());
+                extraCost = measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+            }
+
+            endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
+        } else {
+            endNode = findNearestNode(MapsActivity.customEndPos);
+            extraCost = measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.location.get(0), endNode.location.get(1));
+            endPositionLatLng = MapsActivity.customEndPos;
         }
 
-        if(startNode == null || endNode == null) {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        LatLng startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
-        LatLng endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
+            if(startNode == null || endNode == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation not found", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+
+
 
         double cost = g.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString());
         if(cost != 0.0) {
@@ -203,10 +271,7 @@ public class SetupGraph  {
                 return node;
             }
         }
-
-
-
-        return r.jsonList.get(0);
+        return null;
     }
 
 

@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,7 +41,10 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import project.movinindoor.Graph.Graph;
+import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.SetupGraph;
 import project.movinindoor.Reparation.Reparation;
 
@@ -49,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public static Context getContext() { return context; }
     public static GoogleMap getMap() { return mMap; }
-    public SetupGraph setupGraph;
+    public static SetupGraph setupGraph;
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -59,8 +64,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     private Marker longClickMarker = null;
     private Room inRoom;
+    public static LatLng customStartPos = null;
+    public static LatLng customEndPos = null;
+    private JSONArray jitems;
 
-    private EditText editStart, editEnd;
+    public static EditText editStart;
+    private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private GridLayout oOverlay;
     private Button btnCurrentFloor;
@@ -77,6 +86,14 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         context = getApplicationContext();
 
         setupGraph = new SetupGraph();
+
+        try {
+            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         // id: fMarkerDisplay
         fmMarkerDisplay       = getSupportFragmentManager();
@@ -143,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        prepareListData();
+
 
         getActionBar().hide();
 
@@ -155,6 +172,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setIndoorEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
 
+        //Set a marker on long click
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -162,7 +180,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                 textView.setText("");
 
                 inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
-                if(inRoom !=null) textView.setText(inRoom.getLocation());
+                if (inRoom != null) textView.setText(inRoom.getLocation());
                 else textView.setText("Custom Position");
 
                 if (longClickMarker != null) longClickMarker.remove();
@@ -175,6 +193,26 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                     fMarkerDisplay.getView().setVisibility(View.VISIBLE);
                 }
 
+            }
+        });
+
+        RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
+        final ImageView infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
+        radioGroupMovingBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.radioCart:
+                        Graph.movingByWalk=false;
+                        infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
+                        Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Graph.movingByWalk=true;
+                        infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
+                        Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
 
@@ -207,6 +245,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     public void btnMarkerClose(View view) {
         longClickMarker.remove();
+        MapDrawer.removeMarkers();
+        MapDrawer.removePolylines();
         Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
         fMarkerDisplay.getView().startAnimation(hideBottom);
         fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
@@ -221,12 +261,24 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         String text;
 
         if(radioButton.getHint().toString().equals("to")) {
-            if(inRoom !=null) editEnd.setText(inRoom.getLocation());
-            else editEnd.setText("Custom End Position");
+            if(inRoom !=null) {
+                customEndPos = null;
+                editEnd.setText(inRoom.getLocation());
+            }
+            else {
+                customEndPos = longClickMarker.getPosition();
+                editEnd.setText("Custom End Position");
+            }
             text = "End";
         } else if(radioButton.getHint().toString().equals("from")) {
-            if(inRoom !=null) editStart.setText(inRoom.getLocation());
-            else editStart.setText("Custom End Position");
+            if(inRoom !=null) {
+                customStartPos = null;
+                editStart.setText(inRoom.getLocation());
+            }
+            else {
+                customStartPos = longClickMarker.getPosition();
+                editStart.setText("Custom Start Position");
+            }
             text = "Start";
         } else {
             Toast.makeText(getContext(), "Failed. Try again", Toast.LENGTH_SHORT).show();
@@ -251,7 +303,10 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     public void btnCloseNavigate(View view) {
+
+
         MapDrawer.removePolylines();
+        MapDrawer.removeMarkers();
         linearLayout2.setVisibility(View.VISIBLE);
         Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
         Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
@@ -280,6 +335,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     public void btnNavBar(View view) {
+        prepareListData();
+
         Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
         Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
         Animation hideRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_out);
@@ -296,18 +353,41 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         //Hide keyboard on navigate
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+        //Get Start position
+        String startPosition = editStart.getText().toString();
+        String endPosition = editEnd.getText().toString();
+
+        navigate(startPosition, endPosition);
+    }
+
+
+    public void btnNavigateRepair(View view) {
+        final String startRoom;
+
+        int pos = Integer.valueOf(view.getTag().toString());
+        if(pos > 0) {
+            startRoom = listAdapter.getChild(pos - 1, 0).toString().substring(16);
+        } else {
+            startRoom = MapsActivity.editStart.getText().toString();
+        }
+
+        final String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
+
+        navigate(startRoom, EndRoom);
+    }
+
+    public void navigate(String start, String end) {
         //Removes From -> To Fragement;
         oOverlay.setVisibility(View.INVISIBLE);
         //Removes existing Polylines
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
 
-        //Get Start position
-        String startPosition = editStart.getText().toString();
-        String endPosition = editEnd.getText().toString();
+        boolean sucess = setupGraph.navigateRoute(start, end);
 
-        boolean sucess = setupGraph.navigateRoute(startPosition, endPosition);
         if(sucess) {
+            Toast.makeText(getApplicationContext(), "Navigation started", Toast.LENGTH_SHORT).show();
             Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
             Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
             Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
@@ -412,7 +492,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         try
         {
-            JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+
 
             //Loop though my JSONArray
             for (int  j=0; j< 10; j++) {
@@ -423,13 +503,23 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                     String floor = jitems.getJSONObject(i).getString("floor");
                     String priority = jitems.getJSONObject(i).getString("priority");
                     String description = jitems.getJSONObject(i).getString("description");
+                    String clong = jitems.getJSONObject(i).getString("clong");
+                    String clat = jitems.getJSONObject(i).getString("clat");
                     String comments = jitems.getJSONObject(i).getString("comments");
                     String status = jitems.getJSONObject(i).getString("status");
                     String node = jitems.getJSONObject(i).getString("defectid");
 
+                    LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
+                    Rooms nodeRooms = setupGraph.getRooms();
+                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng);
+
+                    String room = nodeRoom.getLocation();
+
+
                     List<String> subList = new ArrayList<String>();
                     listDataHeader.add(j +"-" + i + ": " + title);
-                    subList.add("Location:       " + building + "" + floor + "." + node);
+                    if(room != null) subList.add("Location:       " + room);
+                    else subList.add("Location:       " + building + "" + floor + "." + "16");
                     subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
@@ -451,15 +541,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                     // Toast.makeText(getApplicationContext(),
                     // "Group Clicked " + listDataHeader.get(groupPosition),
                     // Toast.LENGTH_SHORT).show();
-
-                    ImageButton btn = (ImageButton) findViewById(R.id.imageButton);
-
-                    btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(getApplicationContext(), "Test", Toast.LENGTH_SHORT).show();
-                        }
-                    });
 
                     return false;
                 }
