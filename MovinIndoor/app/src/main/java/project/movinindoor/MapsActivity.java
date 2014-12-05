@@ -395,7 +395,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        sendPushNotification("He mooie titel", "Goede text man");
+        //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
     }
 
