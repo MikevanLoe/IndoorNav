@@ -55,7 +55,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
 
-    private Marker longClickMarker;
+    private Marker longClickMarker = null;
+    private Room inRoom;
 
     private EditText editStart, editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
@@ -155,10 +156,22 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
+                textView.setText("");
+
+                inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
+                if(inRoom !=null) textView.setText(inRoom.getLocation());
+                else textView.setText("Custom Position");
+
+                if (longClickMarker != null) longClickMarker.remove();
+                TextView txtCord = (TextView) findViewById(R.id.txtCord);
                 longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
-                fMarkerDisplay.getView().startAnimation(showBottom);
-                fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+                txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+                if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
+                    Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
+                    fMarkerDisplay.getView().startAnimation(showBottom);
+                    fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+                }
 
             }
         });
@@ -199,16 +212,20 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
+
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.groupLocation);
         int selectedId = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = (RadioButton) findViewById(selectedId);
         String text;
+
         if(radioButton.getHint().toString().equals("to")) {
-            editStart.setText("Custom Start Position");
-            text = "Start";
-        } else if(radioButton.getHint().toString().equals("from")) {
-            editEnd.setText("Custom End Position");
+            if(inRoom !=null) editEnd.setText(inRoom.getLocation());
+            else editEnd.setText("Custom End Position");
             text = "End";
+        } else if(radioButton.getHint().toString().equals("from")) {
+            if(inRoom !=null) editStart.setText(inRoom.getLocation());
+            else editStart.setText("Custom End Position");
+            text = "Start";
         } else {
             Toast.makeText(getContext(), "Failed. Try again", Toast.LENGTH_SHORT).show();
             return;

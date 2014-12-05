@@ -26,8 +26,6 @@ public class Rooms {
         try {
             inputStream = MapsActivity.getContext().getAssets().open("WindesheimRooms.json");
             rooms = readJsonStream(inputStream);
-
-            String test = "TEST";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,12 +131,6 @@ public class Rooms {
         ArrayList<Double>  polyY = new ArrayList<Double>();
         ArrayList<ArrayList<Double>> returnList = new ArrayList<ArrayList<Double>>();
 
-        Double locationLTLat = 0.0, locationLTLng = 0.0;
-            Double locationRTLat = 0.0, locationRTLng = 0.0;
-            Double locationLBLat = 0.0, locationLBLng = 0.0;
-            Double locationRBLat = 0.0, locationRBLng = 0.0;
-
-
         try {
 
             reader.beginArray();
@@ -174,13 +166,26 @@ public class Rooms {
         return rooms.get(location);
     }
 
-    public boolean nodeInsideRoom(LatLng latLng) {
+    public Room nodeInsideRoom(LatLng latLng) {
+        Room returnRoom = null;
         for (Room room : rooms.values()) {
-            if(room.getLatLngBounds().contains(latLng)) {
-                return true;
+            try {
+                if (!room.getLocation().equals("") || !room.getLocation().equals("toilet")) {
+                    String split = room.getLocation().substring(1, 2);
+
+                        if (MapDrawer.getFloor() == Integer.valueOf(split)) {
+                            if (nodeInsideRoom(room, latLng)) {
+                                return room;
+                            }
+                        }
+
+
+                }
+            } catch (Exception e) {
+                //Not a proper integer
             }
         }
-        return false;
+        return returnRoom;
     }
 
     public boolean nodeInsideRoom(Room room, LatLng latLng) {
