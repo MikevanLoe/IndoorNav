@@ -35,7 +35,7 @@
                 android:background="#ffffff"
                 android:height="14dp"
                 android:textSize="15sp"
-                android:textColor="#000000"
+                android:textColor="#F08714"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_launcher"
@@ -51,14 +51,15 @@
 
         <GridLayout
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:layout_alignBottom="@+id/TextSpeed"
             android:layout_centerHorizontal="true"
             android:background="#FFFFFF"
             android:id="@+id/Ooverlay"
             android:rowCount="1"
             android:columnCount="3"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,14 +68,15 @@
                 android:id="@+id/textView"
                 android:layout_row="0"
                 android:layout_column="0"
-                android:layout_marginRight="10dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:layout_marginRight="15dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="#F08714" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10m"
-                android:textColor="#ff0000"
+                android:textColor="#F08714"
                 android:id="@+id/textView2"
                 android:layout_row="0"
                 android:layout_column="1"
@@ -85,12 +87,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/closeButton"
-                android:src="@drawable/ic_close_black_48dp"
+                android:src="@drawable/ic_close_black_24dp"
                 android:onClick="btnCloseNavigate"
                 android:background="#ffffff"
                 android:layout_row="0"
                 android:layout_column="2"
-                android:layout_gravity="left" />
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp" />
         </GridLayout>
 
         <fragment
@@ -112,10 +115,20 @@
             android:layout_alignParentStart="true" />
 
         <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:name="project.movinindoor.FloorDisplayFragment"
+        android:id="@+id/fFloorNavigator"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/fragment2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+        <fragment
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="project.movinindoor.FloorDisplayFragment"
-            android:id="@+id/fFloorNavigator"
+            android:name="project.movinindoor.MarkerInfoFragment"
+            android:id="@+id/fMarkerDisplay"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/fragment2"
             android:layout_alignParentTop="true"

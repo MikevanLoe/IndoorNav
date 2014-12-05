@@ -20,6 +20,8 @@ import android.widget.ExpandableListView;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import java.util.ArrayList;
@@ -39,7 +43,7 @@ import java.util.List;
 import project.movinindoor.Graph.SetupGraph;
 import project.movinindoor.Reparation.Reparation;
 
-public class MapsActivity extends FragmentActivity implements FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -53,13 +57,16 @@ public class MapsActivity extends FragmentActivity implements FloorDisplayFragme
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
 
+    private Marker longClickMarker = null;
+    private Room inRoom;
+
     private EditText editStart, editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private GridLayout oOverlay;
     private Button btnCurrentFloor;
     private LinearLayout linearLayout2;
-    private FragmentManager fm, fm2, fmFloorNavigator;
-    private android.support.v4.app.Fragment fragment, fragment2, fFloorNavigator2;
+    private FragmentManager fm, fm2, fmFloorNavigator, fmMarkerDisplay;
+    private android.support.v4.app.Fragment fragment, fragment2, fFloorNavigator2, fMarkerDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,17 @@ public class MapsActivity extends FragmentActivity implements FloorDisplayFragme
         context = getApplicationContext();
 
         setupGraph = new SetupGraph();
+
+        // id: fMarkerDisplay
+        fmMarkerDisplay       = getSupportFragmentManager();
+        fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
+
+        if (fMarkerDisplay == null) {
+            FragmentTransaction ft2 = fmMarkerDisplay.beginTransaction();
+            ft2.add(R.id.fMarkerDisplay, new NavigationBar());
+            ft2.commit();
+        }
+        //end id: fMarkerDisplay
 
         // id: fFloorNavigator
         fmFloorNavigator       = getSupportFragmentManager();
@@ -107,6 +125,7 @@ public class MapsActivity extends FragmentActivity implements FloorDisplayFragme
         fragment.getView().setVisibility(View.INVISIBLE);
         fragment2.getView().setVisibility(View.INVISIBLE);
         fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+        fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
 
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
@@ -136,6 +155,29 @@ public class MapsActivity extends FragmentActivity implements FloorDisplayFragme
         mMap.setIndoorEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
 
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
+                textView.setText("");
+
+                inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
+                if(inRoom !=null) textView.setText(inRoom.getLocation());
+                else textView.setText("Custom Position");
+
+                if (longClickMarker != null) longClickMarker.remove();
+                TextView txtCord = (TextView) findViewById(R.id.txtCord);
+                longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+                txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+                if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
+                    Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
+                    fMarkerDisplay.getView().startAnimation(showBottom);
+                    fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -162,6 +204,41 @@ public class MapsActivity extends FragmentActivity implements FloorDisplayFragme
             MapDrawer.showPolylinesFloor(currentFloor + 1);
         }
     }
+
+    public void btnMarkerClose(View view) {
+        longClickMarker.remove();
+        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
+        fMarkerDisplay.getView().startAnimation(hideBottom);
+        fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+    }
+
+    public void btnMarkerSelect(View view) {
+        longClickMarker.remove();
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.groupLocation);
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+        RadioButton radioButton = (RadioButton) findViewById(selectedId);
+        String text;
+
+        if(radioButton.getHint().toString().equals("to")) {
+            if(inRoom !=null) editEnd.setText(inRoom.getLocation());
+            else editEnd.setText("Custom End Position");
+            text = "End";
+        } else if(radioButton.getHint().toString().equals("from")) {
+            if(inRoom !=null) editStart.setText(inRoom.getLocation());
+            else editStart.setText("Custom End Position");
+            text = "Start";
+        } else {
+            Toast.makeText(getContext(), "Failed. Try again", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
+        fMarkerDisplay.getView().startAnimation(hideBottom);
+        fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+        Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
+    }
+
 
     public void btnFloorDown(View view) {
         int currentFloor = MapDrawer.getFloor();
