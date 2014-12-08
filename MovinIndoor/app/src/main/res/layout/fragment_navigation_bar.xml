@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
-            android:src="@drawable/ic_my_location_white_36dp"
+            android:src="@drawable/ic_my_location_white_24dp"
             android:layout_row="0"
             android:layout_column="0" />
 
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView3"
-            android:src="@drawable/ic_place_white_36dp"
+            android:src="@drawable/ic_place_white_24dp"
             android:layout_row="1"
             android:layout_column="0"
             android:backgroundTint="#F08714" />
@@ -87,23 +87,35 @@
 
         <RadioGroup
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_row="4"
             android:layout_column="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/radioGroupMovingBy">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Moving by: "
+                android:id="@+id/textView3"
+                android:layout_marginRight="50dp" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioButton"
-                android:checked="false" />
+                android:id="@+id/radioWalk"
+                android:checked="true"
+                android:button="@drawable/walkradiobutton"
+                android:layout_marginRight="30dp" />
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioButton2"
-                android:button="@drawable/ic_local_grocery_store_white_36dp"
+                android:id="@+id/radioCart"
+                android:button="@drawable/cartwalkradiobutton"
                 android:checked="false" />
+
         </RadioGroup>
 
     </GridLayout>
@@ -119,7 +131,6 @@
             android:id="@+id/expandableListView"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.01"
-            android:background="#FFFFFF"
             android:choiceMode="singleChoice"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"

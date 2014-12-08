@@ -20,6 +20,7 @@ import project.movinindoor.MapsActivity;
 public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
+    public static boolean movingByWalk = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
 
     //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
@@ -151,7 +152,7 @@ public class Graph {
 
 
     public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = 5000; //Walking speed in meters per hour
+        int walkingSpeed = (movingByWalk) ? 5000 : 4000;
         int minuteInSec = 3600;
         float walkingspeedPerSecond = ((float) walkingSpeed) / minuteInSec;
         double time;

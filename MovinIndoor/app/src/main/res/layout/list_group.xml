@@ -27,7 +27,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_directions_black_24dp"
-        android:backgroundTint="#F08714" />
+        android:backgroundTint="#F08714"
+        android:onClick="btnNavigateRepair" />
 
     <ImageButton
         android:layout_width="wrap_content"

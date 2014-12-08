@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,8 +94,51 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
 
         TextView lblListHeader = (TextView) convertView
                 .findViewById(R.id.lblListHeader);
-       lblListHeader.setTypeface(null, Typeface.BOLD);
+        lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
+
+        ImageButton Button1= (ImageButton)  convertView.findViewById(R.id.imageButton);
+        Button1.setTag(groupPosition);
+
+        ImageButton Button2= (ImageButton)  convertView.findViewById(R.id.imageButton2);
+        Button2.setTag(groupPosition);
+        /*
+        final String startRoom;
+
+        if(groupPosition > 0) {
+            startRoom = getChild(groupPosition - 1, 0).toString().substring(16);
+        } else {
+            startRoom = MapsActivity.editStart.getText().toString();
+        }
+
+        final String EndRoom = getChild(groupPosition, 0).toString().substring(16);
+
+
+        ImageButton Button1= (ImageButton)  convertView.findViewById(R.id.imageButton);
+        ImageButton Button2= (ImageButton)  convertView.findViewById(R.id.imageButton2);
+
+        Button1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                MapsActivity.setupGraph.navigateRoute(startRoom, EndRoom);
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation started", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        Button2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Repair repaired", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+        */
 
         return convertView;
     }
