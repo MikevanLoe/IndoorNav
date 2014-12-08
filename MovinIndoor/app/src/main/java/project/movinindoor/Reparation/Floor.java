@@ -18,13 +18,13 @@ import java.util.Queue;
  */
 public class Floor implements Comparable<Floor>{
     
-    public Map<Integer, Reparation> repairList;
+    public Map<String, Reparation> repairList;
     public Reparation.PriorityType priority;
     public Queue highOrder;
     public Queue lowOrder;
     
     public Floor() {
-        repairList = new HashMap<Integer, Reparation>();
+        repairList = new HashMap<String, Reparation>();
     }
 
     /**
@@ -33,7 +33,7 @@ public class Floor implements Comparable<Floor>{
      * @param name the name of the floor being added.
      * @param obj the floor being added.
      */
-    public void Add(int name, Reparation obj) {
+    public void Add(String name, Reparation obj) {
         repairList.put(name, obj);
     }
 

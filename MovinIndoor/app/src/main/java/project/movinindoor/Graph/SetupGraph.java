@@ -33,9 +33,11 @@ public class SetupGraph  {
     private Graph g;
     private NodeReader r = new NodeReader();
     private Rooms rooms;
+    private RepairReader repairReader;
 
     public SetupGraph() {
 
+        repairReader = new RepairReader();
         new Thread(new Runnable() {
             public void run() {
                 g = new Graph();
@@ -55,7 +57,9 @@ public class SetupGraph  {
 
     }
 
-    public Graph getGraph() { return g; }
+    public Graph getGraph() { return g;
+    }
+    public RepairReader getRepairReader() { return repairReader; }
 
     public NodeReader getNodes() { return r; }
 

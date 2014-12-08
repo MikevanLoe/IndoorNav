@@ -20,6 +20,7 @@ public class StartAlg {
 
     
     public void StartAlg() {
+        /*
         // List with all Buildings
         List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
         for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) {
@@ -29,6 +30,7 @@ public class StartAlg {
         //Create buildings
         Buildings buildings = new Buildings(buildingsArray);
         /* Test Repairs */
+        /*
         Reparation rep1 = new Reparation(Reparation.BuildingEnum.T, 3, 54, Reparation.PriorityType.URGENT, "bla");
         Reparation rep2 = new Reparation(Reparation.BuildingEnum.T, 5, 45, Reparation.PriorityType.AVERAGE, "bla");
         Reparation rep3 = new Reparation(Reparation.BuildingEnum.T, 2, 45, Reparation.PriorityType.LOW, "bla");
@@ -42,7 +44,7 @@ public class StartAlg {
         Reparation rep11 = new Reparation(Reparation.BuildingEnum.T, 0, 32, Reparation.PriorityType.IMPORTANT, "bla");
 
          // Set Repairs to Building and Floor
-         buildings.addRepair(rep1.Building, rep1.Floor, rep1);
+         buildings.addRepair(rep1);
          buildings.addRepair(rep2.Building, rep2.Floor, rep2);
          buildings.addRepair(rep3.Building, rep3.Floor, rep3);
          buildings.addRepair(rep4.Building, rep4.Floor, rep4);
@@ -77,7 +79,7 @@ public class StartAlg {
     }
         
       
-   
+   */
         
     }
     

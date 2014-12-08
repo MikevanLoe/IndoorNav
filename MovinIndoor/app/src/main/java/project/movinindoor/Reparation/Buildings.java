@@ -65,13 +65,11 @@ public class Buildings {
     /**
      * Adds a repair to the corresponding building and floor.
      *
-     * @param building The building you add the repair to.
-     * @param floor The floor you add the repair to.
      * @param reparation The reparation you want to add.
      */
-    public void addRepair(Reparation.BuildingEnum building, int floor, Reparation reparation) {
-        Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
-        Floor floorR = getBuilding.get(Integer.toString(floor));
+    public void addRepair(Reparation reparation) {
+        Map<Integer, Floor> getBuilding = getRepairsFromBuilding(reparation.Building);
+        Floor floorR = getBuilding.get(Integer.toString(reparation.Floor));
         floorR.Add(reparation.Location, reparation);
     }
 
@@ -93,7 +91,7 @@ public class Buildings {
      * @param floor The floor you want to know about.
      * @return a hashmap with the repairs of the specified floor.
      */
-    public Map<Integer, Reparation> getRepairsFromFloor(Reparation.BuildingEnum building, int floor) {
+    public Map<String, Reparation> getRepairsFromFloor(Reparation.BuildingEnum building, int floor) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
         Floor floorR = getBuilding.get(floor);
         return floorR.repairList;
@@ -116,7 +114,7 @@ public class Buildings {
      * @return the reparation at the location you specified.
      */
     public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
-        Map<Integer, Reparation> getFloor = getRepairsFromFloor(building, floor);
+        Map<String, Reparation> getFloor = getRepairsFromFloor(building, floor);
         Reparation reparationR = getFloor.get(location);
         return reparationR;
     }
@@ -176,7 +174,7 @@ public class Buildings {
      * @param floor The floor you want to calculate the priority of.
      */
     public void calculatePriorityFloor(Reparation.BuildingEnum building, int floor){
-        Map<Integer, Reparation> prioFloor = getRepairsFromFloor(building, floor);
+        Map<String, Reparation> prioFloor = getRepairsFromFloor(building, floor);
         int prioSom = 0;
         int count = 0;
 

@@ -206,6 +206,28 @@ public class Rooms {
         return returnRoom;
     }
 
+    public Room nodeInsideRoom(LatLng latLng, int floor) {
+        Room returnRoom = null;
+        for (Room room : rooms.values()) {
+            try {
+                if (!room.getLocation().equals("") || !room.getLocation().equals("toilet")) {
+                    String[] split = room.getLocation().split(".");
+
+                    if (floor == Integer.valueOf(split[0].substring(1))) {
+                        if (nodeInsideRoom(room, latLng)) {
+                            return room;
+                        }
+                    }
+
+
+                }
+            } catch (Exception e) {
+                //Not a proper integer
+            }
+        }
+        return returnRoom;
+    }
+
     public boolean nodeInsideRoom(Room room, LatLng latLng) {
         ArrayList<Double> vertx = room.getLatLngBounds().get(1);
         ArrayList<Double> verty = room.getLatLngBounds().get(0);
