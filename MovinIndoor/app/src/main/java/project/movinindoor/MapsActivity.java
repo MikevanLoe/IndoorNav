@@ -27,11 +27,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -50,6 +52,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     public static Context getContext() { return context; }
     public static GoogleMap getMap() { return mMap; }
     public SetupGraph setupGraph;
+    private LatLngBounds Bounds = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -181,8 +184,19 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                float minZoom = 15.0f;
+                float minZoom = 16.0f;
                 LatLng position = cameraPosition.target;
+
+                if(cameraPosition.zoom < minZoom)
+                {
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, minZoom);
+                    mMap.moveCamera(cameraUpdate);
+                }
+                if(position.latitude < Bounds.southwest.latitude || position.longitude < Bounds.southwest.longitude || position.latitude > Bounds.northeast.latitude || position.longitude > Bounds.northeast.longitude)
+                {
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(Bounds.getCenter(), cameraPosition.zoom);
+                    mMap.moveCamera(cameraUpdate);
+                }
             }
         });
 
