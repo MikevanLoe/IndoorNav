@@ -83,6 +83,7 @@ public class HighPrioritySplit {
      * @param input the buildings object you want to split
      */
     public void lowSplit(Buildings input){
+
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
@@ -91,12 +92,14 @@ public class HighPrioritySplit {
         Queue tempQ = buildingQ;
         boolean time = true;
 
+        // Loop through the buildings and add the floors to a PriorityQueue
+        // but only if there are buildings left.
         while(time) {
             Building temp = (Building) tempQ.poll();
-            if(time) {
+            if(temp != null) {
                 temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
                 for (Floor f : temp.floorList.values()) {
-                    temp.order.add(f);
+                    temp.order.offer(f);
                 }
             }
             else
@@ -106,6 +109,8 @@ public class HighPrioritySplit {
         tempQ = buildingQ;
         time = true;
 
+        //
+        //
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
             tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
@@ -136,4 +141,9 @@ public class HighPrioritySplit {
             }
         }
     }
+
+    /**
+     *
+     */
+    
 }

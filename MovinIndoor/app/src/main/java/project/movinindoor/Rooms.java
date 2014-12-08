@@ -11,7 +11,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import project.movinindoor.Graph.Graph;
 
 
 /**
@@ -57,10 +60,15 @@ public class Rooms {
                     String name = reader.nextName();
                     if (name.equals("features")) {
                         reader.beginArray();
+                        int count = 1;
                         while (reader.hasNext()) {
                             Room r = readRoom(reader);
-                            //System.out.println(r.locationLTLat);
-                            room.put(r.getLocation(), r);
+                            if(room.get(r.getLocation()) == null) {
+                                room.put(r.getLocation(), r);
+                            } else {
+                                room.put(r.getLocation() + "" + String.valueOf(count), r);
+                                count++;
+                            }
                         }
                         reader.endArray();
                     } else {
@@ -164,6 +172,16 @@ public class Rooms {
 
     public Room getRoom(String location) {
         return rooms.get(location);
+    }
+
+    public List<Room> getAllRoomsWithName(String location) {
+        List<Room> roomsWithName = new ArrayList<Room>();
+        for (Room room : rooms.values()) {
+            if(room.getLocation().startsWith(location)) {
+                roomsWithName.add(room);
+            }
+        }
+        return roomsWithName;
     }
 
     public Room nodeInsideRoom(LatLng latLng) {
