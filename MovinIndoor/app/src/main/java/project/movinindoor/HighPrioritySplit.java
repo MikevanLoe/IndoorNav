@@ -1,6 +1,9 @@
 package project.movinindoor;
 
+import android.util.Log;
+
 import java.util.Collections;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -20,7 +23,7 @@ public class HighPrioritySplit {
      *
      * @param input the buildings object you want to split
      */
-    public void highSplit(Buildings input){
+    public static void highSplit(Buildings input){
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
@@ -29,6 +32,8 @@ public class HighPrioritySplit {
         Queue tempQ = buildingQ;
         boolean time = true;
 
+        // Loop through the buildings and add the floors to a PriorityQueue
+        // but only if there are buildings left.
         while(time) {
             Building temp = (Building) tempQ.poll();
             if(time) {
@@ -44,6 +49,8 @@ public class HighPrioritySplit {
         tempQ = buildingQ;
         time = true;
 
+        // Loop through the floors and add the repairs to a PriorityQueue
+        // but only if there are floors left.
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
             tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
@@ -51,6 +58,8 @@ public class HighPrioritySplit {
 
             if(tempF != null) {
                 for (Reparation rep : tempF.repairList.values()) {
+                    // If the priority of the repair is equal or higher than 5
+                    // add it to the high order queue and remove it from the list
                     if(rep.Priority.value >= 5) {
                         tempF.highOrder.add(rep);
                         tempF.repairList.remove(rep);
@@ -59,6 +68,8 @@ public class HighPrioritySplit {
                             tempQ.add(tempF);
                         }
                     }
+                    // If the priority of the floor is equal or lower than 4
+                    // add it to the low order queue and remove it from the list
                     else if (tempF.priority.value <=4 ){
                         tempF.lowOrder.add(rep);
                         tempF.repairList.remove(rep);
@@ -82,8 +93,7 @@ public class HighPrioritySplit {
      *
      * @param input the buildings object you want to split
      */
-    public void lowSplit(Buildings input){
-
+    public static void lowSplit(Buildings input){
         Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
@@ -109,15 +119,18 @@ public class HighPrioritySplit {
         tempQ = buildingQ;
         time = true;
 
-        //
-        //
+        // Loop through the floors and add the repairs to a PriorityQueue
+        // but only if there are floors left.
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
             tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
             tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
 
+            // If there is a building left, loop through the repairlist
             if(tempF != null) {
                 for (Reparation rep : tempF.repairList.values()) {
+                    // If the priority of the repair is equal or higher than 3
+                    // add it to the high order queue and remove it from the list
                     if(rep.Priority.value >= 3) {
                         tempF.highOrder.add(rep);
                         tempF.repairList.remove(rep);
@@ -126,6 +139,8 @@ public class HighPrioritySplit {
                             tempQ.add(tempF);
                         }
                     }
+                    // If the priority of the floor is equal or lower than 2
+                    // add it to the low order queue and remove it from the list
                     else if (tempF.priority.value <=2 ){
                         tempF.lowOrder.add(rep);
                         tempF.repairList.remove(rep);
@@ -145,5 +160,18 @@ public class HighPrioritySplit {
     /**
      *
      */
-    
+    public static void TestMethod (Buildings input){
+        for (Building b: input.buildingList.values()){
+            for(Floor f : b.floorList.values()){
+                for(Object r : f.highOrder) {
+                    Reparation s = (Reparation) r;
+                    Log.i("", s.Description + " " + s.Location);
+                }
+                for(Object r : f.lowOrder){
+                    Reparation s = (Reparation) r;
+                    Log.i("", s.Description + " " + s.Location);
+                }
+            }
+        }
+    }
 }
