@@ -69,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private Room inRoom;
     public static LatLng customStartPos = null;
     public static LatLng customEndPos = null;
-    private JSONArray jitems;
+    public static JSONArray jitems;
 
     public static EditText editStart;
     private EditText editEnd;
@@ -87,10 +87,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         setContentView(R.layout.activity_maps);
         getActionBar().hide();
 
-        setUpMapIfNeeded();
-        context = getApplicationContext();
-        setupGraph = new SetupGraph();
-
         try {
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
         } catch (InterruptedException e) {
@@ -98,6 +94,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        setUpMapIfNeeded();
+        context = getApplicationContext();
+        setupGraph = new SetupGraph();
+
+
 
         fmMarkerDisplay       = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
