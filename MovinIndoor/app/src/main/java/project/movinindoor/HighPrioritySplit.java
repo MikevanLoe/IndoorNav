@@ -160,9 +160,28 @@ public class HighPrioritySplit {
     /**
      *
      */
-    public static void TestMethod (Buildings input){
+    public static void HighTestMethod (Buildings input){
+        highSplit(input);
         for (Building b: input.buildingList.values()){
             for(Floor f : b.floorList.values()){
+
+                for(Object r : f.highOrder) {
+                    Reparation s = (Reparation) r;
+                    Log.i("", s.Description + " " + s.Location);
+                }
+                for(Object r : f.lowOrder){
+                    Reparation s = (Reparation) r;
+                    Log.i("", s.Description + " " + s.Location);
+                }
+            }
+        }
+    }
+
+    public static void LowTestMethod(Buildings input){
+        lowSplit(input);
+        for (Building b: input.buildingList.values()){
+            for(Floor f : b.floorList.values()){
+
                 for(Object r : f.highOrder) {
                     Reparation s = (Reparation) r;
                     Log.i("", s.Description + " " + s.Location);
