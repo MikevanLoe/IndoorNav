@@ -3,6 +3,8 @@ package project.movinindoor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,24 @@ public class Room {
     }
 
     public LatLng getLatLngBoundsCenter() {
-        return new LatLng(latLngBounds.get(1).get(0), latLngBounds.get(0).get(0));
+
+        List<LatLng> points = new ArrayList<LatLng>();
+        for(int i = 0; i < latLngBounds.get(0).size(); i++) {
+            points.add(new LatLng(latLngBounds.get(1).get(i), latLngBounds.get(0).get(i)));
+        }
+
+        double[] centroid = { 0.0, 0.0 };
+
+        for (int i = 0; i < points.size(); i++) {
+            centroid[0] += points.get(i).latitude;
+            centroid[1] += points.get(i).longitude;
+        }
+
+        int totalPoints = points.size();
+        centroid[0] = centroid[0] / totalPoints;
+        centroid[1] = centroid[1] / totalPoints;
+
+        return new LatLng(centroid[0], centroid[1]);
     }
 
 }

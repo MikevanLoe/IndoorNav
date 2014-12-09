@@ -51,11 +51,11 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-           convertView = infalInflater.inflate(R.layout.list_item, null);
+            convertView = infalInflater.inflate(R.layout.list_item, null);
         }
 
         TextView txtListChild = (TextView) convertView
-               .findViewById(R.id.lblListItem);
+                .findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText);
         return convertView;
@@ -102,6 +102,9 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
 
         ImageButton Button2= (ImageButton)  convertView.findViewById(R.id.imageButton2);
         Button2.setTag(groupPosition);
+
+        ImageButton Button3= (ImageButton)  convertView.findViewById(R.id.imageButton3);
+        Button3.setTag(groupPosition);
         /*
         final String startRoom;
 
