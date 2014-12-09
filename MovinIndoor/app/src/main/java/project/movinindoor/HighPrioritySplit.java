@@ -3,7 +3,6 @@ package project.movinindoor;
 import android.util.Log;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -161,6 +160,7 @@ public class HighPrioritySplit {
      *
      */
     public static void HighTestMethod (Buildings input){
+        Log.i("A", "Test number 1");
         highSplit(input);
         for (Building b: input.buildingList.values()){
             for(Floor f : b.floorList.values()){
@@ -178,17 +178,17 @@ public class HighPrioritySplit {
     }
 
     public static void LowTestMethod(Buildings input){
+        Log.i("And", "Test number 2");
         lowSplit(input);
         for (Building b: input.buildingList.values()){
             for(Floor f : b.floorList.values()){
-
                 for(Object r : f.highOrder) {
                     Reparation s = (Reparation) r;
-                    Log.i("", s.Description + " " + s.Location);
+                    Log.i("A", s.Description + " " + s.Location);
                 }
                 for(Object r : f.lowOrder){
                     Reparation s = (Reparation) r;
-                    Log.i("", s.Description + " " + s.Location);
+                    Log.i("A", s.Description + " " + s.Location);
                 }
             }
         }
