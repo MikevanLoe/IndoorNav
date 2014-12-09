@@ -211,7 +211,7 @@ public class Rooms {
         for (Room room : rooms.values()) {
             try {
                 if (!room.getLocation().equals("") || !room.getLocation().equals("toilet")) {
-                    String[] split = room.getLocation().split(".");
+                    String[] split = room.getLocation().split("\\.");
 
                     if (floor == Integer.valueOf(split[0].substring(1))) {
                         if (nodeInsideRoom(room, latLng)) {

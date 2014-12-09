@@ -37,7 +37,8 @@ public class SetupGraph  {
 
     public SetupGraph() {
 
-        repairReader = new RepairReader();
+
+
         new Thread(new Runnable() {
             public void run() {
                 g = new Graph();
@@ -51,6 +52,7 @@ public class SetupGraph  {
             public void run() {
                 rooms = new Rooms();
                 int size = rooms.getRooms().size();
+                repairReader = new RepairReader();
             }
         }).start();
 
@@ -66,28 +68,8 @@ public class SetupGraph  {
     public Rooms getRooms() { return rooms; }
 
     public void createNodes() {
-        double lat1, long1;
-
         for (Node n : r.jsonList.values()) {
             g.addVertex(n.nodeId, n.location.get(0), n.location.get(1));
-            lat1 = n.location.get(0);
-            long1 = n.location.get(1);
-            g.addVertex(n.nodeId, lat1, long1);
-
-            final double t1 = lat1;
-            final double t2 = long1;
-            final String t3 = n.nodeId;
-
-            /*
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    MapDrawer.addMarker(t1, t2, t3);
-                }
-            });
-            */
-            //MapDrawer.addMarker(lat1, long1, n.nodeId);
         }
     }
 

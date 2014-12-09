@@ -69,7 +69,7 @@ public class Buildings {
      */
     public void addRepair(Reparation reparation) {
         Map<Integer, Floor> getBuilding = getRepairsFromBuilding(reparation.Building);
-        Floor floorR = getBuilding.get(Integer.toString(reparation.Floor));
+        Floor floorR = getBuilding.get(Integer.valueOf(reparation.Floor));
         floorR.Add(reparation.Location, reparation);
     }
 
