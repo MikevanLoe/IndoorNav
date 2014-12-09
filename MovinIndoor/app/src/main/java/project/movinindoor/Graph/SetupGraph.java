@@ -254,8 +254,8 @@ public class SetupGraph  {
         if(cost != 0.0) {
             cost += extraCost;
             String walkingSpeed = g.calculateWalkingSpeed(cost);
-            MapsActivity.textSpeed.setText("Estimate duration: " + walkingSpeed);
-            MapsActivity.textSpeedCost.setText(String.valueOf(Math.round(cost)) + "m");
+            MapsActivity.textSpeed.setText("ETA: " + walkingSpeed);
+            MapsActivity.textSpeedCost.setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
             MapsActivity.textFrom.setText(startPosition);
             MapsActivity.textTo.setText(endPosition);
