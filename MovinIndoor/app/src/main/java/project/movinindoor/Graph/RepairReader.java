@@ -17,6 +17,7 @@ import java.util.Map;
 import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Animator;
 import project.movinindoor.ExpandableListAdapterNew;
+import project.movinindoor.HighPrioritySplit;
 import project.movinindoor.HttpJson;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
@@ -94,7 +95,8 @@ public class RepairReader {
             }
 
             Algorithm algo = new Algorithm(buildings);
-
+            HighPrioritySplit.HighTestMethod(buildings);
+            HighPrioritySplit.LowTestMethod(buildings);
 
         }
         catch(Exception e)
