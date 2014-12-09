@@ -392,6 +392,38 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         navigate(startRoom, EndRoom);
     }
 
+
+    public void showLocation(View view) {
+        MapDrawer.removePolylines();
+        MapDrawer.removeMarkers();
+        String room;
+
+        int pos = Integer.valueOf(view.getTag().toString());
+        room = listAdapter.getChild(pos, 0).toString().substring(16);
+        LatLng getRoom = setupGraph.getRooms().getRoom(room).getLatLngBoundsCenter();
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getRoom, 20));
+
+        MapDrawer.addMarker(getRoom.latitude, getRoom.longitude, "Location");
+
+        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
+        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
+        Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
+        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
+
+        oOverlay.startAnimation(showBottom);
+        oOverlay.setVisibility(View.VISIBLE);
+
+        fragment.getView().startAnimation(hideTop);
+        fragment.getView().setVisibility(View.INVISIBLE);
+
+        linearLayout2.startAnimation(showTop);
+        linearLayout2.setVisibility(View.VISIBLE);
+
+        fFloorNavigator2.getView().startAnimation(showRight);
+        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+    }
+
+
     public void navigate(String start, String end) {
         //Removes From -> To Fragement;
         oOverlay.setVisibility(View.INVISIBLE);
@@ -532,14 +564,14 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
 
                     List<String> subList = new ArrayList<String>();
-                    listDataHeader.add(j +"-" + i + ": " + title);
+                    listDataHeader.add(j +"" + i + " " + title);
                     if(room != null) subList.add("Location:       " + room);
                     else subList.add("Location:       " + building + "" + floor + "." + "16");
                     subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     subList.add("Comment:  " + comments);
-                    listDataChild.put(j +"-" + i + ": " + title, subList);
+                    listDataChild.put(j +"" + i + " " + title, subList);
 
 
                 }
