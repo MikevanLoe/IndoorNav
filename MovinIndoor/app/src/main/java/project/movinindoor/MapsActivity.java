@@ -29,11 +29,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -54,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public static Context getContext() { return context; }
     public static GoogleMap getMap() { return mMap; }
+    public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     public static SetupGraph setupGraph;
 
     //ExpandableListView
@@ -219,8 +222,20 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                float minZoom = 15.0f;
+                float minZoom = 16.0f;
                 LatLng position = cameraPosition.target;
+
+                if(cameraPosition.zoom < minZoom)
+                {
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, minZoom);
+                    mMap.moveCamera(cameraUpdate);
+                }
+                if(position.latitude < BOUNDS.southwest.latitude || position.longitude < BOUNDS.southwest.longitude || position.latitude > BOUNDS.northeast.latitude || position.longitude > BOUNDS.northeast.longitude)
+                {
+                    LatLng correctedPosition = getLatLngCorrection(position);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(correctedPosition, cameraPosition.zoom);
+                    mMap.moveCamera(cameraUpdate);
+                }
             }
         });
 
@@ -606,6 +621,25 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                 .build();
 
         notificationManager.notify(0, notification);
+    }
+
+    private LatLng getLatLngCorrection(LatLng cameraPosition) {
+        double latitude = cameraPosition.latitude;
+        double longitude = cameraPosition.longitude;
+
+        if(cameraPosition.latitude < BOUNDS.southwest.latitude) {
+            latitude = BOUNDS.southwest.latitude;
+        }
+        if(cameraPosition.longitude < BOUNDS.southwest.longitude) {
+            longitude = BOUNDS.southwest.longitude;
+        }
+        if(cameraPosition.latitude > BOUNDS.northeast.latitude) {
+            latitude = BOUNDS.northeast.latitude;
+        }
+        if(cameraPosition.longitude > BOUNDS.northeast.longitude) {
+            longitude = BOUNDS.northeast.longitude;
+        }
+        return new LatLng(latitude, longitude);
     }
 }
 
