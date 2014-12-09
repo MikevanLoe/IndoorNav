@@ -44,7 +44,6 @@ public class RepairReader {
             JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
 
             //Loop though my JSONArray
-            for (int  j=0; j< 10; j++) {
                 for (Integer i = 0; i < jitems.length(); i++) {
                     String title = jitems.getJSONObject(i).getString("shortdescription");
                     String floor = jitems.getJSONObject(i).getString("floor");
@@ -63,7 +62,7 @@ public class RepairReader {
                     String room = nodeRoom.getLocation();
                     String building = room.substring(0, 1);
 
-                    String[] splitFloor = room.split(".");
+                    String[] splitFloor = room.split("\\.");
 
                     int nodeId = Integer.valueOf(node);
                     Reparation.BuildingEnum buildingEnum;
@@ -92,7 +91,6 @@ public class RepairReader {
 
 
                 }
-            }
 
             Algorithm algo = new Algorithm(buildings);
             HighPrioritySplit.HighTestMethod(buildings);
@@ -101,7 +99,7 @@ public class RepairReader {
         }
         catch(Exception e)
         {
-            Log.e("items_error: ", e.toString());
+            e.printStackTrace();
         }
     }
 
