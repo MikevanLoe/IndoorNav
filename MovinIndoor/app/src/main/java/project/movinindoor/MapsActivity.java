@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.internal.view.menu.ExpandedMenuView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -18,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -455,6 +458,49 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         // Navigation drawer items
         listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
+
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                // TODO Auto-generated method stub
+                if (childPosition == 4) {
+                    TextView editText2 = (TextView) v.findViewById(R.id.lblListItem);
+                    editText2.setText("Comment:");
+
+
+                    ImageButton btn = (ImageButton) v.findViewById(R.id.btnListItem);
+                    btn.setVisibility(View.VISIBLE);
+
+                    final EditText editText = (EditText) v.findViewById(R.id.lblListItemEdit);
+                    editText.setVisibility(View.VISIBLE);
+                    parent.requestFocus();
+                    parent.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+                    editText.requestFocusFromTouch();
+                    final View view = v;
+
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EditText editText = (EditText) view.findViewById(R.id.lblListItemEdit);
+                            editText.setVisibility(View.GONE);
+
+                            TextView editText2 = (TextView) view.findViewById(R.id.lblListItem);
+                            editText2.setText("Comment:  " + editText.getText());
+
+                            ImageButton btn = (ImageButton) view.findViewById(R.id.btnListItem);
+                            btn.setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+                return false;
+            }
+        });
+
+
     }
 
     public void sendPushNotification(String title, String text) {

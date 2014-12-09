@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,24 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText);
+        ImageButton btn = (ImageButton) convertView.findViewById(R.id.btnListItem);
+        EditText editText = (EditText) convertView.findViewById(R.id.lblListItemEdit);
+        String txt = txtListChild.getText().toString().substring(10);
+        editText.setText(txt);
+
+        txtListChild.setTag(groupPosition+"-"+childPosition);
+        btn.setTag(groupPosition+"-"+childPosition);
+        editText.setTag(groupPosition+"-"+childPosition);
+        convertView.setTag(groupPosition+"-"+childPosition);
+
+        if(childPosition == 4) {
+            btn.setVisibility(View.GONE);
+            editText.setVisibility(View.GONE);
+        } else {
+            btn.setVisibility(View.GONE);
+            editText.setVisibility(View.GONE);
+        }
+
         return convertView;
     }
 
