@@ -4,22 +4,20 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -46,7 +44,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Graph.Graph;
-import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.SetupGraph;
 import project.movinindoor.Reparation.Reparation;
 
@@ -74,20 +71,21 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     public static EditText editStart;
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
-    private GridLayout oOverlay;
+    public static GridLayout fNavigationInfoBottom;
     private Button btnCurrentFloor;
-    private LinearLayout linearLayout2;
-    private FragmentManager fm, fm2, fmFloorNavigator, fmMarkerDisplay;
-    private android.support.v4.app.Fragment fragment, fragment2, fFloorNavigator2, fMarkerDisplay;
+    public static LinearLayout fNavigationMenu;
+    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
+    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
+    private ImageView infoWalkingBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getActionBar().hide();
 
         setUpMapIfNeeded();
         context = getApplicationContext();
-
         setupGraph = new SetupGraph();
 
         try {
@@ -98,52 +96,20 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             e.printStackTrace();
         }
 
-        // id: fMarkerDisplay
         fmMarkerDisplay       = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
 
-        if (fMarkerDisplay == null) {
-            FragmentTransaction ft2 = fmMarkerDisplay.beginTransaction();
-            ft2.add(R.id.fMarkerDisplay, new NavigationBar());
-            ft2.commit();
-        }
-        //end id: fMarkerDisplay
-
-        // id: fFloorNavigator
         fmFloorNavigator       = getSupportFragmentManager();
         fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
 
-        if (fFloorNavigator2 == null) {
-            FragmentTransaction ft2 = fmFloorNavigator.beginTransaction();
-            ft2.add(R.id.fFloorNavigator, new NavigationBar());
-            ft2.commit();
-        }
-        //end id: fFloorNavigator
+        fmRepairList = getSupportFragmentManager();
+        fRepairList = fmRepairList.findFragmentById(R.id.fragment2);
 
-        // id: fragement2
-        fm       = getSupportFragmentManager();
-        fragment = fm.findFragmentById(R.id.fragment2);
+        fmNavigationInfoTop = getSupportFragmentManager();
+        fNavigationInfoTop = fmNavigationInfoTop.findFragmentById(R.id.fragment3);
 
-        if (fragment == null) {
-            FragmentTransaction ft2 = fm.beginTransaction();
-            ft2.add(R.id.fragment2, new NavigationBar());
-            ft2.commit();
-        }
-        //end id: fragement2
-
-        //id: fragement3
-        fm2       = getSupportFragmentManager();
-        fragment2 = fm2.findFragmentById(R.id.fragment3);
-
-        if (fragment2 == null) {
-            FragmentTransaction ft2 = fm2.beginTransaction();
-            ft2.add(R.id.fragment2, new Fragment_FromToDisplay());
-            ft2.commit();
-        }
-        //end id: fragement3
-
-        fragment.getView().setVisibility(View.INVISIBLE);
-        fragment2.getView().setVisibility(View.INVISIBLE);
+        fRepairList.getView().setVisibility(View.INVISIBLE);
+        fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
         fFloorNavigator2.getView().setVisibility(View.VISIBLE);
         fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
 
@@ -157,69 +123,26 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         btnCurrentFloor = (Button) findViewById(R.id.currentFloor);
 
-        oOverlay = (GridLayout) findViewById(R.id.Ooverlay);
-        linearLayout2 = (LinearLayout) findViewById(R.id.linearLayout2);
-        oOverlay.setVisibility(View.INVISIBLE);
+        fNavigationInfoBottom = (GridLayout) findViewById(R.id.Ooverlay);
+        fNavigationMenu = (LinearLayout) findViewById(R.id.linearLayout2);
+        fNavigationInfoBottom.setVisibility(View.INVISIBLE);
 
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
 
-        getActionBar().hide();
-
-
-
-//        this.getApplicationContext().getAssets().open("WTCNavMesh.json");
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setIndoorEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
-
         //Set a marker on long click
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
-                textView.setText("");
-
-                inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
-                if (inRoom != null) textView.setText(inRoom.getLocation());
-                else textView.setText("Custom Position");
-
-                if (longClickMarker != null) longClickMarker.remove();
-                TextView txtCord = (TextView) findViewById(R.id.txtCord);
-                longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
-                if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
-                    Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
-                    fMarkerDisplay.getView().startAnimation(showBottom);
-                    fMarkerDisplay.getView().setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
+        mMap.setOnMapLongClickListener(onMapLongClick);
+        //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
-        final ImageView infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
-        radioGroupMovingBy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.radioCart:
-                        Graph.movingByWalk=false;
-                        infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
-                        Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        Graph.movingByWalk=true;
-                        infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
-                        Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
+        infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
+        radioGroupMovingBy.setOnCheckedChangeListener(onCheckedChangeListener);
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 float minZoom = 16.0f;
@@ -248,6 +171,48 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         super.onConfigurationChanged(newConfig);
     }
 
+    public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.radioCart:
+                    Graph.movingByWalk=false;
+                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
+                    Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Graph.movingByWalk=true;
+                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
+                    Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
+            textView.setText("");
+
+            inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
+            if (inRoom != null) textView.setText(inRoom.getLocation());
+            else textView.setText("Custom Position");
+
+            if (longClickMarker != null) longClickMarker.remove();
+            TextView txtCord = (TextView) findViewById(R.id.txtCord);
+            longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+            txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+            if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
+                Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
+                fMarkerDisplay.getView().startAnimation(showBottom);
+                fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+            }
+
+        }
+    };
+
+    //OnClick FloorNavigator Button Up
     public void btnFloorUp(View view) {
        int currentFloor = MapDrawer.getFloor();
         if(currentFloor < 10) {
@@ -258,15 +223,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         }
     }
 
+
+    //OnClick Close Button From Custom Marker
     public void btnMarkerClose(View view) {
         longClickMarker.remove();
         MapDrawer.removeMarkers();
         MapDrawer.removePolylines();
-        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
-        fMarkerDisplay.getView().startAnimation(hideBottom);
-        fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+        Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
     }
 
+
+    //OnClick Select Custom Location
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
 
@@ -300,13 +267,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             return;
         }
 
-        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
-        fMarkerDisplay.getView().startAnimation(hideBottom);
-        fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+        Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
     }
 
 
+    //OnClick FloorNavigator Button Down
     public void btnFloorDown(View view) {
         int currentFloor = MapDrawer.getFloor();
         if(currentFloor > 0) {
@@ -317,53 +283,35 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         }
     }
 
+
+    //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
-
-
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
-        linearLayout2.setVisibility(View.VISIBLE);
-        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-        Animation hideBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom);
-        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
-        oOverlay.startAnimation(hideBottom);
-        oOverlay.setVisibility(View.INVISIBLE);
-
-        fragment2.getView().startAnimation(hideTop);
-        fragment2.getView().setVisibility(View.INVISIBLE);
-
-        fFloorNavigator2.getView().startAnimation(showRight);
-        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+        //animate
+        Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
+        Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
+        Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+        Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
     }
 
     public void btnCloseNavBar(View view) {
-        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
-        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
-        linearLayout2.startAnimation(showTop);
-        linearLayout2.setVisibility(View.VISIBLE);
-        fragment.getView().startAnimation(hideTop);
-        fragment.getView().setVisibility(View.INVISIBLE);
-
-        fFloorNavigator2.getView().startAnimation(showRight);
-        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+        //animate
+        Animator.visibilityRepairList(Animator.Visibility.HIDE);
+        Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+        Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
     }
 
+    //Onclick NavagationMenu
     public void btnNavBar(View view) {
         prepareListData();
-
-        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
-        Animation hideRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_out);
-        linearLayout2.startAnimation(hideTop);
-        linearLayout2.setVisibility(View.INVISIBLE);
-        fragment.getView().startAnimation(showTop);
-        fragment.getView().setVisibility(View.VISIBLE);
-
-        fFloorNavigator2.getView().startAnimation(hideRight);
-        fFloorNavigator2.getView().setVisibility(View.INVISIBLE);
+        //animate
+        Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
+        Animator.visibilityRepairList(Animator.Visibility.SHOW);
+        Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
     }
 
+    //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -376,57 +324,37 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         navigate(startPosition, endPosition);
     }
 
-
+    //OnClick Navigate to Reparation
     public void btnNavigateRepair(View view) {
-        final String startRoom;
-
         int pos = Integer.valueOf(view.getTag().toString());
-        if(pos > 0) {
-            startRoom = listAdapter.getChild(pos - 1, 0).toString().substring(16);
-        } else {
-            startRoom = MapsActivity.editStart.getText().toString();
-        }
-
-        final String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
+        String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
+        String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
         navigate(startRoom, EndRoom);
     }
 
 
+    //OnClick Location From Reparation
     public void showLocation(View view) {
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
-        String room;
 
         int pos = Integer.valueOf(view.getTag().toString());
-        room = listAdapter.getChild(pos, 0).toString().substring(16);
+        String room = listAdapter.getChild(pos, 0).toString().substring(16);
         LatLng getRoom = setupGraph.getRooms().getRoom(room).getLatLngBoundsCenter();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getRoom, 20));
 
         MapDrawer.addMarker(getRoom.latitude, getRoom.longitude, "Location");
-
-        Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-        Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
-        Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
-        Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
-
-        oOverlay.startAnimation(showBottom);
-        oOverlay.setVisibility(View.VISIBLE);
-
-        fragment.getView().startAnimation(hideTop);
-        fragment.getView().setVisibility(View.INVISIBLE);
-
-        linearLayout2.startAnimation(showTop);
-        linearLayout2.setVisibility(View.VISIBLE);
-
-        fFloorNavigator2.getView().startAnimation(showRight);
-        fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+        //animate
+        Animator.visibilityRepairList(Animator.Visibility.HIDE);
+        Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
+        Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
 
-
+    //Called by methods
     public void navigate(String start, String end) {
         //Removes From -> To Fragement;
-        oOverlay.setVisibility(View.INVISIBLE);
+        fNavigationInfoBottom.setVisibility(View.INVISIBLE);
         //Removes existing Polylines
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
@@ -435,22 +363,11 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         if(sucess) {
             Toast.makeText(getApplicationContext(), "Navigation started", Toast.LENGTH_SHORT).show();
-            Animation hideTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_top);
-            Animation showTop = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_top);
-            Animation showBottom = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom);
-            Animation showRight = AnimationUtils.loadAnimation(this, R.anim.abc_fade_in);
-
-            oOverlay.startAnimation(showBottom);
-            oOverlay.setVisibility(View.VISIBLE);
-
-            fragment.getView().startAnimation(hideTop);
-            fragment.getView().setVisibility(View.INVISIBLE);
-
-            fragment2.getView().startAnimation(showTop);
-            fragment2.getView().setVisibility(View.VISIBLE);
-
-            fFloorNavigator2.getView().startAnimation(showRight);
-            fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+            //animate
+            Animator.visibilityRepairList(Animator.Visibility.HIDE);
+            Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
+            Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
+            Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         }
     }
 
@@ -531,115 +448,13 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         MapDrawer mapDrawer = new MapDrawer();
     }
 
-
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        setupGraph.getRepairReader().prepareListData(jitems);
+        listDataHeader = setupGraph.getRepairReader().listDataHeader;
+        listDataChild = setupGraph.getRepairReader().listDataChild;
         // Navigation drawer items
-
-        try
-        {
-
-
-            //Loop though my JSONArray
-            for (int  j=0; j< 10; j++) {
-                for (Integer i = 0; i < jitems.length(); i++) {
-                    //Get My JSONObject and grab the String Value that I want.
-                    String title = jitems.getJSONObject(i).getString("shortdescription");
-                    String building = jitems.getJSONObject(i).getString("building");
-                    String floor = jitems.getJSONObject(i).getString("floor");
-                    String priority = jitems.getJSONObject(i).getString("priority");
-                    String description = jitems.getJSONObject(i).getString("description");
-                    String clong = jitems.getJSONObject(i).getString("clong");
-                    String clat = jitems.getJSONObject(i).getString("clat");
-                    String comments = jitems.getJSONObject(i).getString("comments");
-                    String status = jitems.getJSONObject(i).getString("status");
-                    String node = jitems.getJSONObject(i).getString("defectid");
-
-                    LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                    Rooms nodeRooms = setupGraph.getRooms();
-                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng);
-
-                    String room = nodeRoom.getLocation();
-
-
-                    List<String> subList = new ArrayList<String>();
-                    listDataHeader.add(j +"" + i + " " + title);
-                    if(room != null) subList.add("Location:       " + room);
-                    else subList.add("Location:       " + building + "" + floor + "." + "16");
-                    subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
-                    subList.add("Status:           " + status);
-                    subList.add("Description:  " + description);
-                    subList.add("Comment:  " + comments);
-                    listDataChild.put(j +"" + i + " " + title, subList);
-
-
-                }
-            }
-            listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
-            expListView.setAdapter(listAdapter);
-
-            // Listview Group click listener
-            expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v,
-                                            int groupPosition, long id) {
-                    // Toast.makeText(getApplicationContext(),
-                    // "Group Clicked " + listDataHeader.get(groupPosition),
-                    // Toast.LENGTH_SHORT).show();
-
-                    return false;
-                }
-            });
-
-            // Listview Group expanded listener
-            expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-
-                @Override
-                public void onGroupExpand(int groupPosition) {
-                    /*Toast.makeText(getApplicationContext(),
-                            listDataHeader.get(groupPosition) + " Expanded",
-                            Toast.LENGTH_SHORT).show();*/
-                }
-            });
-
-            // Listview Group collasped listener
-            expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-                @Override
-                public void onGroupCollapse(int groupPosition) {
-                     /*Toast.makeText(getApplicationContext(),
-                            listDataHeader.get(groupPosition) + " Collapsed",
-                            Toast.LENGTH_SHORT).show();*/
-
-                }
-            });
-
-            // Listview on child click listener
-            expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-                @Override
-                public boolean onChildClick(ExpandableListView parent, View v,
-                                            int groupPosition, int childPosition, long id) {
-                    // TODO Auto-generated method stub
-                    /* Toast.makeText(
-                            getApplicationContext(),
-                            listDataHeader.get(groupPosition)
-                                    + " : "
-                                    + listDataChild.get(
-                                    listDataHeader.get(groupPosition)).get(
-                                    childPosition), Toast.LENGTH_SHORT)
-                            .show();*/
-                    return false;
-                }
-            });
-
-        }
-        catch(Exception e)
-        {
-            Log.e("items_error: ", e.toString());
-        }
+        listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
+        expListView.setAdapter(listAdapter);
     }
 
     public void sendPushNotification(String title, String text) {
