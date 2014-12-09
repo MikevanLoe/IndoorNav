@@ -15,7 +15,7 @@ import project.movinindoor.Reparation.Reparation;
  * Created by 5736z454 on 24-11-2014.
  */
 public class HighPrioritySplit {
-    private static final String LOG_TAG = "Tag" ;
+    private static final String LOG_TAG = "System.out" ;
 
     /**
      * Splits the input based on the priority of repairs.
@@ -37,7 +37,7 @@ public class HighPrioritySplit {
         // but only if there are buildings left.
         while(time) {
             Building temp = (Building) tempQ.poll();
-            if(time) {
+            if(temp != null) {
                 temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
                 for (Floor f : temp.floorList.values()) {
                     temp.order.add(f);
@@ -54,10 +54,11 @@ public class HighPrioritySplit {
         // but only if there are floors left.
         while (time) {
             Floor tempF = (Floor) tempQ.poll();
-            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
-            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
-
             if(tempF != null) {
+                tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+                tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
+
+
                 for (Reparation rep : tempF.repairList.values()) {
                     // If the priority of the repair is equal or higher than 5
                     // add it to the high order queue and remove it from the list
@@ -167,14 +168,13 @@ public class HighPrioritySplit {
         highSplit(input);
         for (Building b: input.buildingList.values()){
             for(Floor f : b.floorList.values()){
-
                 for(Object r : f.highOrder) {
                     Reparation s = (Reparation) r;
-                    Log.i("", s.Description + " " + s.Location);
+                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
                 }
                 for(Object r : f.lowOrder){
                     Reparation s = (Reparation) r;
-                    Log.i("", s.Description + " " + s.Location);
+                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
                 }
             }
         }
