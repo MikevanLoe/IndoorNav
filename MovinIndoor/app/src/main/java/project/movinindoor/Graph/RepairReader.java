@@ -31,6 +31,7 @@ import project.movinindoor.Rooms;
  */
 public class RepairReader {
 
+    private  Buildings buildings;
     public RepairReader(){
         try
         {
@@ -39,9 +40,15 @@ public class RepairReader {
                 buildingsArray.add(dir);
             }
 
+            JSONArray jitems;
+
             //Create buildings
-            Buildings buildings = new Buildings(buildingsArray);
-            JSONArray jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            buildings = new Buildings(buildingsArray);
+            try {
+                jitems = MapsActivity.jitems;
+            } catch (Exception e) {
+                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            }
 
             //Loop though my JSONArray
                 for (Integer i = 0; i < jitems.length(); i++) {
@@ -147,7 +154,7 @@ public class RepairReader {
                 for (Integer i = 0; i < jitems.length(); i++) {
                     //Get My JSONObject and grab the String Value that I want.
                     String title = jitems.getJSONObject(i).getString("shortdescription");
-                    String building = jitems.getJSONObject(i).getString("building");
+                   // String building = jitems.getJSONObject(i).getString("building");
                     String floor = jitems.getJSONObject(i).getString("floor");
                     String priority = jitems.getJSONObject(i).getString("priority");
                     String description = jitems.getJSONObject(i).getString("description");
@@ -159,7 +166,7 @@ public class RepairReader {
 
                     LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
                     Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
-                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng);
+                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
                     String room = nodeRoom.getLocation();
 
@@ -167,7 +174,7 @@ public class RepairReader {
                     List<String> subList = new ArrayList<String>();
                     listDataHeader.add(j +"" + i + " " + title);
                     if(room != null) subList.add("Location:       " + room);
-                    else subList.add("Location:       " + building + "" + floor + "." + "16");
+                    else subList.add("Location:       " + "C" + floor + "." + "16");
                     subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
