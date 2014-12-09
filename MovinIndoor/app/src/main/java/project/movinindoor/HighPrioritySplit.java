@@ -15,6 +15,8 @@ import project.movinindoor.Reparation.Reparation;
  * Created by 5736z454 on 24-11-2014.
  */
 public class HighPrioritySplit {
+    private static final String LOG_TAG = "Tag" ;
+
     /**
      * Splits the input based on the priority of repairs.
      * Takes the high repairs, and follows with the medium and low priority
@@ -160,7 +162,7 @@ public class HighPrioritySplit {
      *
      */
     public static void HighTestMethod (Buildings input){
-        Log.i("A", "Test number 1");
+        Log.i(HighPrioritySplit.LOG_TAG, "Test number 1");
         System.out.println("systeem test");
         highSplit(input);
         for (Building b: input.buildingList.values()){
@@ -179,7 +181,7 @@ public class HighPrioritySplit {
     }
 
     public static void LowTestMethod(Buildings input){
-        Log.i("And", "Test number 2");
+        Log.i(HighPrioritySplit.LOG_TAG, "Test number 2");
         System.out.println("test");
         lowSplit(input);
         for (Building b: input.buildingList.values()){
