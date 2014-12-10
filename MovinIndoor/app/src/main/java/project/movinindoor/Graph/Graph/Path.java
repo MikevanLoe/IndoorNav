@@ -1,4 +1,4 @@
-package project.movinindoor.Graph;
+package project.movinindoor.Graph.Graph;
 
 /**
  * Created by Wietse on 24-11-2014.

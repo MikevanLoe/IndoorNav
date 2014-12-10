@@ -6,15 +6,11 @@
 
 package project.movinindoor.Algorithm;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import project.movinindoor.Graph.Node;
-import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 import project.movinindoor.Reparation.Buildings;
-import project.movinindoor.Room;
+import project.movinindoor.Rooms.Room;
 
 /**
  *

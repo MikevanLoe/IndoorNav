@@ -1,10 +1,7 @@
-package project.movinindoor.Graph;
+package project.movinindoor.Readers;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.ExpandableListView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -12,19 +9,14 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import project.movinindoor.Algorithm.Algorithm;
-import project.movinindoor.Animator;
-import project.movinindoor.ExpandableListAdapterNew;
+import project.movinindoor.Rooms.Room;
+import project.movinindoor.Rooms.Rooms;
 import project.movinindoor.HighPrioritySplit;
-import project.movinindoor.HttpJson;
-import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Reparation;
-import project.movinindoor.Room;
-import project.movinindoor.Rooms;
 
 /**
  * Created by Davey on 8-12-2014.

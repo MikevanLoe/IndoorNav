@@ -1,9 +1,8 @@
-package project.movinindoor;
+package project.movinindoor.Rooms;
 
 import android.util.JsonReader;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import project.movinindoor.Graph.Graph;
+import project.movinindoor.MapDrawer;
+import project.movinindoor.MapsActivity;
 
 
 /**

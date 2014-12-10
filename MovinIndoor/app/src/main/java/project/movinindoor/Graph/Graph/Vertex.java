@@ -1,9 +1,7 @@
-package project.movinindoor.Graph;
+package project.movinindoor.Graph.Graph;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import project.movinindoor.Reparation.Reparation;
 
 /**
  * Created by Wietse on 24-11-2014.
