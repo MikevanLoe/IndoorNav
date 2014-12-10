@@ -6,10 +6,8 @@
 
 package project.movinindoor.Reparation;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -21,11 +19,11 @@ public class Building implements Comparable<Building>{
     public Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
     public Queue order;
+    public int totalFloors;
 
     public Building() {
-        int totalFloors = 10;
+        totalFloors = 10;
         floorList = new HashMap<Integer, Floor>();
-        order = new PriorityQueue(10, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();
@@ -34,8 +32,8 @@ public class Building implements Comparable<Building>{
     }
 
     public Building(int totalFloors) {
+        this.totalFloors = totalFloors;
         floorList = new HashMap<Integer, Floor>();
-        order = new PriorityQueue(totalFloors, Collections.reverseOrder());
 
         for (int i = 0; i <= totalFloors; i++) {
             Floor floor = new Floor();
@@ -44,14 +42,31 @@ public class Building implements Comparable<Building>{
 
     }
 
+    /**
+     * Adds a floor to the building.
+     *
+     * @param name the name of the floor being added.
+     * @param obj the floor being added.
+     */
     public void Add(int name, Floor obj) {
         floorList.put(name, obj);
     }
-    
+
+    /**
+     * Removes a floor from the building.
+     *
+     * @param obj the object to remove.
+     */
     public void Remove(Floor obj) {
         floorList.remove(obj);
     }
 
+    /**
+     * Compare two buildings with eachother.
+     *
+     * @param b the building you compare to.
+     * @return an int to define the largest or smallest.
+     */
     @Override
     public int compareTo(Building b) {
 

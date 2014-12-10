@@ -6,6 +6,8 @@
 
 package project.movinindoor.Reparation;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  *
  * @author Davey
@@ -30,27 +32,50 @@ public class  Reparation implements Comparable<Reparation>{
     A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
     }
 
-    private static int CountID = 1;
+    public enum StatusEnum {
+        NEW, ASSIGNED, ACCEPTED, REPAIRED, DONE
+    }
+
+    //private static int CountID = 1;
     public int Id;
+    public String ShortDescription;
     public BuildingEnum Building;
+    public LatLng LatLng;
     public int Floor;
-    public int Location;
+    public String Location;
+    public StatusEnum Status;
     public PriorityType Priority;
     public String Description;
+    public String Comment;
 
-    public Reparation(BuildingEnum building, int floor, int location, PriorityType priority, String desc) {
-        this.Id = CountID++;
-        this.Building = building;
-        this.Floor = floor;
-        this.Location = location;
-        this.Priority = priority;
-        this.Description = desc;
+    public Reparation(int id, BuildingEnum building, int floor, String location, LatLng latLng, StatusEnum status, PriorityType priority, String shortDescription, String description, String comment) {
+        Id = id;
+        ShortDescription = shortDescription;
+        Building = building;
+        LatLng = latLng;
+        Floor = floor;
+        Location = location;
+        Status = status;
+        Priority = priority;
+        Description = description;
+        Comment = comment;
     }
-    
+
+    /**
+     * Gets the floor the reparation is on.
+     *
+     * @return the floor the reparation is on.
+     */
     public int getFloor() {
         return this.Floor;
     }
 
+    /**
+     * Compare two reparations with eachother.
+     *
+     * @param b the reparations you compare to.
+     * @return an int to define the largest or smallest.
+     */
     @Override
     public int compareTo(Reparation b) {
 

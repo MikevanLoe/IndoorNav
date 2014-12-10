@@ -18,23 +18,40 @@ import java.util.Queue;
  */
 public class Floor implements Comparable<Floor>{
     
-    public Map<Integer, Reparation> repairList;
+    public Map<String, Reparation> repairList;
     public Reparation.PriorityType priority;
-    public Queue order;
+    public Queue highOrder;
+    public Queue lowOrder;
     
     public Floor() {
-        repairList = new HashMap<Integer, Reparation>();
-        order = new PriorityQueue(200, Collections.reverseOrder());
+        repairList = new HashMap<String, Reparation>();
     }
-    
-    public void Add(int name, Reparation obj) {
+
+    /**
+     * Adds a floor to the building.
+     *
+     * @param name the name of the floor being added.
+     * @param obj the floor being added.
+     */
+    public void Add(String name, Reparation obj) {
         repairList.put(name, obj);
     }
-    
+
+    /**
+     * Removes a reparation from the floor.
+     *
+     * @param obj the object to remove.
+     */
     public void Remove(Reparation obj) {
         repairList.remove(obj);
     }
 
+    /**
+     * Compare two floors with eachother.
+     *
+     * @param b the floor you compare to.
+     * @return an int to define the largest or smallest.
+     */
     @Override
     public int compareTo(Floor b) {
 

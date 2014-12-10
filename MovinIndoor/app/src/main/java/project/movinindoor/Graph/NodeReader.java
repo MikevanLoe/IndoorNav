@@ -2,10 +2,7 @@ package project.movinindoor.Graph;
 
 
 import android.util.JsonReader;
-import android.util.Log;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,13 +22,12 @@ public class NodeReader {
     public NodeReader() {
         InputStream inputStream = null;
         try {
-            inputStream = MapsActivity.getContext().getAssets().open("WTCNavMesh.json");
+            inputStream = MapsActivity.getContext().getAssets().open("WindesheimNavMesh.json");
 
 
             HashMap<String, Node> read = readJsonStream(inputStream);
 
             jsonList = calculate(read);
-
 
 
         } catch (Exception e) {
@@ -76,7 +72,9 @@ public class NodeReader {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
         //try {
-            return readMessagesArray(reader);
+
+
+        return readMessagesArray(reader);
 
 
         //} finally {

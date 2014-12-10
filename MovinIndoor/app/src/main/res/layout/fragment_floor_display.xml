@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="project.movinindoor.FloorDisplayFragment" >
+
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentFloor"
+        android:background="#90F08714"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:text="0"
+        android:layout_marginRight="10dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floorUp"
+        android:src="@drawable/ic_arrow_drop_up_black_36dp"
+        android:layout_alignEnd="@+id/currentFloor"
+        android:layout_above="@+id/currentFloor"
+        android:nestedScrollingEnabled="false"
+        android:onClick="btnFloorUp"
+        android:background="#90F08714"
+        android:padding="6dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/floorDown"
+        android:src="@drawable/ic_arrow_drop_down_black_36dp"
+        android:layout_below="@+id/currentFloor"
+        android:layout_alignEnd="@+id/currentFloor"
+        android:onClick="btnFloorDown"
+        android:background="#90F08714"
+        android:padding="6dp" />
+
+
+</RelativeLayout>
