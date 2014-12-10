@@ -8,15 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.internal.view.menu.ExpandedMenuView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridLayout;
@@ -41,14 +38,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import project.movinindoor.Graph.Graph;
-import project.movinindoor.Graph.SetupGraph;
-import project.movinindoor.Reparation.Reparation;
+import project.movinindoor.Fragment.FloorDisplayFragment;
+import project.movinindoor.Fragment.Fragment_FromToDisplay;
+import project.movinindoor.Fragment.MarkerInfoFragment;
+import project.movinindoor.Fragment.NavigationBar;
+import project.movinindoor.Graph.Graph.Graph;
+import project.movinindoor.Graph.GraphHandler;
+import project.movinindoor.Readers.HttpJson;
+import project.movinindoor.Rooms.Room;
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
@@ -57,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     public static Context getContext() { return context; }
     public static GoogleMap getMap() { return mMap; }
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
-    public static SetupGraph setupGraph;
+    public static GraphHandler setupGraph;
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -97,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         setUpMapIfNeeded();
         context = getApplicationContext();
-        setupGraph = new SetupGraph();
+        setupGraph = new GraphHandler();
 
 
 
@@ -404,7 +406,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     private void setUpGraphIfNeeded() {
         if (setupGraph == null) {
-            setupGraph = new SetupGraph();
+            setupGraph = new GraphHandler();
         }
     }
 

@@ -107,7 +107,7 @@
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:name="project.movinindoor.NavigationBar"
+            android:name="project.movinindoor.Fragment.NavigationBar"
             android:id="@+id/fragment2"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true" />
@@ -115,7 +115,7 @@
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="project.movinindoor.Fragment_FromToDisplay"
+            android:name="project.movinindoor.Fragment.Fragment_FromToDisplay"
             android:id="@+id/fragment3"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/fragment2"
@@ -125,7 +125,7 @@
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="project.movinindoor.FloorDisplayFragment"
+            android:name="project.movinindoor.Fragment.FloorDisplayFragment"
             android:id="@+id/fFloorNavigator"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/fragment2"
@@ -135,7 +135,7 @@
         <fragment
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:name="project.movinindoor.MarkerInfoFragment"
+            android:name="project.movinindoor.Fragment.MarkerInfoFragment"
             android:id="@+id/fMarkerDisplay"
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/fragment2"

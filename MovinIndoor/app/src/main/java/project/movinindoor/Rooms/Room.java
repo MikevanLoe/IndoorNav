@@ -1,4 +1,4 @@
-package project.movinindoor;
+package project.movinindoor.Rooms;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;

@@ -1,4 +1,4 @@
-package project.movinindoor.Graph;
+package project.movinindoor.Graph.Graph;
 
 import android.graphics.Color;
 import android.widget.Toast;

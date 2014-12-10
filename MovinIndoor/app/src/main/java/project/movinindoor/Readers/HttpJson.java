@@ -1,4 +1,4 @@
-package project.movinindoor;
+package project.movinindoor.Readers;
 import android.os.AsyncTask;
 import android.util.Log;
 
