@@ -25,11 +25,12 @@ public class HighPrioritySplit {
      * @param input the buildings object you want to split
      */
     public static void highSplit(Buildings input){
-        Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
+        Queue buildingQ = new PriorityQueue(input.buildingList.size(), Collections.reverseOrder());
         for(Building B : input.buildingList.values()) {
             buildingQ.offer(B);
         }
 
+        input.order = buildingQ;
         Queue tempQ = buildingQ;
         boolean time = true;
 
