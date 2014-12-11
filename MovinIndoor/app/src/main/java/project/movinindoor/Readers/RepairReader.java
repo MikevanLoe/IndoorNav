@@ -28,9 +28,7 @@ public class RepairReader {
         try
         {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
-            for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) {
-                buildingsArray.add(dir);
-            }
+            for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) { buildingsArray.add(dir); }
 
             JSONArray jitems;
 
@@ -42,7 +40,6 @@ public class RepairReader {
                 jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
             }
 
-            //Loop though my JSONArray
                 for (Integer i = 0; i < jitems.length(); i++) {
                     String title = jitems.getJSONObject(i).getString("shortdescription");
                     String floor = jitems.getJSONObject(i).getString("floor");
@@ -84,33 +81,20 @@ public class RepairReader {
                         statusEnum = Reparation.StatusEnum.NEW;
                     }
 
-
                     Reparation reparation = new Reparation(nodeId, buildingEnum, floor1 ,location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
                     buildings.addRepair(reparation);
-
-
                 }
-
-            Algorithm algo = new Algorithm(buildings);
             HighPrioritySplit.HighTestMethod(buildings);
             HighPrioritySplit.LowTestMethod(buildings);
 
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        catch(Exception e) { e.printStackTrace(); }
     }
 
-    //ExpandableListView
-    //public ExpandableListAdapterNew listAdapter;
-    //public ExpandableListView expListView;
     public List<String> listDataHeader;
     public HashMap<String, List<String>> listDataChild;
 
     public void bindToRepairList(JSONArray jitems) {
-        //listAdapter = MapsActivity.listAdapter;
-        //expListView = MapsActivity.expListView;
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
@@ -126,13 +110,9 @@ public class RepairReader {
             subList.add("Comment:  " + r.Comment);
             listDataChild.put(r.ShortDescription, subList);
         }
-        //listAdapter = new ExpandableListAdapterNew(MapsActivity.getContext(), listDataHeader, listDataChild);
-        //expListView.setAdapter(listAdapter);
     }
 
     public void prepareListData(JSONArray jitems) {
-        //listAdapter = MapsActivity.listAdapter;
-        //expListView = MapsActivity.expListView;
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
         // Navigation drawer items

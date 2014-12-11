@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
@@ -138,12 +139,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
 
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.setIndoorEnabled(false);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
-        //Set a marker on long click
-        mMap.setOnMapLongClickListener(onMapLongClick);
+
         //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
         infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
@@ -253,8 +249,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             if(inRoom !=null) {
                 customEndPos = null;
                 editEnd.setText(inRoom.getLocation());
-            }
-            else {
+            } else {
                 customEndPos = longClickMarker.getPosition();
                 editEnd.setText("Custom End Position");
             }
@@ -263,8 +258,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             if(inRoom !=null) {
                 customStartPos = null;
                 editStart.setText(inRoom.getLocation());
-            }
-            else {
+            } else {
                 customStartPos = longClickMarker.getPosition();
                 editStart.setText("Custom Start Position");
             }
@@ -328,7 +322,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         String startPosition = editStart.getText().toString();
         String endPosition = editEnd.getText().toString();
 
-        navigate(startPosition, endPosition);
+        Algorithm.navigate(startPosition, endPosition);
     }
 
     //OnClick Navigate to Reparation
@@ -337,7 +331,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
-        navigate(startRoom, EndRoom);
+        Algorithm.navigate(startRoom, EndRoom);
     }
 
 
@@ -358,25 +352,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
 
-    //Called by methods
-    public void navigate(String start, String end) {
-        //Removes From -> To Fragement;
-        fNavigationInfoBottom.setVisibility(View.INVISIBLE);
-        //Removes existing Polylines
-        MapDrawer.removePolylines();
-        MapDrawer.removeMarkers();
 
-        boolean sucess = setupGraph.navigateRoute(start, end);
-
-        if(sucess) {
-            Toast.makeText(getApplicationContext(), "Navigation started", Toast.LENGTH_SHORT).show();
-            //animate
-            Animator.visibilityRepairList(Animator.Visibility.HIDE);
-            Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
-            Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
-            Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
-        }
-    }
 
 
     @Override
@@ -448,6 +424,13 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private void setUpMap() {
         //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
+
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.setIndoorEnabled(false);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
+        //Set a marker on long click
+        mMap.setOnMapLongClickListener(onMapLongClick);
     }
 
     @Override

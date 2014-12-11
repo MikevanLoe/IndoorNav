@@ -12,11 +12,12 @@ public class Node {
     public String floor;
     public List<ToNode> toNode;
 
-
     public Node(String nodeId, List<Double> location, String floor, List<ToNode> toNode) {
         this.nodeId = nodeId;
         this.location = location;
         this.floor = floor;
         this.toNode = toNode;
     }
+
+
 }
