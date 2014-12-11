@@ -53,11 +53,8 @@ public class MapDrawer {
 
         tileOverlays = new ArrayList<TileOverlay>();
 
-
             tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
                     .tileProvider(MapDrawer.tileProvider));
-
-
     }
 
     public static void setFloor(int floor) {
@@ -69,18 +66,13 @@ public class MapDrawer {
         return floorNumber;
     }
 
-
     static TileProvider tileProvider = new UrlTileProvider(256, 256) {
         @Override
         public URL getTileUrl(int x, int y, int zoom) {
 
-
-    /* Define the URL pattern for the tile images */
             String s = String.format("http://wmts.movinsoftware.nl/?Service=WMTS&Request=GetTile&Version=1.0.0&Layer=AllTypes&TileMatrixSet=GoogleMapsCompatible&Format=image/png&Style=Default&TileMatrix=%d&TileCol=%d&TileRow=%d&Floor="+floorNumber,
                     zoom, x, y);
-            if (!checkTileExists(x, y, zoom)) {
-                return null;
-            }
+            if (!checkTileExists(x, y, zoom)) { return null; }
 
             try {
                 //Log.i("MAP_LOG1", s);
@@ -90,20 +82,11 @@ public class MapDrawer {
             }
         }
 
-        /*
-         * Check that the tile server supports the requested x, y and zoom.
-         * Complete this stub according to the tile range you support.
-         * If you support a limited range of tiles at different zoom levels, then you
-         * need to define the supported x, y range at each zoom level.
-         */
         private boolean checkTileExists(int x, int y, int zoom) {
-
             int minZoom = 12;
             int maxZoom = 22;
 
-            if ((zoom < minZoom || zoom > maxZoom)) {
-                return false;
-            }
+            if ((zoom < minZoom || zoom > maxZoom)) return false;
 
             return true;
         }
@@ -118,7 +101,6 @@ public class MapDrawer {
                 .add(new LatLng(lat1, long1))
                 .add(new LatLng(lat2, long2)).zIndex(100);
 
-        // Get back the mutable Polyline
         Polyline polyline = mMap.addPolyline(rectOptions);
         polylines.add(polyline);
     }
@@ -129,7 +111,6 @@ public class MapDrawer {
                 .add(new LatLng(lat1, long1))
                 .add(new LatLng(lat2, long2)).zIndex(500).color(color);
 
-        // Get back the mutable Polyline
         Polyline polyline =  mMap.addPolyline(rectOptions);
         polylines.add(polyline);
     }
@@ -140,12 +121,10 @@ public class MapDrawer {
                 .add(new LatLng(lat1, long1))
                 .add(new LatLng(lat2, long2)).zIndex(200 + zIndex).color(color);
 
-        // Get back the mutable Polyline
         Polyline polyline =  mMap.addPolyline(rectOptions);
         polylines.add(polyline);
 
     }
-
 
     public static void addMarker(double lat1, double long1, String name) {
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name)));
@@ -160,42 +139,25 @@ public class MapDrawer {
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker")));
     }
 
-
-
     public static void removeMarkers() {
-        for(Marker m : markers)
-        {
-                m.remove();
-        }
+        for(Marker m : markers) { m.remove(); }
     }
 
     public static void hidePolylinesFloor(int floor) {
-        for(Polyline p : polylines)
-        {
-            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) {
-                p.setVisible(false);
-
-            }
+        for(Polyline p : polylines) {
+            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) p.setVisible(false);
         }
     }
 
     public static void showPolylinesFloor(int floor) {
-        for(Polyline p : polylines)
-        {
-            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) {
-                p.setVisible(true);
-
-            }
+        for(Polyline p : polylines) {
+            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) p.setVisible(true);
         }
     }
 
     public static void removePolylines() {
-        for(Polyline p : polylines)
-        {
-            if(p.getColor() != Color.BLACK) {
-                p.remove();
-
-            }
+        for(Polyline p : polylines) {
+            if(p.getColor() != Color.BLACK) p.remove();
         }
     }
 }
