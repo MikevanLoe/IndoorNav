@@ -78,65 +78,47 @@ public class HighPrioritySplit {
      * @param input the buildings object you want to split
      */
     public static void lowSplit(Buildings input){
-        Queue buildingQ = new PriorityQueue(15, Collections.reverseOrder());
-        for(Building B : input.buildingList.values()) {
-            buildingQ.offer(B);
+        for(Reparation.BuildingEnum b : input.buildingList.keySet()) {
+            input.calculatePriorityBuilding(b);
         }
 
-        Queue tempQ = buildingQ;
-        boolean time = true;
+        Queue buildingQ = new PriorityQueue(input.buildingList.size(), Collections.reverseOrder());
+        for(Building B : input.buildingList.values()) {
+            buildingQ.add(B);
+        }
+
+        input.order = buildingQ;
 
         // Loop through the buildings and add the floors to a PriorityQueue
         // but only if there are buildings left.
-        while(time) {
-            Building temp = (Building) tempQ.poll();
-            if(temp != null) {
-                temp.order = new PriorityQueue(temp.totalFloors, Collections.reverseOrder());
-                for (Floor f : temp.floorList.values()) {
-                    temp.order.offer(f);
-                }
+        for(Object b : input.order) {
+            Building c = (Building) b;
+            c.order = new PriorityQueue(c.totalFloors, Collections.reverseOrder());
+            for (Floor f : c.floorList.values()) {
+                c.order.add(f);
             }
-            else
-                time = false;
         }
-
-        tempQ = buildingQ;
-        time = true;
 
         // Loop through the floors and add the repairs to a PriorityQueue
         // but only if there are floors left.
-        while (time) {
-            Floor tempF = (Floor) tempQ.poll();
-            tempF.highOrder = new PriorityQueue(100, Collections.reverseOrder());
-            tempF.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
+        for(Object b : input.order){
+            Building c = (Building) b;
+            for(Floor f : c.floorList.values()) {
+                f.highOrder = new PriorityQueue(100, Collections.reverseOrder());
+                f.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
 
-            // If there is a building left, loop through the repairlist
-            if(tempF != null) {
-                for (Reparation rep : tempF.repairList.values()) {
-                    // If the priority of the repair is equal or higher than 3
+                for (Reparation rep : f.repairList.values()) {
+                    // If the priority of the repair is equal or higher than 5
                     // add it to the high order queue and remove it from the list
-                    if(rep.Priority.value >= 3) {
-                        tempF.highOrder.add(rep);
-                        tempF.repairList.remove(rep);
-                        input.calculatePriorityFloor(rep.Building, rep.Floor);
-                        if (rep.Priority.value > 0) {
-                            tempQ.add(tempF);
-                        }
+                    if (rep.Priority.value >= 3) {
+                        f.highOrder.add(rep);
                     }
-                    // If the priority of the floor is equal or lower than 2
+                    // If the priority of the floor is equal or lower than 4
                     // add it to the low order queue and remove it from the list
-                    else if (tempF.priority.value <=2 ){
-                        tempF.lowOrder.add(rep);
-                        tempF.repairList.remove(rep);
-                        input.calculatePriorityFloor(rep.Building, rep.Floor);
-                        if (rep.Priority.value > 0) {
-                            tempQ.add(tempF);
-                        }
+                    else if (f.priority.value <= 2) {
+                        f.lowOrder.add(rep);
                     }
                 }
-            }
-            else {
-                time = false;
             }
         }
     }
