@@ -24,7 +24,7 @@ public class HighPrioritySplit {
      *
      * @param input the buildings object you want to split
      */
-    public static void highSplit(Buildings input){
+    public static Buildings highSplit(Buildings input){
         for(Reparation.BuildingEnum b : input.buildingList.keySet()) {
             input.calculatePriorityBuilding(b);
         }
@@ -68,6 +68,7 @@ public class HighPrioritySplit {
                 }
             }
         }
+        return input;
     }
 
     /**
@@ -77,7 +78,7 @@ public class HighPrioritySplit {
      *
      * @param input the buildings object you want to split
      */
-    public static void lowSplit(Buildings input){
+    public static Buildings lowSplit(Buildings input){
         for(Reparation.BuildingEnum b : input.buildingList.keySet()) {
             input.calculatePriorityBuilding(b);
         }
@@ -121,11 +122,10 @@ public class HighPrioritySplit {
                 }
             }
         }
+        return input;
     }
 
-    /**
-     *
-     */
+    /*
     public static void HighTestMethod (Buildings input){
         Log.i(HighPrioritySplit.LOG_TAG, "Test number 1");
         System.out.println("systeem test");
@@ -143,7 +143,6 @@ public class HighPrioritySplit {
             }
         }
     }
-
     public static void LowTestMethod(Buildings input){
         Log.i(HighPrioritySplit.LOG_TAG, "Test number 2");
         System.out.println("test");
@@ -161,4 +160,5 @@ public class HighPrioritySplit {
             }
         }
     }
+    */
 }
