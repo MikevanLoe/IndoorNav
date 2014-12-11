@@ -101,6 +101,26 @@ public class RepairReader {
         List<Reparation> t = new ArrayList<Reparation>();
 
         for(Reparation r : t) {
+            String statusName = "Nieuw";
+
+            switch(r.Status) {
+                case NEW:
+                    statusName = "Nieuw";
+                    break;
+                case ACCEPTED:
+                    statusName = "Geaccepteerd";
+                    break;
+                case ASSIGNED:
+                    statusName = "Toegekend";
+                    break;
+                case DONE:
+                    statusName = "Gerepareerd";
+                    break;
+                case REPAIRED:
+                    statusName = "Afgemeld";
+                    break;
+            }
+
             List<String> subList = new ArrayList<String>();
             listDataHeader.add(r.ShortDescription);
             subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
@@ -122,7 +142,6 @@ public class RepairReader {
 
 
             //Loop though my JSONArray
-            for (int  j=0; j< 10; j++) {
                 for (Integer i = 0; i < jitems.length(); i++) {
                     //Get My JSONObject and grab the String Value that I want.
                     String title = jitems.getJSONObject(i).getString("shortdescription");
@@ -144,18 +163,17 @@ public class RepairReader {
 
 
                     List<String> subList = new ArrayList<String>();
-                    listDataHeader.add(j +"" + i + " " + title);
+                    listDataHeader.add(title);
                     if(room != null) subList.add("Location:       " + room);
                     else subList.add("Location:       " + "C" + floor + "." + "16");
                     subList.add("Priority:          " + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     subList.add("Comment:  " + comments);
-                    listDataChild.put(j +"" + i + " " + title, subList);
+                    listDataChild.put(title, subList);
 
 
                 }
-            }
             //listAdapter = new ExpandableListAdapterNew(MapsActivity.getContext(), listDataHeader, listDataChild);
             //expListView.setAdapter(listAdapter);
         }
