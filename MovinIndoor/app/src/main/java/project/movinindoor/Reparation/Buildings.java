@@ -206,6 +206,10 @@ public class Buildings {
         int prioSom = 0;
         int count = 0;
 
+        for(int i = 0 ; i < prioFloor.size(); i++){
+            this.calculatePriorityFloor(building, i);
+        }
+
         for(Floor rep : prioFloor.values()) {
             prioSom += rep.priority.getValue();
             count++;

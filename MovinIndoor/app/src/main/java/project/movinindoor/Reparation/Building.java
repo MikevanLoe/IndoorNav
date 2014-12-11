@@ -69,12 +69,19 @@ public class Building implements Comparable<Building>{
      */
     @Override
     public int compareTo(Building b) {
-
-        if(this.priority.getValue() < b.priority.getValue()){
+        if((b.priority == null)||(this.priority == null)) {
+            return 0;
+        }
+        else if(this.priority.getValue() == b.priority.getValue()){
+            return 0;
+        }
+        else if(this.priority.getValue() < b.priority.getValue()){
             return -1;
-        }else if(this.priority.getValue() > b.priority.getValue()){
+        }
+        else if(this.priority.getValue() > b.priority.getValue()){
             return 1;
-        }else{
+        }
+        else{
             return 0;
         }
     }

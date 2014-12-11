@@ -84,8 +84,8 @@ public class RepairReader {
                     Reparation reparation = new Reparation(nodeId, buildingEnum, floor1 ,location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
                     buildings.addRepair(reparation);
                 }
-            HighPrioritySplit.HighTestMethod(buildings);
-            HighPrioritySplit.LowTestMethod(buildings);
+            Buildings high = HighPrioritySplit.highSplit(buildings);
+            Buildings low = HighPrioritySplit.lowSplit(buildings);
 
         }
         catch(Exception e) { e.printStackTrace(); }

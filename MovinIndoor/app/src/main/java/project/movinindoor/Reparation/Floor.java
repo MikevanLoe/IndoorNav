@@ -6,10 +6,8 @@
 
 package project.movinindoor.Reparation;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
@@ -54,12 +52,19 @@ public class Floor implements Comparable<Floor>{
      */
     @Override
     public int compareTo(Floor b) {
-
-        if(this.priority.getValue() < b.priority.getValue()){
+        if(b.priority == null) {
+            return 0;
+        }
+        else if(this.priority.getValue() == b.priority.getValue()){
+            return 0;
+        }
+        else if(this.priority.getValue() < b.priority.getValue()){
             return -1;
-        }else if(this.priority.getValue() > b.priority.getValue()){
+        }
+        else if(this.priority.getValue() > b.priority.getValue()){
             return 1;
-        }else{
+        }
+        else{
             return 0;
         }
     }
