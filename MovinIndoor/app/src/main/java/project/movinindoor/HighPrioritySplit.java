@@ -15,7 +15,7 @@ import project.movinindoor.Reparation.Reparation;
  * Created by 5736z454 on 24-11-2014.
  */
 public class HighPrioritySplit {
-    private static final String LOG_TAG = "System.out" ;
+    private static final String LOG_TAG = "Mike" ;
 
     /**
      * Splits the input based on the priority of repairs.
@@ -152,11 +152,11 @@ public class HighPrioritySplit {
             for(Floor f : b.floorList.values()){
                 for(Object r : f.highOrder) {
                     Reparation s = (Reparation) r;
-                    Log.i("A", s.Description + " " + s.Location);
+                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
                 }
                 for(Object r : f.lowOrder){
                     Reparation s = (Reparation) r;
-                    Log.i("A", s.Description + " " + s.Location);
+                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
                 }
             }
         }
