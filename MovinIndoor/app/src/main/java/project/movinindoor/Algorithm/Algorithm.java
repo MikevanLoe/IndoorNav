@@ -98,8 +98,6 @@ public class Algorithm {
                     List<Node> nodeList = travelBetweenBuildingsByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
                     drawRoute(nodeList);
                 }
-
-
             }
         }
     }
@@ -119,7 +117,7 @@ public class Algorithm {
        11. calculate simple van from door to door
       11. return shortest route
     */
-    public static List<Node> travelBetweenBuildingsByElevatorOrStair(Travel travel, Room startPos, Room endPos) {
+    private static List<Node> travelBetweenBuildingsByElevatorOrStair(Travel travel, Room startPos, Room endPos) {
         String startLocation= startPos.getLocation();
         String endLocation= endPos.getLocation();
 
@@ -244,7 +242,7 @@ public class Algorithm {
     }
 
 
-    public static void drawRoute(List<Node> nodeList) {
+    private static void drawRoute(List<Node> nodeList) {
         double cost = 0.0;
         for(int i = 0; i < nodeList.size(); i = i+2) {
             Node start = nodeList.get(i);
@@ -260,7 +258,7 @@ public class Algorithm {
     3. calculate route foreach elevator
     4. return shortest route
     */
-    public static List<Node> travelByElevatorOrStair(Travel travel, Room startPos, Room endPos) {
+    private static List<Node> travelByElevatorOrStair(Travel travel, Room startPos, Room endPos) {
         String endLocation= endPos.getLocation();
         String[] splitEndLocation = splitLocation(endLocation);
         int endFloor = Integer.valueOf(splitEndLocation[0].substring(1));
@@ -329,7 +327,7 @@ public class Algorithm {
         return false;
     }
 
-    public static String[] splitLocation(String location) {
+    private static String[] splitLocation(String location) {
         return location.split("\\.");
     }
 
