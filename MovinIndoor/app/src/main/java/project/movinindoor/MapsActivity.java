@@ -334,6 +334,10 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Algorithm.navigate(startRoom, EndRoom);
     }
 
+    //OnClick Activate/Close Reparation
+    public void btnCheckRepair(View view){
+        sendPushNotification("Movin", "checked a repair");
+    }
 
     //OnClick Location From Reparation
     public void showLocation(View view) {
