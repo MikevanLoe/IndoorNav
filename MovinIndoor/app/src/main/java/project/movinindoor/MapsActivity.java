@@ -336,7 +336,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        sendPushNotification("Movin", "checked a repair");
+        //sendPushNotification("Movin", "checked a repair");
+
+        //int pos = Integer.valueOf(view.getTag().toString());
+        //Object o = listAdapter.getGroup(pos);
+
+        view.setEnabled(false);
     }
 
     //OnClick Location From Reparation
