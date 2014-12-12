@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,10 @@ public class NodeReader {
 
     public NodeReader() {
         InputStream inputStream = null;
+
         try {
+            URL url = new URL("http://wrs.movinsoftware.nl/?service=wrs&version=1.0.0&request=GetNavigationGrid&mapid=00W");
+            inputStream = url.openStream();
             inputStream = MapsActivity.getContext().getAssets().open("WindesheimNavMesh.json");
             HashMap<String, Node> read = readJsonStream(inputStream);
             jsonList = calculate(read);
