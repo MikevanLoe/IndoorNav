@@ -24,9 +24,11 @@ import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.ToNode;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
+import project.movinindoor.Models.Elevator;
+import project.movinindoor.Models.Stair;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Reparation;
-import project.movinindoor.Rooms.Room;
+import project.movinindoor.Models.Room;
 
 /**
  *
@@ -80,8 +82,22 @@ public class Algorithm {
                 }
             }
         } else { // If Different Building
-            if(buildingHaveBridge(startBuilding) || buildingHaveBridge(endBuilding)) { //Calculate with Floor 2  And 0
-
+            if((buildingHaveBridge(startBuilding) && Math.abs(startFloor) >= 2 )|| (buildingHaveBridge(endBuilding) && Math.abs(startFloor)  >= 2 )) { //Calculate with Floor 2  And 0
+                if(Graph.movingByWalk == true) { // If Traveling by Foot
+                    if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
+                        // Find (primarly) Only Elevators
+                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.ELEVATOR, startPos, endPos);
+                        drawRoute(nodeList);
+                    } else {
+                        // Find only Stairs
+                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.STAIR, startPos, endPos);
+                        drawRoute(nodeList);
+                    }
+                } else { // If Traveling by Foot With Cart
+                    //  Find Only Elevators
+                    List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.ELEVATOR, startPos, endPos);
+                    drawRoute(nodeList);
+                }
             } else { // Calculate with Floor 0
                 if(Graph.movingByWalk == true) { // If Traveling by Foot
                     if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
@@ -100,6 +116,88 @@ public class Algorithm {
                 }
             }
         }
+    }
+
+    private static List<Node> travelBetweenBuildingsByElevatorOrStairByBridge(Travel travel, Room startPos, Room endPos) {
+        String startLocation= startPos.getLocation();
+        String endLocation= endPos.getLocation();
+
+        String[] splitStartLocation = splitLocation(startLocation);
+        String[] splitEndLocation = splitLocation(endLocation);
+
+        int startFloor = Integer.valueOf(splitStartLocation[0].substring(1));
+        int endFloor = Integer.valueOf(splitEndLocation[0].substring(1));
+
+        List<Node> startElevatorTopN, startElevatorDownN, endElevatorTopN, endElevatorDownN;
+        if(travel == Travel.STAIR) {
+            startElevatorTopN = findAllStairsByNode();
+            startElevatorDownN = findAllStairsByNodeFloor(startElevatorTopN, 0);
+
+            endElevatorTopN = findAllStairsByNode();
+            endElevatorDownN = findAllStairsByNodeFloor(endElevatorTopN, 0);
+        } else {
+            startElevatorTopN = findAllElevatorsByNode();
+            startElevatorDownN = findAllElevatorsByNodeFloor(startElevatorTopN, 0);
+
+            endElevatorTopN = findAllElevatorsByNode();
+            endElevatorDownN = findAllElevatorsByNodeFloor(endElevatorTopN, 0);
+        }
+
+        Node shortestStartNode = null;
+        Node shortestEndNode = null;
+        Node shortestEndElevatorTop = null;
+        Node shortestStartElevatorTop = null;
+        Node shortestEndElevatorDown = null;
+        Node shortestStartElevatorDown = null;
+        double shortestCost = 0.0, costBuilding1= 0.0, costBuilding2 = 0.0, costBetweenBuildings = 0.0;
+        for (int i = 0; i < endElevatorDownN.size(); i++) {
+            Node startPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startPos);
+            Node startElevatorTop = null;
+            if(startFloor != 0) { // startPosition is not on floor 0
+                startElevatorTop = startElevatorTopN.get(i);
+                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString()); // Start -> TravelType1
+            }
+
+            Node startElevatorDown = startElevatorDownN.get(i);
+            for(int j = 0; j < endElevatorDownN.size(); j++) {
+                Node endElevatorDown = endElevatorDownN.get(j);
+                Node endPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endPos);
+                Node endElevatorTop = null;
+
+                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString()); // Start -> End
+                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString()); // Start -> TraveType2
+                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType1 -> End
+                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString()); // TravelType1 -> TraveType2
+
+
+                if(endFloor != 0) { // endPosition is not on floor 0
+                    endElevatorTop = endElevatorTopN.get(j);
+                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType2 -> End
+                }
+
+                double cost = costBuilding1 + costBetweenBuildings + costBuilding2;
+                if (shortestCost == 0.0) shortestCost = cost;
+                if (shortestCost >= cost) {
+                    shortestStartNode = startPositionNode;
+                    if(startFloor != 0) shortestStartElevatorTop = startElevatorTop;
+                    if(startFloor != 0) shortestStartElevatorDown = startElevatorDown;
+                    if(endFloor != 0) shortestEndElevatorDown = endElevatorDown;
+                    if(endFloor != 0) shortestEndElevatorTop = endElevatorTop;
+                    shortestEndNode = endPositionNode;
+                    shortestCost = cost;
+                }
+            }
+        }
+
+        //4. return shortest route
+        List<Node> returnNodeList = new ArrayList<>();
+        returnNodeList.add(shortestStartNode);
+        if(startFloor != 0) returnNodeList.add(shortestStartElevatorTop);
+        if(startFloor != 0) returnNodeList.add(shortestStartElevatorDown);
+        if(endFloor != 0) returnNodeList.add(shortestEndElevatorDown);
+        if(endFloor != 0) returnNodeList.add(shortestEndElevatorTop);
+        returnNodeList.add(shortestEndNode);
+        return returnNodeList;
     }
 
 
@@ -150,35 +248,38 @@ public class Algorithm {
         Node shortestStartElevatorDown = null;
         double shortestCost = 0.0, costBuilding1= 0.0, costBuilding2 = 0.0, costBetweenBuildings = 0.0;
         for (int i = 0; i < endElevatorDownN.size(); i++) {
-            //if(startFloor != 0) {
-                Node startPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startPos);
-                Node startElevatorTop = startElevatorTopN.get(i);
-                // Start -> Elevator1
-                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString());
-            //}
+            Node startPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startPos);
+            Node startElevatorTop = null;
+            if(startFloor != 0) { // startPosition is not on floor 0
+                startElevatorTop = startElevatorTopN.get(i);
+                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString()); // Start -> TravelType1
+            }
 
             Node startElevatorDown = startElevatorDownN.get(i);
             for(int j = 0; j < endElevatorDownN.size(); j++) {
-
                 Node endElevatorDown = endElevatorDownN.get(j);
-
-                //Elevator1 -> Elevator2
-                costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString());
-
                 Node endPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endPos);
-                Node endElevatorTop = endElevatorTopN.get(j);
-                //Elevator2 -> End
-                costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString());
+                Node endElevatorTop = null;
 
+                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString()); // Start -> End
+                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString()); // Start -> TraveType2
+                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType1 -> End
+                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString()); // TravelType1 -> TraveType2
+
+
+                if(endFloor != 0) { // endPosition is not on floor 0
+                    endElevatorTop = endElevatorTopN.get(j);
+                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType2 -> End
+                }
 
                 double cost = costBuilding1 + costBetweenBuildings + costBuilding2;
                 if (shortestCost == 0.0) shortestCost = cost;
                 if (shortestCost >= cost) {
                     shortestStartNode = startPositionNode;
-                    shortestStartElevatorTop = startElevatorTop;
-                    shortestStartElevatorDown = startElevatorDown;
-                    shortestEndElevatorDown = endElevatorDown;
-                    shortestEndElevatorTop = shortestEndElevatorDown;
+                    if(startFloor != 0) shortestStartElevatorTop = startElevatorTop;
+                    if(startFloor != 0) shortestStartElevatorDown = startElevatorDown;
+                    if(endFloor != 0) shortestEndElevatorDown = endElevatorDown;
+                    if(endFloor != 0) shortestEndElevatorTop = endElevatorTop;
                     shortestEndNode = endPositionNode;
                     shortestCost = cost;
                 }
@@ -188,20 +289,20 @@ public class Algorithm {
         //4. return shortest route
         List<Node> returnNodeList = new ArrayList<>();
         returnNodeList.add(shortestStartNode);
-        returnNodeList.add(shortestStartElevatorTop);
-        returnNodeList.add(shortestStartElevatorDown);
-        returnNodeList.add(shortestEndElevatorDown);
-        returnNodeList.add(shortestEndElevatorTop);
+        if(startFloor != 0) returnNodeList.add(shortestStartElevatorTop);
+        if(startFloor != 0) returnNodeList.add(shortestStartElevatorDown);
+        if(endFloor != 0) returnNodeList.add(shortestEndElevatorDown);
+        if(endFloor != 0) returnNodeList.add(shortestEndElevatorTop);
         returnNodeList.add(shortestEndNode);
         return returnNodeList;
     }
 
 
     private static List<Node> findAllElevatorsByNode() {
-        List<Room> allElevators = MapsActivity.setupGraph.getRooms().getAllRoomsWithName("elevator");
+        List<Elevator> allElevators = MapsActivity.setupGraph.getElevators().getAllElevatorsWithName("elevator");
         List<Node> elevatorNode = new ArrayList<>();
-        for(Room r : allElevators) {
-            elevatorNode.add(MapsActivity.setupGraph.getNodes().FindClosestNodeInsideRoom(r));
+        for(Elevator r : allElevators) {
+            elevatorNode.add(MapsActivity.setupGraph.getNodes().FindClosestNodeInsideElevator(r));
         }
 
         return elevatorNode;
@@ -220,10 +321,10 @@ public class Algorithm {
     }
 
     private static List<Node> findAllStairsByNode() {
-        List<Room> allElevators = MapsActivity.setupGraph.getRooms().getAllRoomsWithName("stair");
+        List<Stair> allElevators = MapsActivity.setupGraph.getStairs().getAllStairsWithName("stair");
         List<Node> elevatorNode = new ArrayList<>();
-        for(Room r : allElevators) {
-            elevatorNode.add(MapsActivity.setupGraph.getNodes().FindClosestNodeInsideRoom(r));
+        for(Stair r : allElevators) {
+            elevatorNode.add(MapsActivity.setupGraph.getNodes().FindClosestNodeInsideStair(r));
         }
 
         return elevatorNode;

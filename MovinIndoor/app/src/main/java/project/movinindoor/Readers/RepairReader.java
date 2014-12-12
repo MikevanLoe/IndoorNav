@@ -10,11 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import project.movinindoor.Algorithm.Algorithm;
-import project.movinindoor.Rooms.Room;
-import project.movinindoor.Rooms.Rooms;
 import project.movinindoor.HighPrioritySplit;
 import project.movinindoor.MapsActivity;
+import project.movinindoor.Models.Room;
+import project.movinindoor.Models.Rooms;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Reparation;
 

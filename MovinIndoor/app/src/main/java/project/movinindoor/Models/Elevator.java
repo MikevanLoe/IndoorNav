@@ -1,22 +1,18 @@
-package project.movinindoor.Rooms;
+package project.movinindoor.Models;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Davey on 3-12-2014.
+ * Created by Davey on 12-12-2014.
  */
-public class Room {
-
+public class Elevator {
     private String location;
     private ArrayList<ArrayList<Double>> latLngBounds;
 
-    public Room(String location, ArrayList<ArrayList<Double>> latLngBounds) {
+    public Elevator(String location, ArrayList<ArrayList<Double>> latLngBounds) {
         this.location = location;
         this.latLngBounds = latLngBounds;
     }
@@ -50,5 +46,4 @@ public class Room {
 
         return new LatLng(centroid[0], centroid[1]);
     }
-
 }
