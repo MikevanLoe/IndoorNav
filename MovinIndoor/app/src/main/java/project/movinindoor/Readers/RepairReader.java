@@ -40,7 +40,6 @@ public class RepairReader {
             }
 
                 for (Integer i = 0; i < jitems.length(); i++) {
-                    try {
                         String title = jitems.getJSONObject(i).getString("shortdescription");
                         String floor = jitems.getJSONObject(i).getString("floor");
                         String priority = jitems.getJSONObject(i).getString("priority");
@@ -93,7 +92,6 @@ public class RepairReader {
 
                         Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
                         buildings.addRepair(reparation);
-                    } catch(Exception e) { e.printStackTrace(); }
                 }
             Buildings high = HighPrioritySplit.highSplit(buildings);
             Buildings low = HighPrioritySplit.lowSplit(buildings);
