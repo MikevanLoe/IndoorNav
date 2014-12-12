@@ -35,7 +35,7 @@ public class NodeReader {
 
         try {
             URL url = new URL("http://wrs.movinsoftware.nl/?service=wrs&version=1.0.0&request=GetNavigationGrid&mapid=00W");
-            inputStream = url.openStream();
+//            inputStream = url.openStream();
             inputStream = MapsActivity.getContext().getAssets().open("WindesheimNavMesh.json");
             HashMap<String, Node> read = readJsonStream(inputStream);
             jsonList = calculate(read);
