@@ -1,4 +1,4 @@
-package project.movinindoor.Rooms;
+package project.movinindoor.Models;
 
 import android.util.JsonReader;
 

@@ -3,20 +3,15 @@ package project.movinindoor.Graph;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import project.movinindoor.*;
 import project.movinindoor.Graph.Graph.Graph;
+import project.movinindoor.Models.Elevator;
+import project.movinindoor.Models.Elevators;
+import project.movinindoor.Models.Stairs;
 import project.movinindoor.Readers.NodeReader;
 import project.movinindoor.Readers.RepairReader;
-import project.movinindoor.Rooms.Room;
-import project.movinindoor.Rooms.Rooms;
+import project.movinindoor.Models.Rooms;
 
 /**
  * Created by Wietse on 24-11-2014.
@@ -27,6 +22,8 @@ public class GraphHandler {
     private NodeReader nodeReader = new NodeReader();
     private RepairReader repairReader;
     public Rooms rooms;
+    public Elevators elevators;
+    public Stairs stairs;
 
 
     public GraphHandler() {
@@ -51,8 +48,16 @@ public class GraphHandler {
 
     }
 
-    public Graph getGraph() { return graph;
+
+    public Elevators getElevators() {
+        return elevators;
     }
+
+    public Stairs getStairs() {
+        return stairs;
+    }
+
+    public Graph getGraph() { return graph;  }
     public RepairReader getRepairReader() { return repairReader; }
 
     public NodeReader getNodes() { return nodeReader; }

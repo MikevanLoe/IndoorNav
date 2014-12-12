@@ -51,7 +51,7 @@ import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Readers.HttpJson;
-import project.movinindoor.Rooms.Room;
+import project.movinindoor.Models.Room;
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
