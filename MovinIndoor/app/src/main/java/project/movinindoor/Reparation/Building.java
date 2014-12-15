@@ -76,10 +76,10 @@ public class Building implements Comparable<Building>{
             return 0;
         }
         else if(this.priority.getValue() < b.priority.getValue()){
-            return -1;
+            return 1;
         }
         else if(this.priority.getValue() > b.priority.getValue()){
-            return 1;
+            return -1;
         }
         else{
             return 0;

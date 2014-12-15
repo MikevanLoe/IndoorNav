@@ -52,17 +52,17 @@ public class Floor implements Comparable<Floor>{
      */
     @Override
     public int compareTo(Floor b) {
-        if(b.priority == null) {
+        if((b.priority == null)||(this.priority == null)) {
             return 0;
         }
         else if(this.priority.getValue() == b.priority.getValue()){
             return 0;
         }
         else if(this.priority.getValue() < b.priority.getValue()){
-            return -1;
+            return 1;
         }
         else if(this.priority.getValue() > b.priority.getValue()){
-            return 1;
+            return -1;
         }
         else{
             return 0;

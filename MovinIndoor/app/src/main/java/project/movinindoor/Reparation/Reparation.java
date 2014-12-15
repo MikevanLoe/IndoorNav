@@ -78,12 +78,19 @@ public class  Reparation implements Comparable<Reparation>{
      */
     @Override
     public int compareTo(Reparation b) {
-
-        if(this.Priority.getValue() < b.Priority.getValue()){
-            return -1;
-        }else if(this.Priority.getValue() > b.Priority.getValue()){
+        if((b.Priority == null)||(this.Priority == null)) {
+            return 0;
+        }
+        else if(this.Priority.getValue() == b.Priority.getValue()){
+            return 0;
+        }
+        else if(this.Priority.getValue() < b.Priority.getValue()){
             return 1;
-        }else{
+        }
+        else if(this.Priority.getValue() > b.Priority.getValue()){
+            return -1;
+        }
+        else{
             return 0;
         }
     }
