@@ -83,7 +83,7 @@ public class HighPrioritySplit {
             input.calculatePriorityBuilding(b);
         }
 
-        Queue buildingQ = new PriorityQueue(input.buildingList.size(), Collections.reverseOrder());
+        Queue buildingQ = new PriorityQueue(input.buildingList.size());
         for(Building B : input.buildingList.values()) {
             buildingQ.add(B);
         }
@@ -94,7 +94,7 @@ public class HighPrioritySplit {
         // but only if there are buildings left.
         for(Object b : input.order) {
             Building c = (Building) b;
-            c.order = new PriorityQueue(c.totalFloors, Collections.reverseOrder());
+            c.order = new PriorityQueue(c.totalFloors);
             for (Floor f : c.floorList.values()) {
                 c.order.add(f);
             }
@@ -105,8 +105,8 @@ public class HighPrioritySplit {
         for(Object b : input.order){
             Building c = (Building) b;
             for(Floor f : c.floorList.values()) {
-                f.highOrder = new PriorityQueue(100, Collections.reverseOrder());
-                f.lowOrder = new PriorityQueue(100, Collections.reverseOrder());
+                f.highOrder = new PriorityQueue(100);
+                f.lowOrder = new PriorityQueue(100);
 
                 for (Reparation rep : f.repairList.values()) {
                     // If the priority of the repair is equal or higher than 5

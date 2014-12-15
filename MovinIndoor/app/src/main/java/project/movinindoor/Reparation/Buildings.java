@@ -241,7 +241,7 @@ public class Buildings {
         }
         for(Building b : order){
             for(Floor f : b.order){
-                for(Reparation r : f.highOrder){
+                for(Reparation r : f.lowOrder){
                     al.add(r);
                 }
             }

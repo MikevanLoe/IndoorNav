@@ -97,7 +97,7 @@ public class RepairReader {
             }
 
             Buildings high = HighPrioritySplit.highSplit(buildings);
-            Buildings low = HighPrioritySplit.lowSplit(buildings);
+            //Buildings low = HighPrioritySplit.lowSplit(buildings);
 
 
             al = high.getList();
