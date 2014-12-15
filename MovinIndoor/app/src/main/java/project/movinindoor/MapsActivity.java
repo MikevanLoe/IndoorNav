@@ -81,7 +81,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
-    private Button btnCurrentFloor;
+    private Button btnCurrentFloor, btnFloorUp, btnFloorDown;
     public static LinearLayout fNavigationMenu;
     private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
@@ -133,6 +133,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         textTo = (TextView) findViewById(R.id.toText);
 
         btnCurrentFloor = (Button) findViewById(R.id.currentFloor);
+        btnFloorUp = (Button) findViewById(R.id.floorUp);
+        btnFloorDown = (Button) findViewById(R.id.floorDown);
 
         fNavigationInfoBottom = (GridLayout) findViewById(R.id.Ooverlay);
         fNavigationMenu = (LinearLayout) findViewById(R.id.linearLayout2);
@@ -221,12 +223,18 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick FloorNavigator Button Up
     public void btnFloorUp(View view) {
+        btnFloorDown.setVisibility(View.VISIBLE);
        int currentFloor = MapDrawer.getFloor();
         if(currentFloor < 10) {
             MapDrawer.setFloor(currentFloor + 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor + 1));
+
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor + 1);
+        }
+
+        if (currentFloor == 10) {
+            btnFloorUp.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -279,12 +287,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick FloorNavigator Button Down
     public void btnFloorDown(View view) {
+        btnFloorUp.setVisibility(View.VISIBLE);
         int currentFloor = MapDrawer.getFloor();
         if(currentFloor > 0) {
             MapDrawer.setFloor(currentFloor - 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor - 1);
+        }
+
+        if (currentFloor == 0) {
+            btnFloorDown.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -437,10 +450,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private void setUpMap() {
         //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
-
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mMap.getUiSettings().setCompassEnabled(false);
-        mMap.setIndoorEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
         //Set a marker on long click
         mMap.setOnMapLongClickListener(onMapLongClick);

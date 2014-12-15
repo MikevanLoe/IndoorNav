@@ -102,7 +102,7 @@ public class RepairReader {
 
             al = high.getList();
             for (Reparation r : al) {
-//                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
+                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
             }
 
 
