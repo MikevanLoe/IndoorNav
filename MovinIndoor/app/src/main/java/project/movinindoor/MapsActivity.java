@@ -51,8 +51,10 @@ import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Readers.HttpJson;
-import project.movinindoor.Readers.RepairReader;
-import project.movinindoor.Rooms.Room;
+
+
+import project.movinindoor.Models.Room;
+
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
@@ -336,6 +338,15 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Algorithm.navigate(startRoom, EndRoom);
     }
 
+    //OnClick Activate/Close Reparation
+    public void btnCheckRepair(View view){
+        //sendPushNotification("Movin", "checked a repair");
+
+        //int pos = Integer.valueOf(view.getTag().toString());
+        //Object o = listAdapter.getGroup(pos);
+
+        view.setEnabled(false);
+    }
 
     //OnClick Location From Reparation
     public void showLocation(View view) {

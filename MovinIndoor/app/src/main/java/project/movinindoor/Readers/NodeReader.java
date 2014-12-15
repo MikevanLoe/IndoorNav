@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,9 @@ import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.ToNode;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
-import project.movinindoor.Rooms.Room;
+import project.movinindoor.Models.Elevator;
+import project.movinindoor.Models.Room;
+import project.movinindoor.Models.Stair;
 
 /**
  * Created by Davey on 25-11-2014.
@@ -29,7 +32,10 @@ public class NodeReader {
 
     public NodeReader() {
         InputStream inputStream = null;
+
         try {
+            URL url = new URL("http://wrs.movinsoftware.nl/?service=wrs&version=1.0.0&request=GetNavigationGrid&mapid=00W");
+            //inputStream = url.openStream();
             inputStream = MapsActivity.getContext().getAssets().open("WindesheimNavMesh.json");
             HashMap<String, Node> read = readJsonStream(inputStream);
             jsonList = calculate(read);
@@ -172,6 +178,27 @@ public class NodeReader {
         for (Node node : jsonList.values()) {
             LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
             if(MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public Node FindClosestNodeInsideElevator(Elevator elevator) {
+
+        for (Node node : jsonList.values()) {
+            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
+            if(MapsActivity.setupGraph.getElevators().nodeInsideElevator(elevator, latLng1)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public Node FindClosestNodeInsideStair(Stair stair) {
+        for (Node node : jsonList.values()) {
+            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
+            if(MapsActivity.setupGraph.getStairs().nodeInsideStair(stair, latLng1)) {
                 return node;
             }
         }

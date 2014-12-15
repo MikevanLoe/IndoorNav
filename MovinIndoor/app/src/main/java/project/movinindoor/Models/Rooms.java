@@ -1,4 +1,4 @@
-package project.movinindoor.Rooms;
+package project.movinindoor.Models;
 
 import android.util.JsonReader;
 
@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,8 @@ public class Rooms {
     public Rooms() {
         InputStream inputStream = null;
         try {
+            URL url = new URL("http://wfs.movinsoftware.nl/?service=wfs&version=1.0.0&request=getfeature&mapid=00W&typenames=rooms");
+            inputStream = url.openStream();
             inputStream = MapsActivity.getContext().getAssets().open("WindesheimRooms.json");
             rooms = readJsonStream(inputStream);
         } catch (Exception e) {
