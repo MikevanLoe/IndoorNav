@@ -40,7 +40,7 @@ public class RepairReader {
                 jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
             }
 
-                for (Integer i = 0; i < jitems.length(); i++) {
+                for (int i = 0; i < jitems.length(); i++) {
                     String title = jitems.getJSONObject(i).getString("shortdescription");
                     String floor = jitems.getJSONObject(i).getString("floor");
                     String priority = jitems.getJSONObject(i).getString("priority");
@@ -81,14 +81,23 @@ public class RepairReader {
                         statusEnum = Reparation.StatusEnum.NEW;
                     }
 
-                    Reparation reparation = new Reparation(nodeId, buildingEnum, floor1 ,location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
+                    Reparation reparation = new Reparation(nodeId, buildingEnum, floor1 ,location, latLng1, statusEnum, Reparation.PriorityType.values()[(Integer.valueOf(priority) - 1)], title, description, comments);
                     buildings.addRepair(reparation);
                 }
+
             Buildings high = HighPrioritySplit.highSplit(buildings);
             Buildings low = HighPrioritySplit.lowSplit(buildings);
 
+            ArrayList<Reparation> al = high.getList();
+            for(Reparation r : al){
+                Log.i("REPARATIONS",  "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: "  + r.Priority + " Description: "  + r.Description);
+            }
+
         }
-        catch(Exception e) { e.printStackTrace(); }
+        catch(Exception e) {
+            Log.i("ERROR123", "something went wrong with this for-loop");
+            e.printStackTrace();
+        }
     }
 
     public List<String> listDataHeader;
@@ -164,4 +173,6 @@ public class RepairReader {
             Log.e("items_error: ", e.toString());
         }
     }
+
+
 }

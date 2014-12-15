@@ -18,7 +18,7 @@ public class Building implements Comparable<Building>{
     
     public Map<Integer, Floor> floorList;
     public Reparation.PriorityType priority;
-    public Queue order;
+    public Queue<Floor> order;
     public int totalFloors;
 
     public Building() {

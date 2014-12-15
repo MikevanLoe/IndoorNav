@@ -18,8 +18,8 @@ public class Floor implements Comparable<Floor>{
     
     public Map<String, Reparation> repairList;
     public Reparation.PriorityType priority;
-    public Queue highOrder;
-    public Queue lowOrder;
+    public Queue<Reparation> highOrder;
+    public Queue<Reparation> lowOrder;
     
     public Floor() {
         repairList = new HashMap<String, Reparation>();

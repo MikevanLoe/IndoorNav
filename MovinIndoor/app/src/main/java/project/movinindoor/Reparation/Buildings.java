@@ -6,6 +6,9 @@
 
 package project.movinindoor.Reparation;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.Queue;
  * @author Davey
  */
 public class Buildings {
-    public Queue order;
+    public Queue<Building> order;
     public Map<Reparation.BuildingEnum, Building> buildingList;
     
     public Buildings() {
@@ -225,6 +228,25 @@ public class Buildings {
             setPriorityBuilding(building, Reparation.PriorityType.values()[prio]);
         }
 
+    }
+
+    public ArrayList getList(){
+        ArrayList<Reparation> al = new ArrayList<Reparation>();
+        for(Building b : order){
+            for(Floor f : b.order){
+                for(Reparation r : f.highOrder){
+                    al.add(r);
+                }
+                for(Reparation r : f.lowOrder){
+                    al.add(r);
+                }
+            }
+        }
+
+
+
+
+        return al;
     }
 }
 

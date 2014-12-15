@@ -51,6 +51,7 @@ import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Readers.HttpJson;
+import project.movinindoor.Readers.RepairReader;
 import project.movinindoor.Rooms.Room;
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
@@ -166,6 +167,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         });
 
         textSpeed.setText("");
+
     }
 
     @Override
