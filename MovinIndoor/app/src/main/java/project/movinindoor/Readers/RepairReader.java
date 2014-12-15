@@ -23,11 +23,12 @@ import project.movinindoor.Reparation.Reparation;
 public class RepairReader {
 
     private  Buildings buildings;
-    public RepairReader(){
-        try
-        {
+    public RepairReader() {
+        try {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
-            for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) { buildingsArray.add(dir); }
+            for (Reparation.BuildingEnum dir : Reparation.BuildingEnum.values()) {
+                buildingsArray.add(dir);
+            }
 
             JSONArray jitems;
 
@@ -39,66 +40,76 @@ public class RepairReader {
                 jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
             }
 
-                for (Integer i = 0; i < jitems.length(); i++) {
-                        String title = jitems.getJSONObject(i).getString("shortdescription");
-                        String floor = jitems.getJSONObject(i).getString("floor");
-                        String priority = jitems.getJSONObject(i).getString("priority");
-                        String description = jitems.getJSONObject(i).getString("description");
-                        String clong = jitems.getJSONObject(i).getString("clong");
-                        String clat = jitems.getJSONObject(i).getString("clat");
-                        String comments = jitems.getJSONObject(i).getString("comments");
-                        String status = jitems.getJSONObject(i).getString("status");
-                        String node = jitems.getJSONObject(i).getString("defectid");
+            for (Integer i = 0; i < jitems.length(); i++) {
+                String title = jitems.getJSONObject(i).getString("shortdescription");
+                String floor = jitems.getJSONObject(i).getString("floor");
+                String priority = jitems.getJSONObject(i).getString("priority");
+                String description = jitems.getJSONObject(i).getString("description");
+                String clong = jitems.getJSONObject(i).getString("clong");
+                String clat = jitems.getJSONObject(i).getString("clat");
+                String comments = jitems.getJSONObject(i).getString("comments");
+                String status = jitems.getJSONObject(i).getString("status");
+                String node = jitems.getJSONObject(i).getString("defectid");
 
-                        LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                        Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
-                        Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
+                LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
+                Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
+                Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
-                        String room = nodeRoom.getLocation();
-                        String building = room.substring(0, 1);
+                String room = nodeRoom.getLocation();
+                String building = room.substring(0, 1);
 
-                        String[] splitFloor = room.split("\\.");
+                String[] splitFloor = room.split("\\.");
 
-                        int nodeId = Integer.valueOf(node);
-                        Reparation.BuildingEnum buildingEnum;
-                        int floor1 = Integer.valueOf(splitFloor[0].substring(1));
-                        String location = splitFloor[1];
-                        LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                        Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
+                int nodeId = Integer.valueOf(node);
+                Reparation.BuildingEnum buildingEnum;
+                int floor1 = Integer.valueOf(splitFloor[0].substring(1));
+                String location = splitFloor[1];
+                LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
+                Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
 
-                        try {
-                            buildingEnum = Reparation.BuildingEnum.valueOf(building);
-                        } catch (IllegalArgumentException ex) {
-                            buildingEnum = Reparation.BuildingEnum.A;
-                        }
-
-                        switch (status) {
-                            case "Nieuw":
-                                statusEnum = Reparation.StatusEnum.NEW;
-                                break;
-                            case "Geaccepteerd":
-                                statusEnum = Reparation.StatusEnum.ACCEPTED;
-                                break;
-                            case "Toegekend":
-                                statusEnum = Reparation.StatusEnum.ASSIGNED;
-                                break;
-                            case "Gerepareerd":
-                                statusEnum = Reparation.StatusEnum.DONE;
-                                break;
-                            case "Afgemeld":
-                                statusEnum = Reparation.StatusEnum.REPAIRED;
-                                break;
-                        }
-
-                        Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
-                        buildings.addRepair(reparation);
+                try {
+                    buildingEnum = Reparation.BuildingEnum.valueOf(building);
+                } catch (IllegalArgumentException ex) {
+                    buildingEnum = Reparation.BuildingEnum.A;
                 }
+
+                switch (status) {
+                    case "Nieuw":
+                        statusEnum = Reparation.StatusEnum.NEW;
+                        break;
+                    case "Geaccepteerd":
+                        statusEnum = Reparation.StatusEnum.ACCEPTED;
+                        break;
+                    case "Toegekend":
+                        statusEnum = Reparation.StatusEnum.ASSIGNED;
+                        break;
+                    case "Gerepareerd":
+                        statusEnum = Reparation.StatusEnum.DONE;
+                        break;
+                    case "Afgemeld":
+                        statusEnum = Reparation.StatusEnum.REPAIRED;
+                        break;
+                }
+
+                Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
+                buildings.addRepair(reparation);
+            }
+
             Buildings high = HighPrioritySplit.highSplit(buildings);
             Buildings low = HighPrioritySplit.lowSplit(buildings);
 
 
-        } catch(Exception e) { e.printStackTrace(); }
+            ArrayList<Reparation> al = high.getList();
+            for (Reparation r : al) {
+//                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
+            }
+
+        } catch (Exception e) {
+            Log.i("ERROR123", "something went wrong with this for-loop");
+            e.printStackTrace();
+        }
     }
+
 
     public List<String> listDataHeader;
     public HashMap<String, List<String>> listDataChild;
@@ -255,4 +266,6 @@ public class RepairReader {
             Log.e("items_error: ", e.toString());
         }
     }
+
+
 }
