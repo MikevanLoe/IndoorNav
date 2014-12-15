@@ -45,8 +45,6 @@ public class Rooms {
         try {
             JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
             return readRoomsArray(reader);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

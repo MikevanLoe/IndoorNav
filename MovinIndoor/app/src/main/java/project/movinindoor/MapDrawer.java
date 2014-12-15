@@ -35,11 +35,11 @@ public class MapDrawer {
 
     public MapDrawer() {
         //mMap.addMarker(new MarkerOptions().position(new LatLng(51.92108335157883, 4.4808608293533325)).title("Marker"));
-        mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
-        mMap.setIndoorEnabled(false);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.92108335157883, 4.4808608293533325), 17));
+        mMap.setIndoorEnabled(true);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 18));
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener(){
 
