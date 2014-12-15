@@ -43,8 +43,6 @@ public class Stairs {
         try {
             JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
             return readStairsArray(reader);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

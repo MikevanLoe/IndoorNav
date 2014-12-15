@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     public static GridLayout fNavigationInfoBottom;
     private Button btnCurrentFloor;
     private ImageButton btnFloorUp, btnFloorDown;
-    
+
     public static LinearLayout fNavigationMenu;
     private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
@@ -235,7 +235,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             MapDrawer.showPolylinesFloor(currentFloor + 1);
         }
 
-        if (currentFloor == 10) {
+        if (currentFloor >= 9) {
             btnFloorUp.setVisibility(View.INVISIBLE);
         }
     }
@@ -298,7 +298,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             MapDrawer.showPolylinesFloor(currentFloor - 1);
         }
 
-        if (currentFloor == 0) {
+        if (currentFloor <= 1) {
             btnFloorDown.setVisibility(View.INVISIBLE);
         }
     }
@@ -452,7 +452,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private void setUpMap() {
         //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 16));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 18));
         //Set a marker on long click
         mMap.setOnMapLongClickListener(onMapLongClick);
     }

@@ -45,8 +45,6 @@ public class Elevators {
             return readElevatorsArray(reader);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return new HashMap<String, Elevator>();
     }
