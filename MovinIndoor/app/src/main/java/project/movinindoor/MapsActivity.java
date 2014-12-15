@@ -81,7 +81,9 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
-    private Button btnCurrentFloor, btnFloorUp, btnFloorDown;
+    private Button btnCurrentFloor;
+    private ImageButton btnFloorUp, btnFloorDown;
+    
     public static LinearLayout fNavigationMenu;
     private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
@@ -133,8 +135,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         textTo = (TextView) findViewById(R.id.toText);
 
         btnCurrentFloor = (Button) findViewById(R.id.currentFloor);
-        btnFloorUp = (Button) findViewById(R.id.floorUp);
-        btnFloorDown = (Button) findViewById(R.id.floorDown);
+        btnFloorUp = (ImageButton) findViewById(R.id.floorUp);
+        btnFloorDown = (ImageButton) findViewById(R.id.floorDown);
 
         fNavigationInfoBottom = (GridLayout) findViewById(R.id.Ooverlay);
         fNavigationMenu = (LinearLayout) findViewById(R.id.linearLayout2);
