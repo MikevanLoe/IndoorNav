@@ -104,6 +104,7 @@ public class RepairReader {
 //                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
             }
 
+
         } catch (Exception e) {
             Log.i("ERROR123", "something went wrong with this for-loop");
             e.printStackTrace();

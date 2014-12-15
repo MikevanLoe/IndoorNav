@@ -237,12 +237,15 @@ public class Buildings {
                 for(Reparation r : f.highOrder){
                     al.add(r);
                 }
-                for(Reparation r : f.lowOrder){
+            }
+        }
+        for(Building b : order){
+            for(Floor f : b.order){
+                for(Reparation r : f.highOrder){
                     al.add(r);
                 }
             }
         }
-
 
 
 
