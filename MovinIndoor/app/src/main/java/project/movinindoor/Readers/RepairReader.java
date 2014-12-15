@@ -23,6 +23,7 @@ import project.movinindoor.Reparation.Reparation;
 public class RepairReader {
 
     private  Buildings buildings;
+    private ArrayList<Reparation> al;
     public RepairReader() {
         try {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
@@ -99,7 +100,7 @@ public class RepairReader {
             Buildings low = HighPrioritySplit.lowSplit(buildings);
 
 
-            ArrayList<Reparation> al = high.getList();
+            al = high.getList();
             for (Reparation r : al) {
 //                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
             }
@@ -118,9 +119,9 @@ public class RepairReader {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
 
-        List<Reparation> t = new ArrayList<Reparation>();
+        //List<Reparation> t = new ArrayList<Reparation>();
 
-        for(Reparation r : t) {
+        for(Reparation r : al) {
             String statusName = "Nieuw";
             String PrioName = "Normaal";
 

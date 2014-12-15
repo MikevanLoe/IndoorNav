@@ -452,7 +452,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     private void prepareListData() {
-        setupGraph.getRepairReader().prepareListData(jitems);
+        setupGraph.getRepairReader().bindToRepairList(jitems);
         listDataHeader = setupGraph.getRepairReader().listDataHeader;
         listDataChild = setupGraph.getRepairReader().listDataChild;
         // Navigation drawer items
