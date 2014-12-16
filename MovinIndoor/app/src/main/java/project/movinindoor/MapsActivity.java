@@ -39,6 +39,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -360,6 +366,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         //int pos = Integer.valueOf(view.getTag().toString());
         //Object o = listAdapter.getGroup(pos);
 
+        HttpURLConnection urlConnection;
+
+        try {
+            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + "" + "&status=geaccepteerd");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.disconnect();
+        } catch (MalformedURLException u){
+
+        } catch (IOException e){
+
+        }
         view.setEnabled(false);
     }
 

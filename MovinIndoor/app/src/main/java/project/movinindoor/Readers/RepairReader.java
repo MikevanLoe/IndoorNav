@@ -172,6 +172,7 @@ public class RepairReader {
             subList.add("Status:           " + statusName);
             subList.add("Description:  " + r.Description);
             subList.add("Comment:  " + r.Comment);
+            //subList.add("id: " + r.Id);
             listDataChild.put(r.ShortDescription, subList);
         }
     }
@@ -256,6 +257,7 @@ public class RepairReader {
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     subList.add("Comment:  " + comments);
+                    //subList.add("Id: " + node);
                     listDataChild.put(title, subList);
 
 
