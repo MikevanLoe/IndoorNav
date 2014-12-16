@@ -1,13 +1,13 @@
 package project.movinindoor;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,14 +38,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -64,6 +71,10 @@ import project.movinindoor.Models.Room;
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
+    GoogleCloudMessaging gcm;
+    String regid;
+    String PROJECT_NUMBER = "607567241847";
+
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public static Context getContext() { return context; }
@@ -76,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
+
 
     private Marker longClickMarker = null;
     private Room inRoom;
@@ -113,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         context = getApplicationContext();
         setupGraph = new GraphHandler();
 
-
+        getRegId();
 
         fmMarkerDisplay       = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
@@ -369,7 +381,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         HttpURLConnection urlConnection;
         try {
-            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=geaccepteerd");
+            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=Geaccepteerd");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.disconnect();
         } catch (MalformedURLException u){
@@ -531,18 +543,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     }
 
-    public void sendPushNotification(String title, String text) {
-        context = getApplicationContext();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(context)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(R.drawable.movin_push)
-                .build();
-
-        notificationManager.notify(0, notification);
-    }
 
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
@@ -562,5 +563,54 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         }
         return new LatLng(latitude, longitude);
     }
+
+    public void getRegId(){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(PROJECT_NUMBER);
+                    msg = "Device registered, registration ID=" + regid;
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
+
+                    try {
+                        // Add your data
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                        // Execute HTTP Post Request
+                        HttpResponse response = httpclient.execute(httppost);
+
+                    } catch (ClientProtocolException e) {
+                        // TODO Auto-generated catch block
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                    }
+
+                   // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
+                    //Log.i("GCM", msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
+                }
+                
+                return msg;
+            }
+
+
+
+
+        }.execute(null, null, null);
+    }
+
+
+
 }
 
