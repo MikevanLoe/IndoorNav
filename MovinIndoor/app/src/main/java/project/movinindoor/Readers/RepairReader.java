@@ -101,9 +101,6 @@ public class RepairReader {
 
 
             al = high.getList();
-            for (Reparation r : al) {
-                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
-            }
 
 
         } catch (Exception e) {
@@ -172,7 +169,7 @@ public class RepairReader {
             subList.add("Status:           " + statusName);
             subList.add("Description:  " + r.Description);
             subList.add("Comment:  " + r.Comment);
-            //subList.add("id: " + r.Id);
+            subList.add("id: " + r.Id);
             listDataChild.put(r.ShortDescription, subList);
         }
     }
@@ -257,7 +254,7 @@ public class RepairReader {
                     subList.add("Status:           " + status);
                     subList.add("Description:  " + description);
                     subList.add("Comment:  " + comments);
-                    //subList.add("Id: " + node);
+                    subList.add("Id: " + node);
                     listDataChild.put(title, subList);
 
 
