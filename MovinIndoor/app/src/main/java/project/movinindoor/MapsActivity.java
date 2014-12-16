@@ -43,6 +43,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -373,23 +374,29 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        //sendPushNotification("Movin", "checked a repair");
+        final View task = view;
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                //sendPushNotification("Movin", "checked a repair");
 
-        int pos = Integer.valueOf(view.getTag().toString());
-        String tag = listAdapter.getChild(pos, 5).toString();
-        tag.substring(5);
+                int pos = Integer.valueOf(task.getTag().toString());
+                String tag = listAdapter.getChild(pos, 5).toString();
+                tag.substring(6);
 
-        HttpURLConnection urlConnection;
-        try {
-            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=Geaccepteerd");
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.disconnect();
-        } catch (MalformedURLException u){
-
-        } catch (IOException e){
-
-        }
-        view.setEnabled(false);
+                try {
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=Geaccepteerd");
+                    HttpResponse response = httpclient.execute(httpget);
+                } catch (MalformedURLException u) {
+                    Log.i("MIKE", "URL chrash");
+                } catch (IOException e) {
+                    Log.i("MIKE", "IOException");
+                }
+                task.setEnabled(false);
+                return "";
+            }
+        }.execute(null,null,null);
     }
 
     //OnClick Location From Reparation
@@ -408,9 +415,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
