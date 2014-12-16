@@ -340,7 +340,9 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //Onclick NavagationMenu
     public void btnNavBar(View view) {
+    try {
         prepareListData();
+    } catch (NullPointerException e) {}
         //animate
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
@@ -479,9 +481,11 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     private void prepareListData() {
+        try {
         setupGraph.getRepairReader().bindToRepairList(jitems);
         listDataHeader = setupGraph.getRepairReader().listDataHeader;
         listDataChild = setupGraph.getRepairReader().listDataChild;
+
         // Navigation drawer items
         listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
@@ -527,7 +531,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             }
         });
 
-
+        } catch (NullPointerException e) {}
     }
 
 
@@ -552,49 +556,50 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     public void getRegId(){
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                    }
-                    regid = gcm.register(PROJECT_NUMBER);
-                    msg = "Device registered, registration ID=" + regid;
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
-
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    String msg = "";
                     try {
-                        // Add your data
-                        List<NameValuePair> nameValuePairs = new ArrayList<>();
-                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
-                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                        if (gcm == null) {
+                            gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                        }
+                        try {
+                        regid = gcm.register(PROJECT_NUMBER);
 
-                        // Execute HTTP Post Request
-                        HttpResponse response = httpclient.execute(httppost);
+                        } catch (NullPointerException e) {}
+                        msg = "Device registered, registration ID=" + regid;
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
 
-                    } catch (ClientProtocolException e) {
-                        // TODO Auto-generated catch block
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
+                        try {
+                            // Add your data
+                            List<NameValuePair> nameValuePairs = new ArrayList<>();
+                            nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
+                            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                            // Execute HTTP Post Request
+                            HttpResponse response = httpclient.execute(httppost);
+
+                        } catch (ClientProtocolException e) {
+                            // TODO Auto-generated catch block
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                        }
+
+                        // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
+                        //Log.i("GCM", msg);
+
+                    } catch (IOException ex) {
+                        msg = "Error :" + ex.getMessage();
+
                     }
 
-                   // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                    //Log.i("GCM", msg);
-
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-
+                    return msg;
                 }
-                
-                return msg;
-            }
 
 
-
-
-        }.execute(null, null, null);
+            }.execute(null, null, null);
     }
 
 
