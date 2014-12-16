@@ -361,15 +361,15 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        sendPushNotification("Movin", "checked a repair");
+        //sendPushNotification("Movin", "checked a repair");
 
         int pos = Integer.valueOf(view.getTag().toString());
-        Object o = listAdapter.getGroup(pos);
-
+        String tag = listAdapter.getChild(pos, 5).toString();
+        tag.substring(5);
 
         HttpURLConnection urlConnection;
         try {
-            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + "" + "&status=geaccepteerd");
+            URL url = new URL("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=geaccepteerd");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.disconnect();
         } catch (MalformedURLException u){
