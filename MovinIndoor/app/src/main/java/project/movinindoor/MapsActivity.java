@@ -374,29 +374,31 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        final View task = view;
+        int pos = Integer.valueOf(view.getTag().toString());
+        final String tag = listAdapter.getChild(pos, 5).toString();
+
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 //sendPushNotification("Movin", "checked a repair");
-
-                int pos = Integer.valueOf(task.getTag().toString());
-                String tag = listAdapter.getChild(pos, 5).toString();
-                tag.substring(6);
+                String cTag = tag.substring(4);
 
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + tag + "&status=Geaccepteerd");
+                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
                     HttpResponse response = httpclient.execute(httpget);
+                } catch (ClientProtocolException e) {
+                    Log.i("MIKE", "ClientProtocol");
                 } catch (MalformedURLException u) {
                     Log.i("MIKE", "URL chrash");
                 } catch (IOException e) {
                     Log.i("MIKE", "IOException");
                 }
-                task.setEnabled(false);
+
                 return "";
             }
         }.execute(null,null,null);
+        view.setEnabled(false);
     }
 
     //OnClick Location From Reparation
