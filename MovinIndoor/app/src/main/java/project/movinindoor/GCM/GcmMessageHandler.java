@@ -11,8 +11,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import project.movinindoor.MapsActivity;
 import project.movinindoor.R;
+import project.movinindoor.Readers.HttpJson;
+import project.movinindoor.Readers.RepairReader;
 
 /**
  * Created by Davey on 16-12-2014.
@@ -41,10 +45,18 @@ public class GcmMessageHandler extends IntentService {
         String messageType = gcm.getMessageType(intent);
 
         mes = extras.getString("name");
-        Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
-        Log.i("GCM", "Received : "+ extras);
-        sendPushNotification("New Repair" +  extras.getString("name"), extras.getString("name"));
+        //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
+        //Log.i("GCM", "Received : "+ extras);
+        sendPushNotification("New Repair: " +  mes, mes);
+        try {
+            MapsActivity.jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
+        MapsActivity.setupGraph.setRepairReader(new RepairReader());
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
     }
@@ -59,10 +71,12 @@ public class GcmMessageHandler extends IntentService {
                 .setSmallIcon(R.drawable.movin_push)
                 .build();
 
-        notification.ledARGB = Color.BLUE;
+
+
+        notification.ledARGB = 0xFFF700FF;
         notification.flags = Notification.FLAG_SHOW_LIGHTS;
-        notification.ledOnMS = 1000;
-        notification.ledOffMS = 1000;
+        notification.ledOnMS = 2000;
+        notification.ledOffMS = 2000;
 
         notificationManager.notify(notifyCount++, notification);
     }

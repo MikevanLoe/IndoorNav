@@ -64,6 +64,7 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
         String txt = txtListChild.getText().toString().substring(10);
         editText.setText(txt);
 
+
         txtListChild.setTag(groupPosition+"-"+childPosition);
         btn.setTag(groupPosition+"-"+childPosition);
         editText.setTag(groupPosition+"-"+childPosition);

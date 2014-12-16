@@ -60,6 +60,8 @@ public class GraphHandler {
     public Graph getGraph() { return graph;  }
     public RepairReader getRepairReader() { return repairReader; }
 
+    public void setRepairReader(RepairReader repairReader) { this.repairReader = repairReader; }
+
     public NodeReader getNodes() { return nodeReader; }
 
     public Rooms getRooms() { return rooms; }
