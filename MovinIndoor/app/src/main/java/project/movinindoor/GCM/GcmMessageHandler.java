@@ -23,7 +23,7 @@ import project.movinindoor.Readers.RepairReader;
  */
 public class GcmMessageHandler extends IntentService {
 
-    String mes;
+    String mes = "";
     private Handler handler;
     public GcmMessageHandler() {
         super("GcmMessageHandler");
@@ -39,7 +39,7 @@ public class GcmMessageHandler extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
 
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
+        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(MapsActivity.getContext());
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
@@ -50,13 +50,16 @@ public class GcmMessageHandler extends IntentService {
         sendPushNotification("New Repair: " +  mes, mes);
         try {
             MapsActivity.jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            MapsActivity.setupGraph.setRepairReader(new RepairReader());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        MapsActivity.setupGraph.setRepairReader(new RepairReader());
+        try {
+            //MapsActivity.setupGraph.setRepairReader(new RepairReader());
+        } catch (NullPointerException e) { }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
     }
@@ -65,7 +68,7 @@ public class GcmMessageHandler extends IntentService {
 
     public void sendPushNotification(String title, String text) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(MapsActivity.getContext().NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(MapsActivity.getContext())
+        Notification notification = new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.movin_push)

@@ -86,6 +86,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
 
+
     private Marker longClickMarker = null;
     private Room inRoom;
     public static LatLng customStartPos = null;
@@ -580,7 +581,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                     }
 
                    // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                    Log.i("GCM", msg);
+                    //Log.i("GCM", msg);
 
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
