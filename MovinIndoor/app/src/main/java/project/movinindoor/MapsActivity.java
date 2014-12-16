@@ -5,9 +5,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -57,6 +61,10 @@ import project.movinindoor.Models.Room;
 
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+
+    GoogleCloudMessaging gcm;
+    String regid;
+    String PROJECT_NUMBER = "607567241847";
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -107,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         context = getApplicationContext();
         setupGraph = new GraphHandler();
 
-
+        getRegId();
 
         fmMarkerDisplay       = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
@@ -514,18 +522,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     }
 
-    public void sendPushNotification(String title, String text) {
-        context = getApplicationContext();
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification.Builder(context)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(R.drawable.movin_push)
-                .build();
-
-        notificationManager.notify(0, notification);
-    }
 
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
@@ -545,5 +542,35 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         }
         return new LatLng(latitude, longitude);
     }
+
+    public void getRegId(){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(PROJECT_NUMBER);
+                    msg = "Device registered, registration ID=" + regid;
+                    Log.i("GCM", msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                //etRegId.setText(msg + "\n");
+            }
+        }.execute(null, null, null);
+    }
+
+
+
 }
 
