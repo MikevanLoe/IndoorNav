@@ -4,6 +4,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -47,10 +48,12 @@ public class GcmMessageHandler extends IntentService {
         mes = extras.getString("name");
         //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
         //Log.i("GCM", "Received : "+ extras);
-        sendPushNotification("New Repair: " +  mes, mes);
+        sendPushNotification("New Repair", mes);
         try {
             MapsActivity.jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
-            MapsActivity.setupGraph.setRepairReader(new RepairReader());
+            try {
+                MapsActivity.setupGraph.setRepairReader(new RepairReader());
+            } catch (NullPointerException e) {}
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -74,14 +77,24 @@ public class GcmMessageHandler extends IntentService {
                 .setSmallIcon(R.drawable.movin_push)
                 .build();
 
+        Intent notificationIntent = new Intent(this, MapsActivity.class);
 
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent intent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+        notification.contentIntent = intent;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
         notification.ledARGB = 0xFFF700FF;
         notification.flags = Notification.FLAG_SHOW_LIGHTS;
         notification.ledOnMS = 2000;
         notification.ledOffMS = 2000;
+        int in = (int) Math.random();
 
-        notificationManager.notify(notifyCount++, notification);
+        notificationManager.notify(in, notification);
     }
 
 }

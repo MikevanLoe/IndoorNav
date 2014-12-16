@@ -22,8 +22,9 @@ import project.movinindoor.Reparation.Reparation;
  */
 public class RepairReader {
 
-    private  Buildings buildings;
+    private Buildings buildings;
     private ArrayList<Reparation> al;
+
     public RepairReader() {
         try {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
@@ -53,8 +54,11 @@ public class RepairReader {
                 String node = jitems.getJSONObject(i).getString("defectid");
 
                 LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
-                Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
+                try {
+                    Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
+                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
+
+
 
                 String room = nodeRoom.getLocation();
                 String building = room.substring(0, 1);
@@ -67,6 +71,7 @@ public class RepairReader {
                 String location = splitFloor[1];
                 LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
                 Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
+
 
                 try {
                     buildingEnum = Reparation.BuildingEnum.valueOf(building);
@@ -94,6 +99,7 @@ public class RepairReader {
 
                 Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
                 buildings.addRepair(reparation);
+                } catch (NullPointerException e) {}
             }
 
             Buildings high = HighPrioritySplit.highSplit(buildings);
@@ -118,50 +124,49 @@ public class RepairReader {
         listDataChild = new HashMap<String, List<String>>();
 
         //List<Reparation> t = new ArrayList<Reparation>();
+        try {
+            for (Reparation r : al) {
+                String statusName = "Nieuw";
+                String PrioName = "Normaal";
 
-        for(Reparation r : al) {
-            String statusName = "Nieuw";
-            String PrioName = "Normaal";
+                switch (r.Status) {
+                    case NEW:
+                        statusName = "Nieuw";
+                        break;
+                    case ACCEPTED:
+                        statusName = "Geaccepteerd";
+                        break;
+                    case ASSIGNED:
+                        statusName = "Toegekend";
+                        break;
+                    case DONE:
+                        statusName = "Gerepareerd";
+                        break;
+                    case REPAIRED:
+                        statusName = "Afgemeld";
+                        break;
+                }
 
-            switch(r.Status) {
-                case NEW:
-                    statusName = "Nieuw";
-                    break;
-                case ACCEPTED:
-                    statusName = "Geaccepteerd";
-                    break;
-                case ASSIGNED:
-                    statusName = "Toegekend";
-                    break;
-                case DONE:
-                    statusName = "Gerepareerd";
-                    break;
-                case REPAIRED:
-                    statusName = "Afgemeld";
-                    break;
-            }
-
-            switch(r.Priority) {
-                case URGENT:
-                    PrioName = "Urgent";
-                    break;
-                case IMPORTANT:
-                    PrioName = "Erg belangrijk";
-                    break;
-                case HIGH:
-                    PrioName = "Belangrijk";
-                    break;
-                case AVERAGE:
-                    PrioName = "Normaal";
-                    break;
-                case LOW:
-                    PrioName = "Laag";
-                    break;
-                case VERYLOW:
-                    PrioName = "Erg laag";
-                    break;
-            }
-
+                switch (r.Priority) {
+                    case URGENT:
+                        PrioName = "Urgent";
+                        break;
+                    case IMPORTANT:
+                        PrioName = "Erg belangrijk";
+                        break;
+                    case HIGH:
+                        PrioName = "Belangrijk";
+                        break;
+                    case AVERAGE:
+                        PrioName = "Normaal";
+                        break;
+                    case LOW:
+                        PrioName = "Laag";
+                        break;
+                    case VERYLOW:
+                        PrioName = "Erg laag";
+                        break;
+                }
             List<String> subList = new ArrayList<String>();
             listDataHeader.add(r.ShortDescription);
             subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
@@ -171,6 +176,9 @@ public class RepairReader {
             subList.add("Comment:  " + r.Comment);
             subList.add("id: " + r.Id);
             listDataChild.put(r.ShortDescription, subList);
+            }
+        } catch (NullPointerException e) {
+
         }
     }
 
@@ -179,31 +187,26 @@ public class RepairReader {
         listDataChild = new HashMap<String, List<String>>();
         // Navigation drawer items
 
-        try
-        {
-
-
+        try {
             //Loop though my JSONArray
-                for (Integer i = 0; i < jitems.length(); i++) {
-                    //Get My JSONObject and grab the String Value that I want.
-                    String title = jitems.getJSONObject(i).getString("shortdescription");
-                   // String building = jitems.getJSONObject(i).getString("building");
-                    String floor = jitems.getJSONObject(i).getString("floor");
-                    String priority = jitems.getJSONObject(i).getString("priority");
-                    String description = jitems.getJSONObject(i).getString("description");
-                    String clong = jitems.getJSONObject(i).getString("clong");
-                    String clat = jitems.getJSONObject(i).getString("clat");
-                    String comments = jitems.getJSONObject(i).getString("comments");
-                    String status = jitems.getJSONObject(i).getString("status");
-                    String node = jitems.getJSONObject(i).getString("defectid");
+            for (Integer i = 0; i < jitems.length(); i++) {
+                //Get My JSONObject and grab the String Value that I want.
+                String title = jitems.getJSONObject(i).getString("shortdescription");
+                // String building = jitems.getJSONObject(i).getString("building");
+                String floor = jitems.getJSONObject(i).getString("floor");
+                String priority = jitems.getJSONObject(i).getString("priority");
+                String description = jitems.getJSONObject(i).getString("description");
+                String clong = jitems.getJSONObject(i).getString("clong");
+                String clat = jitems.getJSONObject(i).getString("clat");
+                String comments = jitems.getJSONObject(i).getString("comments");
+                String status = jitems.getJSONObject(i).getString("status");
+                String node = jitems.getJSONObject(i).getString("defectid");
 
-                    LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                    Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
-                    Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
+                LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
+                Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
+                Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
                     String room = nodeRoom.getLocation();
-
-
                     String statusName = "Nieuw";
                     String PrioName = "Normaal";
 
@@ -256,14 +259,10 @@ public class RepairReader {
                     subList.add("Comment:  " + comments);
                     subList.add("Id: " + node);
                     listDataChild.put(title, subList);
-
-
-                }
+            }
             //listAdapter = new ExpandableListAdapterNew(MapsActivity.getContext(), listDataHeader, listDataChild);
             //expListView.setAdapter(listAdapter);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             Log.e("items_error: ", e.toString());
         }
     }
