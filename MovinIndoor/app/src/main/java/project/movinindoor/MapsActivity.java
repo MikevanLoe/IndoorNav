@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
+import project.movinindoor.Fragment.AlertDFragment;
+import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
@@ -68,6 +70,7 @@ import project.movinindoor.Readers.HttpJson;
 
 
 import project.movinindoor.Models.Room;
+import project.movinindoor.Readers.RepairReader;
 
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
@@ -104,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private ImageButton btnFloorUp, btnFloorDown;
 
     public static LinearLayout fNavigationMenu;
+    FragmentManager fm = getSupportFragmentManager();
     private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
     private ImageView infoWalkingBy;
@@ -494,6 +498,18 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setOnMapLongClickListener(onMapLongClick);
     }
 
+    public void refreshList() {
+        try {
+            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            setupGraph.setRepairReader(new RepairReader());
+            prepareListData();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         MapDrawer mapDrawer = new MapDrawer();
@@ -517,33 +533,22 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
                 if (childPosition == 4) {
-                    TextView editText2 = (TextView) v.findViewById(R.id.lblListItem);
-                    editText2.setText("Comment:");
+                    DFragment alertdFragment = new DFragment();
+                    // Show Alert DialogFragment
+                    alertdFragment.show(fm, "Edit Comment");
+
+                    TextView textView = (TextView) v.findViewById(R.id.lblListItem);
+                    //textView.setText("Comment:  " + editText.getText());
+
+                    EditText editText = (EditText) v.findViewById(R.id.editTextComment);
+                   // editText.setText(textView.getText().toString());
 
 
-                    ImageButton btn = (ImageButton) v.findViewById(R.id.btnListItem);
-                    btn.setVisibility(View.VISIBLE);
 
-                    final EditText editText = (EditText) v.findViewById(R.id.lblListItemEdit);
-                    editText.setVisibility(View.VISIBLE);
-                    parent.requestFocus();
-                    parent.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-                    editText.requestFocusFromTouch();
-                    final View view = v;
+                            //
+                    //
 
-                    btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            EditText editText = (EditText) view.findViewById(R.id.lblListItemEdit);
-                            editText.setVisibility(View.GONE);
 
-                            TextView editText2 = (TextView) view.findViewById(R.id.lblListItem);
-                            editText2.setText("Comment:  " + editText.getText());
-
-                            ImageButton btn = (ImageButton) view.findViewById(R.id.btnListItem);
-                            btn.setVisibility(View.GONE);
-                        }
-                    });
                 }
 
                 return false;

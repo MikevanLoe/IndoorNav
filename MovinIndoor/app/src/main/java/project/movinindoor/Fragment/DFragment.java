@@ -5,6 +5,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import project.movinindoor.R;
+
 /**
  * Created by Davey on 17-12-2014.
  */

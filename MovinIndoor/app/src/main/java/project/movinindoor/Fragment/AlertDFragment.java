@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
+import project.movinindoor.R;
+
 /**
  * Created by Davey on 17-12-2014.
  */
@@ -14,11 +16,12 @@ public class AlertDFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
                 // Set Dialog Icon
-                .setIcon(R.drawable.androidhappy)
+
+                .setIcon(R.drawable.movin_push)
                         // Set Dialog Title
-                .setTitle("Alert DialogFragment")
+                .setTitle("Edit comment")
                         // Set Dialog Message
-                .setMessage("Alert DialogFragment Tutorial")
+                //.setMessage("Alert DialogFragment Tutorial")
 
                         // Positive button
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -34,4 +37,6 @@ public class AlertDFragment extends DialogFragment {
                     }
                 }).create();
     }
+
+
 }
