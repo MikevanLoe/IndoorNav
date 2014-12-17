@@ -43,11 +43,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +58,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
+import project.movinindoor.Fragment.AlertDFragment;
+import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
@@ -65,6 +70,7 @@ import project.movinindoor.Readers.HttpJson;
 
 
 import project.movinindoor.Models.Room;
+import project.movinindoor.Readers.RepairReader;
 
 
 public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
@@ -101,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private ImageButton btnFloorUp, btnFloorDown;
 
     public static LinearLayout fNavigationMenu;
+    FragmentManager fm = getSupportFragmentManager();
     private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
     private ImageView infoWalkingBy;
@@ -373,11 +380,30 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        //sendPushNotification("Movin", "checked a repair");
+        int pos = Integer.valueOf(view.getTag().toString());
+        final String tag = listAdapter.getChild(pos, 5).toString();
 
-        //int pos = Integer.valueOf(view.getTag().toString());
-        //Object o = listAdapter.getGroup(pos);
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                //sendPushNotification("Movin", "checked a repair");
+                String cTag = tag.substring(4);
 
+                try {
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                    HttpResponse response = httpclient.execute(httpget);
+                } catch (ClientProtocolException e) {
+                    Log.i("MIKE", "ClientProtocol");
+                } catch (MalformedURLException u) {
+                    Log.i("MIKE", "URL chrash");
+                } catch (IOException e) {
+                    Log.i("MIKE", "IOException");
+                }
+
+                return "";
+            }
+        }.execute(null,null,null);
         view.setEnabled(false);
     }
 
@@ -397,9 +423,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -475,6 +498,18 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         mMap.setOnMapLongClickListener(onMapLongClick);
     }
 
+    public void refreshList() {
+        try {
+            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            setupGraph.setRepairReader(new RepairReader());
+            prepareListData();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
         MapDrawer mapDrawer = new MapDrawer();
@@ -498,33 +533,24 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
                 if (childPosition == 4) {
-                    TextView editText2 = (TextView) v.findViewById(R.id.lblListItem);
-                    editText2.setText("Comment:");
+                    String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
+
+                    TextView textView = (TextView) v.findViewById(R.id.lblListItem);
+
+                    DFragment alertdFragment = new DFragment();
+                    alertdFragment.setEditText(textView.getText().toString().substring(10));
+                    alertdFragment.setRepairId(Rid);
+                    alertdFragment.show(fm, "Edit Comment");
 
 
-                    ImageButton btn = (ImageButton) v.findViewById(R.id.btnListItem);
-                    btn.setVisibility(View.VISIBLE);
+                    // Show Alert DialogFragment
 
-                    final EditText editText = (EditText) v.findViewById(R.id.lblListItemEdit);
-                    editText.setVisibility(View.VISIBLE);
-                    parent.requestFocus();
-                    parent.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-                    editText.requestFocusFromTouch();
-                    final View view = v;
+                    //textView.setText("Comment:  " + editText.getText());
 
-                    btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            EditText editText = (EditText) view.findViewById(R.id.lblListItemEdit);
-                            editText.setVisibility(View.GONE);
 
-                            TextView editText2 = (TextView) view.findViewById(R.id.lblListItem);
-                            editText2.setText("Comment:  " + editText.getText());
 
-                            ImageButton btn = (ImageButton) view.findViewById(R.id.btnListItem);
-                            btn.setVisibility(View.GONE);
-                        }
-                    });
+
+
                 }
 
                 return false;

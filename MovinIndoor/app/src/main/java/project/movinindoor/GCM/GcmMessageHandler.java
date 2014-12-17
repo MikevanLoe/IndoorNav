@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -71,22 +73,36 @@ public class GcmMessageHandler extends IntentService {
 
     public void sendPushNotification(String title, String text) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(MapsActivity.getContext().NOTIFICATION_SERVICE);
+        Intent notificationIntent = new Intent(this, MapsActivity.class);
+        PendingIntent intent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
         Notification notification = new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.movin_push)
+
+                .addAction(R.drawable.movin_push, "View", intent)
+                .addAction(0, "Remind", intent)
+
                 .build();
 
-        Intent notificationIntent = new Intent(this, MapsActivity.class);
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent intent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+
+        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+         //       | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+
 
         notification.contentIntent = intent;
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+
+        long[] vibrate = { 0, 800, 800, 1200, 2000, 2000 };
+        notification.vibrate = vibrate;
 
         notification.ledARGB = 0xFFF700FF;
         notification.flags = Notification.FLAG_SHOW_LIGHTS;
