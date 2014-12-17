@@ -107,9 +107,6 @@ public class RepairReader {
 
 
             al = high.getList();
-            for (Reparation r : al) {
-                Log.i("REPARATIONS", "Building: " + r.Building + " Floor: " + r.getFloor() + " Priority: " + r.Priority + " Description: " + r.Description);
-            }
 
 
         } catch (Exception e) {
@@ -170,17 +167,18 @@ public class RepairReader {
                         PrioName = "Erg laag";
                         break;
                 }
-
-                List<String> subList = new ArrayList<String>();
-                listDataHeader.add(r.ShortDescription);
-                subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
-                subList.add("Priority:          " + PrioName);
-                subList.add("Status:           " + statusName);
-                subList.add("Description:  " + r.Description);
-                subList.add("Comment:  " + r.Comment);
-                listDataChild.put(r.ShortDescription, subList);
+            List<String> subList = new ArrayList<String>();
+            listDataHeader.add(r.ShortDescription);
+            subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
+            subList.add("Priority:          " + PrioName);
+            subList.add("Status:           " + statusName);
+            subList.add("Description:  " + r.Description);
+            subList.add("Comment:  " + r.Comment);
+            subList.add("id: " + r.Id);
+            listDataChild.put(r.ShortDescription, subList);
             }
         } catch (NullPointerException e) {
+
         }
     }
 
@@ -190,8 +188,6 @@ public class RepairReader {
         // Navigation drawer items
 
         try {
-
-
             //Loop though my JSONArray
             for (Integer i = 0; i < jitems.length(); i++) {
                 //Get My JSONObject and grab the String Value that I want.
@@ -210,62 +206,59 @@ public class RepairReader {
                 Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
                 Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
-                String room = nodeRoom.getLocation();
+                    String room = nodeRoom.getLocation();
+                    String statusName = "Nieuw";
+                    String PrioName = "Normaal";
 
+                    switch(status) {
+                        case "NEW":
+                            statusName = "Nieuw";
+                            break;
+                        case "ACCEPTED":
+                            statusName = "Geaccepteerd";
+                            break;
+                        case "ASSIGNED":
+                            statusName = "Toegekend";
+                            break;
+                        case "DONE":
+                            statusName = "Gerepareerd";
+                            break;
+                        case "REPAIRED":
+                            statusName = "Afgemeld";
+                            break;
+                    }
 
-                String statusName = "Nieuw";
-                String PrioName = "Normaal";
+                    switch(priority) {
+                        case "6":
+                            PrioName = "Urgent";
+                            break;
+                        case "5":
+                            PrioName = "Erg belangrijk";
+                            break;
+                        case "4":
+                            PrioName = "Belangrijk";
+                            break;
+                        case "3":
+                            PrioName = "Normaal";
+                            break;
+                        case "2":
+                            PrioName = "Laag";
+                            break;
+                        case "1":
+                            PrioName = "Erg laag";
+                            break;
+                    }
 
-                switch (status) {
-                    case "NEW":
-                        statusName = "Nieuw";
-                        break;
-                    case "ACCEPTED":
-                        statusName = "Geaccepteerd";
-                        break;
-                    case "ASSIGNED":
-                        statusName = "Toegekend";
-                        break;
-                    case "DONE":
-                        statusName = "Gerepareerd";
-                        break;
-                    case "REPAIRED":
-                        statusName = "Afgemeld";
-                        break;
-                }
-
-                switch (priority) {
-                    case "6":
-                        PrioName = "Urgent";
-                        break;
-                    case "5":
-                        PrioName = "Erg belangrijk";
-                        break;
-                    case "4":
-                        PrioName = "Belangrijk";
-                        break;
-                    case "3":
-                        PrioName = "Normaal";
-                        break;
-                    case "2":
-                        PrioName = "Laag";
-                        break;
-                    case "1":
-                        PrioName = "Erg laag";
-                        break;
-                }
-
-                List<String> subList = new ArrayList<String>();
-                listDataHeader.add(title);
-                if (room != null) subList.add("Location:       " + room);
-                else subList.add("Location:       " + "C" + floor + "." + "16");
-                subList.add("Priority:          " + PrioName + "|" + Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
-                subList.add("Status:           " + status);
-                subList.add("Description:  " + description);
-                subList.add("Comment:  " + comments);
-                listDataChild.put(title, subList);
-
-
+                    List<String> subList = new ArrayList<String>();
+                    listDataHeader.add(title);
+                    if(room != null) subList.add("Location:       " + room);
+                    else subList.add("Location:       " + "C" + floor + "." + "16");
+                    subList.add("Priority:          " + PrioName + "|" +Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
+                    subList.add("Status:           " + status);
+                    subList.add("Description:  " + description);
+                    subList.add("Comment:  " + comments);
+                    subList.add("Id: " + node);
+                    listDataChild.put(title, subList);
             }
             //listAdapter = new ExpandableListAdapterNew(MapsActivity.getContext(), listDataHeader, listDataChild);
             //expListView.setAdapter(listAdapter);

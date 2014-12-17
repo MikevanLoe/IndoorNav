@@ -59,19 +59,19 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
                 .findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText);
-        ImageButton btn = (ImageButton) convertView.findViewById(R.id.btnListItem);
+        /*ImageButton btn = (ImageButton) convertView.findViewById(R.id.btnListItem);
         EditText editText = (EditText) convertView.findViewById(R.id.lblListItemEdit);
         String txt = txtListChild.getText().toString().substring(10);
-        editText.setText(txt);
+        editText.setText(txt);*/
 
 
         txtListChild.setTag(groupPosition+"-"+childPosition);
-        btn.setTag(groupPosition+"-"+childPosition);
-        editText.setTag(groupPosition+"-"+childPosition);
+        //btn.setTag(groupPosition+"-"+childPosition);
+        //editText.setTag(groupPosition+"-"+childPosition);
         convertView.setTag(groupPosition+"-"+childPosition);
 
-        btn.setVisibility(View.GONE);
-        editText.setVisibility(View.GONE);
+        //btn.setVisibility(View.GONE);
+        //editText.setVisibility(View.GONE);
 
         return convertView;
     }

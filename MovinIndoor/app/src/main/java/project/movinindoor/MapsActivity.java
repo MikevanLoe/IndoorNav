@@ -43,11 +43,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -373,11 +376,30 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        //sendPushNotification("Movin", "checked a repair");
+        int pos = Integer.valueOf(view.getTag().toString());
+        final String tag = listAdapter.getChild(pos, 5).toString();
 
-        //int pos = Integer.valueOf(view.getTag().toString());
-        //Object o = listAdapter.getGroup(pos);
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                //sendPushNotification("Movin", "checked a repair");
+                String cTag = tag.substring(4);
 
+                try {
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                    HttpResponse response = httpclient.execute(httpget);
+                } catch (ClientProtocolException e) {
+                    Log.i("MIKE", "ClientProtocol");
+                } catch (MalformedURLException u) {
+                    Log.i("MIKE", "URL chrash");
+                } catch (IOException e) {
+                    Log.i("MIKE", "IOException");
+                }
+
+                return "";
+            }
+        }.execute(null,null,null);
         view.setEnabled(false);
     }
 
@@ -397,9 +419,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
