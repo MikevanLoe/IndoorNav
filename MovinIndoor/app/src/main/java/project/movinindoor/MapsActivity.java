@@ -2,6 +2,7 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -403,8 +404,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
                 return "";
             }
-        }.execute(null,null,null);
-        view.setEnabled(false);
+        }.execute(null, null, null);
+        refreshList();
     }
 
     //OnClick Location From Reparation
@@ -508,6 +509,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
