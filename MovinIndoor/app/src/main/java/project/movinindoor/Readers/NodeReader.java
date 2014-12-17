@@ -44,15 +44,17 @@ public class NodeReader {
         }
     }
 
-    public HashMap<String, Node> calculate(HashMap<String, Node> read ) {
+    public HashMap<String, Node> calculate(HashMap<String, Node> read) {
         double lat1 = 0.0;
         double long1 = 0.0;
         double lat2 = 0.0;
         double long2 = 0.0;
 
         for (Node n : read.values()) {
+
             lat1 = n.location.get(0);
             long1 = n.location.get(1);
+
 
             for (ToNode tN : n.toNode) {
                 lat2 = read.get(tN.toNodeID).location.get(0);
@@ -84,32 +86,45 @@ public class NodeReader {
 
 
     public Node readNodes(JsonReader reader) throws IOException {
-        String nodeID = null;
+        String nodeID = "";
         List<Double> position = null;
         String floor = null;
         List<ToNode> nodeLinks = null;
+        String type = "";
 
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("nodeID")) {
-                nodeID = reader.nextString();
-            } else if (name.equals("position")) {
-                position = readDoublesArray(reader);
-            } else if (name.equals("floor")) {
-                floor =  reader.nextString();
-            } else if (name.equals("nodeLinks")) {
-                List<ToNode> r = readNodeLinks(reader);
-                nodeLinks = r;
-            } else {
-                reader.skipValue();
-            }
 
+            switch (name) {
+                case "nodeID":
+                    nodeID = reader.nextString();
+                    break;
+                case "position":
+                    position = readDoublesArray(reader);
+                    break;
+                case "floor":
+                    floor = reader.nextString();
+                    break;
+                case "nodeLinks":
+                    List<ToNode> r = readNodeLinks(reader);
+                    nodeLinks = r;
+                    break;
+                case "featureBaseType":
+                    if (reader.peek().toString().equals("STRING")) {
+                        type = reader.nextString();
+                    } else {
+                        reader.nextNull();
+                    }
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
+            }
         }
         reader.endObject();
-        return new Node(nodeID,position,floor,nodeLinks);
+        return new Node(nodeID, position, floor, nodeLinks, type);
     }
-
 
 
     public List<Double> readDoublesArray(JsonReader reader) throws IOException {
@@ -130,7 +145,7 @@ public class NodeReader {
         reader.beginArray();
         while (reader.hasNext()) {
             reader.beginObject();
-            while(reader.hasNext()) {
+            while (reader.hasNext()) {
                 String name = reader.nextName();
                 if (name.equals("toNodeID")) toNodeID = reader.nextString();
                 else reader.skipValue();
@@ -155,7 +170,7 @@ public class NodeReader {
             double lat1 = n.location.get(0);
             double long1 = n.location.get(1);
 
-            if(shortLng == 0.0 && shortLng == 0.0) {
+            if (shortLng == 0.0 && shortLng == 0.0) {
                 shortLat = lat1;
                 shortLng = long1;
             }
@@ -163,7 +178,7 @@ public class NodeReader {
             double som1 = CalcMath.measureMeters(startLat1, startLong1, lat1, long1);
             double som2 = CalcMath.measureMeters(startLat1, startLong1, shortLat, shortLng);
 
-            if(som1 <= som2) {
+            if (som1 <= som2) {
                 shortLat = lat1;
                 shortLng = long1;
                 tempNode = n;
@@ -176,8 +191,8 @@ public class NodeReader {
     public Node FindClosestNodeInsideRoom(Room room) {
 
         for (Node node : jsonList.values()) {
-            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
-            if(MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1)) {
+            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
+            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1)) {
                 return node;
             }
         }
@@ -187,8 +202,8 @@ public class NodeReader {
     public Node FindClosestNodeInsideElevator(Elevator elevator) {
 
         for (Node node : jsonList.values()) {
-            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
-            if(MapsActivity.setupGraph.getElevators().nodeInsideElevator(elevator, latLng1)) {
+            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
+            if (MapsActivity.setupGraph.getElevators().nodeInsideElevator(elevator, latLng1)) {
                 return node;
             }
         }
@@ -197,8 +212,8 @@ public class NodeReader {
 
     public Node FindClosestNodeInsideStair(Stair stair) {
         for (Node node : jsonList.values()) {
-            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
-            if(MapsActivity.setupGraph.getStairs().nodeInsideStair(stair, latLng1)) {
+            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
+            if (MapsActivity.setupGraph.getStairs().nodeInsideStair(stair, latLng1)) {
                 return node;
             }
         }
