@@ -3,15 +3,16 @@ package project.movinindoor.Graph;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
-import project.movinindoor.*;
 import project.movinindoor.Graph.Graph.Graph;
-import project.movinindoor.Models.Elevator;
+import project.movinindoor.Graph.Graph.Vertex;
+import project.movinindoor.MapDrawer;
 import project.movinindoor.Models.Elevators;
+import project.movinindoor.Models.Rooms;
 import project.movinindoor.Models.Stairs;
 import project.movinindoor.Readers.NodeReader;
 import project.movinindoor.Readers.RepairReader;
-import project.movinindoor.Models.Rooms;
 
 /**
  * Created by Wietse on 24-11-2014.
@@ -31,7 +32,7 @@ public class GraphHandler {
         new Thread(new Runnable() {
             public void run() {
                 graph = new Graph();
-                createNodes();
+                createVertices();
                 createEdges();
             }
         }).start();
@@ -57,30 +58,59 @@ public class GraphHandler {
         return stairs;
     }
 
-    public Graph getGraph() { return graph;  }
-    public RepairReader getRepairReader() { return repairReader; }
-
-    public void setRepairReader(RepairReader repairReader) { this.repairReader = repairReader; }
-
-    public NodeReader getNodes() { return nodeReader; }
-
-    public Rooms getRooms() { return rooms; }
-
-    public void createNodes() {
-        for (Node n : nodeReader.jsonList.values()) {
-            graph.addVertex(n.nodeId, n.location.get(0), n.location.get(1));
-        }
+    public Graph getGraph() {
+        return graph;
     }
 
+    public RepairReader getRepairReader() {
+        return repairReader;
+    }
+
+    public void setRepairReader(RepairReader repairReader) {
+        this.repairReader = repairReader;
+    }
+
+    public NodeReader getNodes() {
+        return nodeReader;
+    }
+
+    public Rooms getRooms() {
+        return rooms;
+    }
+
+    public void createVertices() {
+        Vertex.Vertextype type = null;
+        for (Node n : nodeReader.jsonList.values()) {
+            if (n.type != null) {
+                switch (n.type) {
+                    case "Hall":
+                        type = Vertex.Vertextype.Hall;
+                        break;
+                    case "Room":
+                        type = Vertex.Vertextype.Room;
+                        break;
+                    case "Elevator":
+                        type = Vertex.Vertextype.Elevator;
+                        break;
+                    case "Stairs":
+                        type = Vertex.Vertextype.Hall;
+                        break;
+                    default:
+                        break;
+                }
+                graph.addVertex(n.nodeId, n.location.get(0), n.location.get(1), type);
+            }
+        }
+    }
     public void createEdges() {
         double lat1, long1, lat2, long2;
 
         for (Node n : nodeReader.jsonList.values()) {
-            lat1 =  n.location.get(0);
+            lat1 = n.location.get(0);
             long1 = n.location.get(1);
             for (ToNode t : n.toNode) {
-                lat2 =  nodeReader.jsonList.get(t.toNodeID).location.get(0);
-                long2 =  nodeReader.jsonList.get(t.toNodeID).location.get(1);
+                lat2 = nodeReader.jsonList.get(t.toNodeID).location.get(0);
+                long2 = nodeReader.jsonList.get(t.toNodeID).location.get(1);
                 graph.addEdge(n.nodeId, t.toNodeID, t.cost);
 
                 final double t1 = lat1;
@@ -146,10 +176,6 @@ public class GraphHandler {
         return null;
     }
     */
-
-
-
-
 
 
 }

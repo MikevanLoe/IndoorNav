@@ -32,8 +32,8 @@ public class Graph {
     }
 
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
-    public void addVertex(String name, double lat1, double long1) {
-        Vertex v = new Vertex(name, lat1, long1);
+    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type) {
+        Vertex v = new Vertex(name, lat1, long1, type);
         vertexMap.put(name, v);
     }
 
