@@ -535,20 +535,22 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
                 if (childPosition == 4) {
-                    DFragment alertdFragment = new DFragment();
-                    // Show Alert DialogFragment
-                    alertdFragment.show(fm, "Edit Comment");
+                    String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
 
                     TextView textView = (TextView) v.findViewById(R.id.lblListItem);
+
+                    DFragment alertdFragment = new DFragment();
+                    alertdFragment.setEditText(textView.getText().toString().substring(10));
+                    alertdFragment.setRepairId(Rid);
+                    alertdFragment.show(fm, "Edit Comment");
+
+
+                    // Show Alert DialogFragment
+
                     //textView.setText("Comment:  " + editText.getText());
 
-                    EditText editText = (EditText) v.findViewById(R.id.editTextComment);
-                   // editText.setText(textView.getText().toString());
 
 
-
-                            //
-                    //
 
 
                 }
