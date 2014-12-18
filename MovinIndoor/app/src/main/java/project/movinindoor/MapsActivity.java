@@ -129,10 +129,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         context = getApplicationContext();
         setupGraph = new GraphHandler();
 
-        int currentFloor = MapDrawer.getFloor();
-        MapDrawer.hidePolylines();
-        //MapDrawer.showPolylinesFloor(currentFloor);
-
         getRegId();
 
         fmMarkerDisplay       = getSupportFragmentManager();
@@ -263,6 +259,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor + 1);
+
+            MapDrawer.hidePolylinesFloorNav(currentFloor);
+            MapDrawer.showPolylinesFloorNav(currentFloor + 1);
         }
 
         if (currentFloor >= 9) {
@@ -327,6 +326,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor - 1);
+
+            MapDrawer.hidePolylinesFloorNav(currentFloor);
+            MapDrawer.showPolylinesFloorNav(currentFloor - 1);
         }
 
         if (currentFloor <= 1) {
