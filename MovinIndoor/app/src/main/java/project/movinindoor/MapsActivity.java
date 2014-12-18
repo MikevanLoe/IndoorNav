@@ -381,31 +381,61 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Activate/Close Reparation
     public void btnCheckRepair(View view){
-        int pos = Integer.valueOf(view.getTag().toString());
-        final String tag = listAdapter.getChild(pos, 5).toString();
+        if(view.getBackground() == getResources().getDrawable(R.drawable.ic_check_black_24dp)) {
+            view.setBackground(getResources().getDrawable(R.drawable.ic_check_grey600_24dp));
+            int pos = Integer.valueOf(view.getTag().toString());
+            final String tag = listAdapter.getChild(pos, 5).toString();
 
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                //sendPushNotification("Movin", "checked a repair");
-                String cTag = tag.substring(4);
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    //sendPushNotification("Movin", "checked a repair");
+                    String cTag = tag.substring(4);
 
-                try {
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
-                    HttpResponse response = httpclient.execute(httpget);
-                } catch (ClientProtocolException e) {
-                    Log.i("MIKE", "ClientProtocol");
-                } catch (MalformedURLException u) {
-                    Log.i("MIKE", "URL chrash");
-                } catch (IOException e) {
-                    Log.i("MIKE", "IOException");
+                    try {
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                        HttpResponse response = httpclient.execute(httpget);
+                    } catch (ClientProtocolException e) {
+                        Log.i("MIKE", "ClientProtocol");
+                    } catch (MalformedURLException u) {
+                        Log.i("MIKE", "URL chrash");
+                    } catch (IOException e) {
+                        Log.i("MIKE", "IOException");
+                    }
+
+                    return "";
                 }
+            }.execute(null, null, null);
+            refreshList();
+        }
+        else{
+            int pos = Integer.valueOf(view.getTag().toString());
+            final String tag = listAdapter.getChild(pos, 5).toString();
 
-                return "";
-            }
-        }.execute(null, null, null);
-        refreshList();
+            new AsyncTask<Void, Void, String>() {
+                @Override
+                protected String doInBackground(Void... params) {
+                    //sendPushNotification("Movin", "checked a repair");
+                    String cTag = tag.substring(4);
+
+                    try {
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
+                        HttpResponse response = httpclient.execute(httpget);
+                    } catch (ClientProtocolException e) {
+                        Log.i("MIKE", "ClientProtocol");
+                    } catch (MalformedURLException u) {
+                        Log.i("MIKE", "URL chrash");
+                    } catch (IOException e) {
+                        Log.i("MIKE", "IOException");
+                    }
+
+                    return "";
+                }
+            }.execute(null, null, null);
+            refreshList();
+        }
     }
 
     //OnClick Location From Reparation
