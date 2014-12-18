@@ -136,24 +136,29 @@ public class HighPrioritySplit {
      * @param input the buildings object you want to split
      */
     public static Buildings statusSplit(Buildings input){
-        for(Building b : input.order){
-            for(Floor f : b.order){
-                for(Reparation r : f.highOrder){
-                    if (r.Status == Reparation.StatusEnum.ACCEPTED){
-                        input.acceptedWork.add(r);
+        try {
+            for (Building b : input.order) {
+                for (Floor f : b.order) {
+                    for (Reparation r : f.highOrder) {
+                        if (r.Status == Reparation.StatusEnum.ACCEPTED) {
+                            input.acceptedWork.add(r);
+                            f.highOrder.remove(r);
+                        }
+                    }
+                }
+            }
+            for (Building b : input.order) {
+                for (Floor f : b.order) {
+                    for (Reparation r : f.lowOrder) {
+                        if (r.Status == Reparation.StatusEnum.ACCEPTED) {
+                            input.acceptedWork.add(r);
+                            f.lowOrder.remove(r);
+                        }
                     }
                 }
             }
         }
-        for(Building b : input.order){
-            for(Floor f : b.order){
-                for(Reparation r : f.lowOrder){
-                    if (r.Status == Reparation.StatusEnum.ACCEPTED){
-                        input.acceptedWork.add(r);
-                    }
-                }
-            }
-        }
+        catch(NullPointerException e) {}
         return input;
     }
     /*
