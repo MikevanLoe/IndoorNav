@@ -392,6 +392,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public void btnCheckRepair(View view){
         int pos = Integer.valueOf(view.getTag().toString());
         final String tag = listAdapter.getChild(pos, 5).toString();
+        final String stat = listAdapter.getChild(pos, 2).toString().substring(18);
+
+        ((ImageButton) findViewById(R.id.imageButton2)).setImageDrawable(getResources().getDrawable(R.drawable.ic_check_grey600_24dp));
 
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -400,7 +403,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                    HttpGet httpget;
+                    switch(stat) {
+                        case "Geaccepteerd": httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
+                        default:             httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                    }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
                     Log.i("MIKE", "ClientProtocol");
