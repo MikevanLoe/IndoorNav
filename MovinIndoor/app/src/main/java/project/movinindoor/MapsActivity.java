@@ -394,19 +394,21 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         final String tag = listAdapter.getChild(pos, 5).toString();
         final String stat = listAdapter.getChild(pos, 2).toString().substring(18);
 
-        ((ImageButton) findViewById(R.id.imageButton2)).setImageDrawable(getResources().getDrawable(R.drawable.ic_check_grey600_24dp));
-
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 String cTag = tag.substring(4);
-
+                Log.i("MIKE", stat);
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpGet httpget;
                     switch(stat) {
-                        case "Geaccepteerd": httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
-                        default:             httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                        case "Geaccepteerd":
+                            httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
+                            break;
+                        default:
+                            httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                            break;
                     }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
