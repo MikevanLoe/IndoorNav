@@ -398,7 +398,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             @Override
             protected String doInBackground(Void... params) {
                 String cTag = tag.substring(4);
-                Log.i("MIKE", stat);
+                //Log.i("MIKE", stat);
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpGet httpget;
@@ -412,11 +412,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
-                    Log.i("MIKE", "ClientProtocol");
+                    //Log.i("MIKE", "ClientProtocol");
                 } catch (MalformedURLException u) {
-                    Log.i("MIKE", "URL chrash");
+                    //Log.i("MIKE", "URL chrash");
                 } catch (IOException e) {
-                    Log.i("MIKE", "IOException");
+                    //Log.i("MIKE", "IOException");
                 }
 
                 return "";
