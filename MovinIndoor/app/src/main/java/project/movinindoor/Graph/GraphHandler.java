@@ -131,6 +131,15 @@ public class GraphHandler {
                 //Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
             }
         }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                MapDrawer.hidePolylines();
+                MapDrawer.showPolylinesFloor(0);
+            }
+        });
+
     }
 
     /*

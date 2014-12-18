@@ -78,10 +78,10 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    private void drawPath(Vertex v) {
-        MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
+    private void drawPath(Vertex v, String floor) {
+        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, Integer.valueOf(floor));
         if (v.prev.prev != null) {
-            drawPath(v.prev);
+            drawPath(v.prev, floor);
         } else {
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
@@ -89,7 +89,7 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    public double drawPath(String startName, String destName) {
+    public double drawPath(String startName, String destName, String floor) {
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {
@@ -100,7 +100,7 @@ public class Graph {
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
-                    drawPath(v);
+                    drawPath(v, floor);
                     return v.dist;
                 } else {
                     Toast.makeText(MapsActivity.getContext().getApplicationContext(), "couldn't find a path to the destination", Toast.LENGTH_LONG).show();

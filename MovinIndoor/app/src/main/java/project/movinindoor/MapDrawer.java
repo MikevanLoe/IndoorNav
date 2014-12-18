@@ -126,6 +126,17 @@ public class MapDrawer {
 
     }
 
+    public static void addPolylineNav(double lat1, double long1, double lat2, double long2, int color, int zIndex){
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions()
+                .add(new LatLng(lat1, long1))
+                .add(new LatLng(lat2, long2)).zIndex(205 + zIndex).color(color);
+
+        Polyline polyline =  mMap.addPolyline(rectOptions);
+        polylines.add(polyline);
+
+    }
+
     public static void addMarker(double lat1, double long1, String name) {
         markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name)));
     }
@@ -145,19 +156,31 @@ public class MapDrawer {
 
     public static void hidePolylinesFloor(int floor) {
         for(Polyline p : polylines) {
-            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) p.setVisible(false);
+            if(p.getZIndex() == (floor + 200)) p.setVisible(false);
+        }
+    }
+
+    public static void hidePolylinesFloorNav(int floor) {
+        for(Polyline p : polylines) {
+            if(p.getZIndex() == (floor + 205)) p.setVisible(false);
         }
     }
 
     public static void hidePolylines() {
         for(Polyline p : polylines) {
-            if(p.getColor() == Color.BLACK) p.setVisible(false);
+            p.setVisible(false);
         }
     }
 
     public static void showPolylinesFloor(int floor) {
         for(Polyline p : polylines) {
-            if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) p.setVisible(true);
+            if(p.getZIndex() == (floor + 200)) p.setVisible(true);
+        }
+    }
+
+    public static void showPolylinesFloorNav(int floor) {
+        for(Polyline p : polylines) {
+            if(p.getZIndex() == (floor + 205 )) p.setVisible(true);
         }
     }
 
