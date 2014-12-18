@@ -6,11 +6,13 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 
@@ -23,18 +25,10 @@ public class Graph {
     public static boolean movingByWalk = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
 
-    //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
-    //the edge will be added to the vertex.adj list of the sourcename vertex.
-    public void addEdge(String sourcename, String destname, double cost) {
+    public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
         Vertex v2 = vertexMap.get(destname);
-        v.adj.add(new Edge(v2, cost));
-    }
-
-    public void addEdge(String sourcename, String destname, double cost, String action){
-        Vertex v = vertexMap.get(sourcename);
-        Vertex v2 = vertexMap.get(destname);
-        v.adj.add(new Edge(v2, cost));
+        v.adj.add(new Edge(v2, cost, actions));
     }
 
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
