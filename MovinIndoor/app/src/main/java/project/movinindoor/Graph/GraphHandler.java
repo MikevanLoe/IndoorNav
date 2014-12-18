@@ -111,7 +111,7 @@ public class GraphHandler {
             for (ToNode t : n.toNode) {
                 lat2 = nodeReader.jsonList.get(t.toNodeID).location.get(0);
                 long2 = nodeReader.jsonList.get(t.toNodeID).location.get(1);
-                graph.addEdge(n.nodeId, t.toNodeID, t.cost);
+                graph.addEdge(n.nodeId, t.toNodeID, t.cost, t.actions);
 
                 final double t1 = lat1;
                 final double t2 = long1;
