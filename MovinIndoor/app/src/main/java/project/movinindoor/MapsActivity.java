@@ -2,7 +2,6 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -49,22 +47,22 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
-import project.movinindoor.Fragment.AlertDFragment;
+import project.movinindoor.Algorithm.NavigationRoute;
 import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
 import project.movinindoor.Fragment.NavigationBar;
+import project.movinindoor.Fragment.ShowNavigationCardFragment;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Readers.HttpJson;
@@ -74,7 +72,7 @@ import project.movinindoor.Models.Room;
 import project.movinindoor.Readers.RepairReader;
 
 
-public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     GoogleCloudMessaging gcm;
     String regid;
@@ -109,8 +107,8 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     public static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
-    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
-    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
+    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay, fmNavigationCard;
+    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
     @Override
@@ -131,10 +129,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         context = getApplicationContext();
         setupGraph = new GraphHandler();
 
+        int currentFloor = MapDrawer.getFloor();
+        MapDrawer.hidePolylines();
+        //MapDrawer.showPolylinesFloor(currentFloor);
+
         getRegId();
 
         fmMarkerDisplay       = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
+
+        fmNavigationCard       = getSupportFragmentManager();
+        fNavigationCard = fmNavigationCard.findFragmentById(R.id.fNavigationCard);
 
         fmFloorNavigator       = getSupportFragmentManager();
         fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
@@ -149,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
         fFloorNavigator2.getView().setVisibility(View.VISIBLE);
         fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+        fNavigationCard.getView().setVisibility(View.INVISIBLE);
 
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
@@ -274,6 +280,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
 
+
     //OnClick Select Custom Location
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
@@ -333,6 +340,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
         //animate
+        Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
@@ -423,6 +431,33 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+    }
+
+    NavigationRoute navigationRoute = new NavigationRoute();
+
+    public void showNextCardLocation(View view) {
+       // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
+        if(navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
+            ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+            String[] split = navigationRoute.getNextCard().split(",");
+            switch (split[0]) {
+                case "up":      imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
+                                break;
+                case "right":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
+                                break;
+                case "left":    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
+                                break;
+                case "sRight":  imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
+                                break;
+                case "sLeft":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
+                                break;
+            }
+
+            if(navigationRoute.getNum() == navigationRoute.getLinkedList().size()) imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
+            //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+            TextView textView = (TextView) findViewById(R.id.txtCardText);
+            textView.setText(split[1]);
+        }
     }
 
     @Override
