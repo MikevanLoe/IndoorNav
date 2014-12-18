@@ -3,6 +3,7 @@ package project.movinindoor.Readers;
 
 import android.graphics.Color;
 import android.util.JsonReader;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import project.movinindoor.CalcMath;
 import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.ToNode;
+import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 import project.movinindoor.Models.Elevator;
@@ -141,20 +143,56 @@ public class NodeReader {
     public List<ToNode> readNodeLinks(JsonReader reader) throws IOException {
         List<ToNode> list = new ArrayList<ToNode>();
         String toNodeID = null;
+        ArrayList<edgeActions> actions = null;
+        String name;
 
         reader.beginArray();
         while (reader.hasNext()) {
             reader.beginObject();
             while (reader.hasNext()) {
-                String name = reader.nextName();
-                if (name.equals("toNodeID")) toNodeID = reader.nextString();
-                else reader.skipValue();
+                name = reader.nextName();
+                if (name.equals("toNodeID")) {
+                    toNodeID = reader.nextString();
+                } else if (name.equals("edgeActions")) {
+                    actions = readActions(reader);
+                } else {
+                    reader.skipValue();
+                }
             }
             reader.endObject();
-            list.add(new ToNode(toNodeID, 0));
+            list.add(new ToNode(toNodeID, 0, actions));
         }
         reader.endArray();
         return list;
+    }
+
+
+    //useless function ATM
+    public ArrayList<edgeActions> readActions(JsonReader reader) throws IOException {
+        String action = "";
+        String toNodeID = "";
+        String name;
+        ArrayList<edgeActions> actions = new ArrayList<edgeActions>();
+        reader.beginArray();
+        while (reader.hasNext()) {
+            reader.beginObject();
+            while (reader.hasNext()) {
+                name = reader.nextName();
+                if (name.equals("action")) {
+                    action = reader.nextString();
+                }else if(name.equals("toNodeID")){
+                    toNodeID = reader.nextString();
+                } else if (name.equals("turns")) {
+                    reader.skipValue();
+                } else {
+                    reader.skipValue();
+                }
+            }
+            reader.endObject();
+            actions.add(new edgeActions(action, Integer.parseInt(toNodeID), 0, 0, 0, 0));
+        }
+        reader.endArray();
+        return actions;
     }
 
     public Node findNearestNode(LatLng latLng) {
