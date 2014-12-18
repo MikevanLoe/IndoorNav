@@ -22,6 +22,7 @@ import java.util.Queue;
  */
 public class Buildings {
     public Queue<Building> order;
+    public ArrayList<Reparation> acceptedWork;
     public Map<Reparation.BuildingEnum, Building> buildingList;
     
     public Buildings() {
@@ -232,6 +233,10 @@ public class Buildings {
 
     public ArrayList getList(){
         ArrayList<Reparation> al = new ArrayList<Reparation>();
+
+        for (Reparation r : acceptedWork){
+            al.add(r);
+        }
         for(Building b : order){
             for(Floor f : b.order){
                 for(Reparation r : f.highOrder){
