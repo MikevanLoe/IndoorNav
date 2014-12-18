@@ -31,6 +31,12 @@ public class Graph {
         v.adj.add(new Edge(v2, cost));
     }
 
+    public void addEdge(String sourcename, String destname, double cost, String action){
+        Vertex v = vertexMap.get(sourcename);
+        Vertex v2 = vertexMap.get(destname);
+        v.adj.add(new Edge(v2, cost));
+    }
+
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type) {
         Vertex v = new Vertex(name, lat1, long1, type);
