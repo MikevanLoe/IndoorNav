@@ -630,6 +630,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
             }.execute(null, null, null);
     }
 
-    
+
 }
 
