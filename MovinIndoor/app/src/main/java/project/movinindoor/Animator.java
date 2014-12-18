@@ -90,4 +90,18 @@ public class Animator {
             MapsActivity.fFloorNavigator2.getView().setVisibility(View.INVISIBLE);
         }
     }
+
+
+    public static void visibilityCardNavigator(Visibility type) {
+        Animation hideAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_fade_out);
+        Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_fade_in);
+
+        if(type.equals(Visibility.SHOW)) {
+            MapsActivity.fNavigationCard.getView().startAnimation(showAnimation);
+            MapsActivity.fNavigationCard.getView().setVisibility(View.VISIBLE);
+        } else {
+            MapsActivity.fNavigationCard.getView().startAnimation(hideAnimation);
+            MapsActivity.fNavigationCard.getView().setVisibility(View.INVISIBLE);
+        }
+    }
 }

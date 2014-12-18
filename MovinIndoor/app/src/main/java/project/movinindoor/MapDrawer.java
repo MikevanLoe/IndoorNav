@@ -149,6 +149,12 @@ public class MapDrawer {
         }
     }
 
+    public static void hidePolylines() {
+        for(Polyline p : polylines) {
+            if(p.getColor() == Color.BLACK) p.setVisible(false);
+        }
+    }
+
     public static void showPolylinesFloor(int floor) {
         for(Polyline p : polylines) {
             if(p.getColor() == Color.BLACK && p.getZIndex() == (floor + 200)) p.setVisible(true);

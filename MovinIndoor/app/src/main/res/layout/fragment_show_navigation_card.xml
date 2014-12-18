@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="project.movinindoor.Fragment.ShowNavigationCardFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <GridLayout
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:baselineAligned="false"
+        android:background="#F08714"
+        android:rowCount="1"
+        android:columnCount="2"
+        android:paddingLeft="10dp"
+        android:layout_marginBottom="40dp"
+        android:nestedScrollingEnabled="false"
+        android:onClick="showNextCardLocation">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imgCardIcon"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:src="@drawable/ic_navigation_white_36dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Start"
+            android:id="@+id/txtCardText"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_gravity="center" />
+
+    </GridLayout>
+</RelativeLayout>

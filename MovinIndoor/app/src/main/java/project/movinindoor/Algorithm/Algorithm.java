@@ -448,6 +448,7 @@ public class Algorithm {
         if(sucess) {
             Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
             //animate
+            Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
             Animator.visibilityRepairList(Animator.Visibility.HIDE);
             Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
             Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
