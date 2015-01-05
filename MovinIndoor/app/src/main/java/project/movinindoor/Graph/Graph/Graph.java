@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -24,6 +25,7 @@ public class Graph {
     public static final double INFINITY = Double.MAX_VALUE;
     public static boolean movingByWalk = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+    public static List<Vertex> walkingPath = new LinkedList<>();
 
     public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
@@ -78,18 +80,20 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    private void drawPath(Vertex v, String floor) {
-        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, Integer.valueOf(floor));
+    private void drawPath(Vertex v) {
+        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
         if (v.prev.prev != null) {
-            drawPath(v.prev, floor);
+            walkingPath.add(v);
+            drawPath(v.prev);
         } else {
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
 
+
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    public double drawPath(String startName, String destName, String floor) {
+    public double drawPath(String startName, String destName) {
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {
@@ -100,7 +104,7 @@ public class Graph {
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
-                    drawPath(v, floor);
+                    drawPath(v);
                     return v.dist;
                 } else {
                     Toast.makeText(MapsActivity.getContext().getApplicationContext(), "couldn't find a path to the destination", Toast.LENGTH_LONG).show();

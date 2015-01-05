@@ -11,13 +11,14 @@ import project.movinindoor.Models.Stairs;
  */
 public class Vertex {
 
-    protected String name;
+    public String name;
     protected List<Edge> adj;
     protected double dist;
-    protected Vertex prev;
+    public Vertex prev;
     protected boolean scratch;
     protected double lat1;
     protected double long1;
+    protected int Floor;
     public enum Vertextype {Elevator, Stairs, Room, Hall};
     protected Vertextype type;
 
