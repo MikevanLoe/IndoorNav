@@ -24,16 +24,21 @@ import project.movinindoor.MapsActivity;
 public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
-    public static boolean movingByWalk = true;
+    public static boolean movingByFoot = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
     public static List<Vertex> walkingPath = new LinkedList<>();
 
     public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
         Vertex v2 = vertexMap.get(destname);
+        if((v.type == Vertex.Vertextype.Elevator || v.type == Vertex.Vertextype.Stairs) && (v2.type == Vertex.Vertextype.Elevator || v2.type == Vertex.Vertextype.Stairs)){
+            Log.i("STAIRS", "added 30 meters to a stair");
+            cost = cost + 10000;
+        }
         v.adj.add(new Edge(v2, cost, actions));
     }
 
+    
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
         Vertex v = new Vertex(name, lat1, long1, type, floor);
@@ -159,7 +164,7 @@ public class Graph {
 
 
     public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = (movingByWalk) ? 5000 : 4000;
+        int walkingSpeed = (movingByFoot) ? 5000 : 4000;
         int minuteInSec = 3600;
         float walkingspeedPerSecond = ((float) walkingSpeed) / minuteInSec;
         double time;

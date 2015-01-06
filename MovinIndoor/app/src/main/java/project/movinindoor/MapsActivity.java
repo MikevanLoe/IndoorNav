@@ -2,7 +2,6 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,13 +51,11 @@ import java.net.MalformedURLException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Algorithm.NavigationRoute;
-import project.movinindoor.Algorithm.RouteStep;
 import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
@@ -215,12 +212,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.radioCart:
-                    Graph.movingByWalk=false;
+                    Graph.movingByFoot =false;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
                     Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Graph.movingByWalk=true;
+                    Graph.movingByFoot =true;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
                     Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
                     break;
