@@ -1,6 +1,7 @@
 package project.movinindoor.Graph.Graph;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -81,11 +82,16 @@ public class Graph {
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
     private void drawPath(Vertex v) {
+
         MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
+        Log.i("FLOOR", String.valueOf(v.Floor));
+        MapDrawer.hidePolylines();
         if (v.prev.prev != null) {
             walkingPath.add(v);
             drawPath(v.prev);
         } else {
+            MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
+            MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
