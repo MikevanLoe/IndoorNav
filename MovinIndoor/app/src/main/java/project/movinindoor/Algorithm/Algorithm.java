@@ -63,11 +63,7 @@ public class Algorithm {
 
         if(startBuilding.equals(endBuilding)) { //Same building
             if(splitStartLocation[0].equals(splitEndLocation[0])) {  //if Same Building And Floor
-<<<<<<< HEAD
-                navigate3(startLocation, endLocation);
-=======
                 navigate(startLocation, endLocation);
->>>>>>> 109ad34595e7840241a651db6f1fe188bd70b865
             } else { // if Same Building but Different Floor
                 // find all Elevators / Stairs
                 if(Graph.movingByWalk == true) { // If Traveling by Foot

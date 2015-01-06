@@ -18,7 +18,6 @@ public class Vertex {
     protected boolean scratch;
     protected double lat1;
     protected double long1;
-    protected int Floor;
     public enum Vertextype {Elevator, Stairs, Room, Hall};
     protected Vertextype type;
     protected int Floor;
