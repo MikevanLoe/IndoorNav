@@ -89,10 +89,9 @@ public class Graph {
     private void drawPath(Vertex v) {
 
         MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
-        Log.i("FLOOR", String.valueOf(v.Floor));
+
         MapDrawer.hidePolylines();
         if (v.prev.prev != null) {
-            Log.i("ADDEDLINE", "name: " +  v.name + " Floor: " + v.Floor);
             walkingPath.add(v);
             drawPath(v.prev);
         } else {

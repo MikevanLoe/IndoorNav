@@ -101,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
-    private Button btnCurrentFloor;
+    public static Button btnCurrentFloor;
     private ImageButton btnFloorUp, btnFloorDown;
 
     public static LinearLayout fNavigationMenu;
@@ -454,18 +454,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
             //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
             LatLng latLng2 = navigationRoute.getLinkedList().get(s+1).getLatLng();
-            Log.i("Routeee3/1", String.valueOf(latLng.latitude));
-            Log.i("Routeee3/2", String.valueOf(latLng.longitude));
-            Log.i("Routeee3/3", String.valueOf(latLng.latitude));
-            Log.i("Routeee3/4", String.valueOf(latLng.longitude));
             count+= CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
-            Log.i("Routeee3/5", String.valueOf(count));
-            Log.i("Routeee3/6", String.valueOf(CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude)));
-        }
+                }
        String cost = Graph.calculateWalkingSpeed(count);
-        Log.i("Routeee1", String.valueOf(count));
-        Log.i("Routeee2", cost);
         textSpeed.setText("ETA: " + cost);
         textSpeedCost.setText("(" + String.valueOf(Math.round(count)) + "m)");
        // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
