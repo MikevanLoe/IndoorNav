@@ -12,7 +12,7 @@ import project.movinindoor.Models.Stairs;
 public class Vertex {
 
     public String name;
-    protected List<Edge> adj;
+    public List<Edge> adj;
     protected double dist;
     public Vertex prev;
     protected boolean scratch;

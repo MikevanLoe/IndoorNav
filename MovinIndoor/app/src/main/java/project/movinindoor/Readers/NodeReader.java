@@ -180,7 +180,7 @@ public class NodeReader {
                 name = reader.nextName();
                 if (name.equals("action")) {
                     action = reader.nextString();
-                }else if(name.equals("toNodeID")){
+                } else if (name.equals("toNodeID")) {
                     toNodeID = reader.nextString();
                 } else if (name.equals("turns")) {
                     reader.skipValue();
@@ -226,11 +226,46 @@ public class NodeReader {
         return tempNode;
     }
 
+    public Node findNearestNode(LatLng latLng, String floor) {
+        double startLat1 = latLng.latitude;
+        double startLong1 = latLng.longitude;
+
+        double shortLat = 0.0;
+        double shortLng = 0.0;
+        Node tempNode = null;
+
+        for (Node n : jsonList.values()) {
+            if (n.floor == floor) {
+                double lat1 = n.location.get(0);
+                double long1 = n.location.get(1);
+
+                if (shortLng == 0.0 && shortLng == 0.0) {
+                    shortLat = lat1;
+                    shortLng = long1;
+                }
+
+                double som1 = CalcMath.measureMeters(startLat1, startLong1, lat1, long1);
+                double som2 = CalcMath.measureMeters(startLat1, startLong1, shortLat, shortLng);
+
+                if (som1 <= som2) {
+                    shortLat = lat1;
+                    shortLng = long1;
+                    tempNode = n;
+                }
+            }
+        }
+        MapDrawer.addPolyline(shortLat, shortLng, startLat1, startLong1, Color.BLUE);
+        return tempNode;
+    }
+
     public Node FindClosestNodeInsideRoom(Room room) {
 
+        String s = room.getLocation();
+        String l = s.split("\\.").toString();
+        String floor = l.substring(1);
         for (Node node : jsonList.values()) {
             LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
-            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1)) {
+            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1) && floor.equals(node.floor)) {
                 return node;
             }
         }
