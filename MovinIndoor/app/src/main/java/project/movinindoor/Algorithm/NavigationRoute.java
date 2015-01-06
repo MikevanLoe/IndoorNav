@@ -10,9 +10,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
-import project.movinindoor.Graph.Graph.Edge;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.Graph.Vertex;
 import project.movinindoor.Graph.Node;
@@ -20,7 +18,6 @@ import project.movinindoor.Graph.ToNode;
 import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
-import project.movinindoor.R;
 
 /**
  * Created by Davey on 18-12-2014.
@@ -80,8 +77,11 @@ public class NavigationRoute {
 */
             Node n = nodes.get(Graph.walkingPath.get(v).name);
             for (ToNode tn : n.toNode) {
+                Log.i("V", "=>");
                 for (edgeActions e : tn.actions) {
+                    Log.i("V", "====>");
                     if (Graph.walkingPath.get(v).prev.prev != null) {
+                        Log.i("V", "=======>");
                         if (e.toNodeID == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).nodeId)) {
                             String text = "";
                             String action = "";
@@ -117,8 +117,10 @@ public class NavigationRoute {
             }
         }
 
+
+
         if(linkedList.getLast() != null) {
-            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
+            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
             linkedList.add(routeStep);
         }
 
@@ -140,10 +142,6 @@ public class NavigationRoute {
 
     public LinkedList<RouteStep> getLinkedList() {
         return linkedList;
-    }
-
-    public void setLinkedList(LinkedList<RouteStep> linkedList) {
-        this.linkedList = linkedList;
     }
 
     Marker tempMarker = null;
@@ -195,5 +193,11 @@ public class NavigationRoute {
 
     public int getNum() {
         return num;
+    }
+
+    public void reset() {
+        num = 0;
+        linkedList.clear();
+        tempMarker.remove();
     }
 }
