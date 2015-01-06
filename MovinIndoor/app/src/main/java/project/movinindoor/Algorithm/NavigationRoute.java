@@ -78,11 +78,11 @@ public class NavigationRoute {
 */
             Node n = nodes.get(Graph.walkingPath.get(v).name);
             for (ToNode tn : n.toNode) {
-                Log.i("V", "=>");
+               // Log.i("V", "=>");
                 for (edgeActions e : tn.actions) {
-                    Log.i("V", "====>");
+                   // Log.i("V", "====>");
                     if (Graph.walkingPath.get(v).prev.prev != null) {
-                        Log.i("V", "=======>");
+                       // Log.i("V", "=======>");
                         if (e.toNodeID == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).nodeId)) {
                             String text = "";
                             String action = "";
@@ -221,6 +221,6 @@ public class NavigationRoute {
     public void reset() {
         num = 0;
         linkedList.clear();
-        tempMarker.remove();
+        if(tempMarker != null) tempMarker.remove();
     }
 }

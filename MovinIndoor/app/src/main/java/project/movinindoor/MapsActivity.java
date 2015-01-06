@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -109,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public static JSONArray jitems;
 
     public static EditText editStart;
-    private EditText editEnd;
+    public static EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
     public static Button btnCurrentFloor;
@@ -117,7 +116,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     public static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
-    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay, fmNavigationCard;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
@@ -142,20 +140,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         getRegId();
 
-        fmMarkerDisplay = getSupportFragmentManager();
-        fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
-
-        fmNavigationCard = getSupportFragmentManager();
-        fNavigationCard = fmNavigationCard.findFragmentById(R.id.fNavigationCard);
-
-        fmFloorNavigator = getSupportFragmentManager();
-        fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
-
-        fmRepairList = getSupportFragmentManager();
-        fRepairList = fmRepairList.findFragmentById(R.id.fragment2);
-
-        fmNavigationInfoTop = getSupportFragmentManager();
-        fNavigationInfoTop = fmNavigationInfoTop.findFragmentById(R.id.fragment3);
+        fMarkerDisplay = fm.findFragmentById(R.id.fMarkerDisplay);
+        fNavigationCard = fm.findFragmentById(R.id.fNavigationCard);
+        fFloorNavigator2 = fm.findFragmentById(R.id.fFloorNavigator);
+        fRepairList = fm.findFragmentById(R.id.fragment2);
+        fNavigationInfoTop = fm.findFragmentById(R.id.fragment3);
 
         fRepairList.getView().setVisibility(View.INVISIBLE);
         fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
@@ -364,6 +353,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+
+        //TODO remove RepairList from stack
     }
 
     //Onclick NavagationMenu
@@ -376,6 +367,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
+
+        //TODO add Repairlist to stack
     }
 
     NavigationRoute navigationRoute = null;
@@ -423,7 +416,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             @Override
             protected String doInBackground(Void... params) {
                 String cTag = tag.substring(4);
-                //Log.i("MIKE", stat);
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpGet httpget;
@@ -437,11 +429,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
-                    //Log.i("MIKE", "ClientProtocol");
                 } catch (MalformedURLException u) {
-                    //Log.i("MIKE", "URL chrash");
                 } catch (IOException e) {
-                    //Log.i("MIKE", "IOException");
                 }
 
                 return "";
@@ -465,6 +454,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+        //TODO add map to stack
     }
 
 
@@ -474,7 +464,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
             //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
             LatLng latLng2 = navigationRoute.getLinkedList().get(s + 1).getLatLng();
-            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
+            //MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
             count += CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
         }
@@ -568,7 +558,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if (mMap == null) {
 
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) fm.findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
@@ -706,7 +696,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     }
 
                     // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                    //Log.i("GCM", msg);
 
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
@@ -720,6 +709,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }.execute(null, null, null);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(fm.getBackStackEntryCount() != 0){
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+            setUpMapIfNeeded();
+            setUpGraphIfNeeded();
+        }
+    }
 }
 

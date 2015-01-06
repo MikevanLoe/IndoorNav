@@ -9,6 +9,7 @@ package project.movinindoor.Algorithm;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -616,8 +617,8 @@ public class Algorithm {
         Room startRoom = null, endRoom = null;
 
         //if not a custom location
-        if(MapsActivity.customStartPos == null) {
-            startRoom = graphHandler.rooms.getRoom(startPosition);
+        if(MapsActivity.customStartPos == null && !MapsActivity.editStart.getText().toString().contains("Custom")) {
+            startRoom = graphHandler.rooms.getRoom(startPosition.toUpperCase());
 
             if (startRoom == null) {
                 Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
@@ -642,7 +643,7 @@ public class Algorithm {
         }
 
         //if not a custom location
-        if(MapsActivity.customEndPos == null) {
+        if(MapsActivity.customEndPos == null  && !MapsActivity.editEnd.getText().toString().contains("Custom")) {
             String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
             String re2="(\\d+)";	// Integer Number 1
             String re3="(.)";	// Any Single Character 1
@@ -652,7 +653,7 @@ public class Algorithm {
             Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
             Matcher m = p.matcher(endPosition);
             if (m.matches()) {
-                endRoom = graphHandler.rooms.getRoom(endPosition);
+                endRoom = graphHandler.rooms.getRoom(endPosition.toUpperCase());
             } else {
                 List<Room> roomsWithName = graphHandler.rooms.getAllRoomsWithName(endPosition);
                 if(roomsWithName.size() != 1) {
@@ -719,7 +720,12 @@ public class Algorithm {
 
             MapsActivity.textFrom.setText(startPosition);
             MapsActivity.textTo.setText(endPosition);
-
+            MapDrawer.setFloor(Integer.valueOf(startNode.floor));
+            MapsActivity.btnCurrentFloor.setText(startNode.floor);
+            MapDrawer.hidePolylines();
+            MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
+            MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());
+            MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(startNode.location.get(0), startNode.location.get(1)), 20));
             MapDrawer.addMarker(startPositionLatLng, startPosition);
             MapDrawer.addMarker(endPositionLatLng, endPosition);
             return true;
