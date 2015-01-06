@@ -117,12 +117,10 @@ public class NavigationRoute {
             }
         }
 
+
+
         if(linkedList.getLast() != null) {
-            RouteStep routeStep = new RouteStep("GoLeft", "Start!", linkedList.getFirst().getLatLng(), linkedList.getFirst().getFloor());
-            linkedList.addFirst(routeStep);
-        }
-        if(linkedList.getLast() != null) {
-            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
+            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
             linkedList.add(routeStep);
         }
 
@@ -195,5 +193,11 @@ public class NavigationRoute {
 
     public int getNum() {
         return num;
+    }
+
+    public void reset() {
+        num = 0;
+        linkedList.clear();
+        tempMarker.remove();
     }
 }
