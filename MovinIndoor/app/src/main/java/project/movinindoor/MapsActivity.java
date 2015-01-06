@@ -106,7 +106,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     public static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
-    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay, fmNavigationCard;
     public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
@@ -130,20 +129,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         getRegId();
 
-        fmMarkerDisplay       = getSupportFragmentManager();
-        fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
 
-        fmNavigationCard       = getSupportFragmentManager();
-        fNavigationCard = fmNavigationCard.findFragmentById(R.id.fNavigationCard);
-
-        fmFloorNavigator       = getSupportFragmentManager();
-        fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
-
-        fmRepairList = getSupportFragmentManager();
-        fRepairList = fmRepairList.findFragmentById(R.id.fragment2);
-
-        fmNavigationInfoTop = getSupportFragmentManager();
-        fNavigationInfoTop = fmNavigationInfoTop.findFragmentById(R.id.fragment3);
+        fMarkerDisplay = fm.findFragmentById(R.id.fMarkerDisplay);
+        fNavigationCard = fm.findFragmentById(R.id.fNavigationCard);
+        fFloorNavigator2 = fm.findFragmentById(R.id.fFloorNavigator);
+        fRepairList = fm.findFragmentById(R.id.fragment2);
+        fNavigationInfoTop = fm.findFragmentById(R.id.fragment3);
 
         fRepairList.getView().setVisibility(View.INVISIBLE);
         fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
@@ -535,7 +526,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if (mMap == null) {
 
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) fm.findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
@@ -693,21 +684,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public void onBackPressed() {
         if(fm.getBackStackEntryCount() != 0){
             fm.popBackStack();
-        }
-        else if(fmRepairList.getBackStackEntryCount() != 0){
-            fmRepairList.popBackStack();
-        }
-        else if(fmNavigationInfoTop.getBackStackEntryCount() != 0){
-            fmNavigationInfoTop.popBackStack();
-        }
-        else if(fmFloorNavigator.getBackStackEntryCount() != 0) {
-            fmFloorNavigator.popBackStack();
-        }
-        else if(fmMarkerDisplay.getBackStackEntryCount() != 0) {
-            fmMarkerDisplay.popBackStack();
-        }
-        else if(fmNavigationCard.getBackStackEntryCount() != 0){
-            fmNavigationCard.popBackStack();
         } else {
             super.onBackPressed();
         }
