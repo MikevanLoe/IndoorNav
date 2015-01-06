@@ -272,6 +272,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         MapDrawer.removeMarkers();
         MapDrawer.removePolylines();
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
+
+        //TODO Possible stack?
     }
 
 
@@ -311,6 +313,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
+
+        //TODO Possible stack?
     }
 
 
@@ -346,6 +350,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+
+        //TODO Possible stack?
     }
 
     public void btnCloseNavBar(View view) {
@@ -355,6 +361,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
 
         //TODO remove RepairList from stack
+
     }
 
     //Onclick NavagationMenu
