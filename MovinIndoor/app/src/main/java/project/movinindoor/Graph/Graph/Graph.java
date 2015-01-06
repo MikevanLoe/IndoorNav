@@ -33,7 +33,8 @@ public class Graph {
         Vertex v2 = vertexMap.get(destname);
         if((v.type == Vertex.Vertextype.Elevator || v.type == Vertex.Vertextype.Stairs) && (v2.type == Vertex.Vertextype.Elevator || v2.type == Vertex.Vertextype.Stairs)){
             Log.i("STAIRS", "added 30 meters to a stair");
-            cost = cost + 10000;
+            cost = cost + 100000;
+
         }
         v.adj.add(new Edge(v2, cost, actions));
     }
