@@ -627,15 +627,19 @@ public class Algorithm {
                 return false;
             }
 
+            String s = startRoom.getLocation();
+            String[] l = s.split("\\.");
+            String floor = l[0].substring(1);
             startNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startRoom);
             if(startNode == null) {
-                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter());
-                extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), floor);
+                if(startNode!=null) extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+                else return false;
             }
 
             startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
         } else {
-            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos);
+            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos, String.valueOf(MapDrawer.getFloor()));
             extraCost = CalcMath.measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.location.get(0), startNode.location.get(1));
             startPositionLatLng = MapsActivity.customStartPos;
         }
@@ -686,15 +690,20 @@ public class Algorithm {
                 return false;
             }
 
+            String s = endRoom.getLocation();
+            String[] l = s.split("\\.");
+            String floor = l[0].substring(1);
             endNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endRoom);
             if (endNode == null) {
-                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter());
-                extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), floor);
+                if(startNode!=null) extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+                else return false;
             }
 
             endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
         } else {
-            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos);
+
+            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos, String.valueOf(MapDrawer.getFloor()));
             extraCost = CalcMath.measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.location.get(0), endNode.location.get(1));
             endPositionLatLng = MapsActivity.customEndPos;
         }
