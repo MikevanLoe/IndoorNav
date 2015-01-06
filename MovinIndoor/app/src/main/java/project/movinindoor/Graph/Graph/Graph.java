@@ -1,6 +1,7 @@
 package project.movinindoor.Graph.Graph;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,8 +33,8 @@ public class Graph {
     }
 
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
-    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type) {
-        Vertex v = new Vertex(name, lat1, long1, type);
+    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
+        Vertex v = new Vertex(name, lat1, long1, type, floor);
         vertexMap.put(name, v);
     }
 
@@ -78,10 +79,11 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    private void drawPath(Vertex v, String floor) {
-        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, Integer.valueOf(floor));
+    private void drawPath(Vertex v) {
+        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
         if (v.prev.prev != null) {
-            drawPath(v.prev, floor);
+            Log.i("ADDEDLINE", "name: " +  v.name + " Floor: " + v.Floor);
+            drawPath(v.prev);
         } else {
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
@@ -89,7 +91,7 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
-    public double drawPath(String startName, String destName, String floor) {
+    public double drawPath(String startName, String destName) {
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {
@@ -100,7 +102,7 @@ public class Graph {
             Vertex v = vertexMap.get(destName);
             if (v != null) {
                 if (v.prev != null) {
-                    drawPath(v, floor);
+                    drawPath(v);
                     return v.dist;
                 } else {
                     Toast.makeText(MapsActivity.getContext().getApplicationContext(), "couldn't find a path to the destination", Toast.LENGTH_LONG).show();
@@ -149,6 +151,7 @@ public class Graph {
             }
         }
     }
+
 
 
     public static String calculateWalkingSpeed(double cost) {

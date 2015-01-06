@@ -63,7 +63,7 @@ public class Algorithm {
 
         if(startBuilding.equals(endBuilding)) { //Same building
             if(splitStartLocation[0].equals(splitEndLocation[0])) {  //if Same Building And Floor
-                navigate2(startLocation, endLocation);
+                navigate3(startLocation, endLocation);
             } else { // if Same Building but Different Floor
                 // find all Elevators / Stairs
                 if(Graph.movingByWalk == true) { // If Traveling by Foot
@@ -156,7 +156,7 @@ public class Algorithm {
             Node startElevatorTop = null;
             if(startFloor != 0) { // startPosition is not on floor 0
                 startElevatorTop = startElevatorTopN.get(i);
-                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString(), startPositionNode.floor); // Start -> TravelType1
+                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString()); // Start -> TravelType1
             }
 
             Node startElevatorDown = startElevatorDownN.get(i);
@@ -165,15 +165,15 @@ public class Algorithm {
                 Node endPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endPos);
                 Node endElevatorTop = null;
 
-                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString(), startPositionNode.floor); // Start -> End
-                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString(), startPositionNode.floor); // Start -> TraveType2
-                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString(), startElevatorDown.floor); // TravelType1 -> End
-                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString(), startElevatorDown.floor); // TravelType1 -> TraveType2
+                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString()); // Start -> End
+                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString()); // Start -> TraveType2
+                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType1 -> End
+                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString()); // TravelType1 -> TraveType2
 
 
                 if(endFloor != 0) { // endPosition is not on floor 0
                     endElevatorTop = endElevatorTopN.get(j);
-                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString(), endElevatorTop.floor); // TravelType2 -> End
+                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType2 -> End
                 }
 
                 double cost = costBuilding1 + costBetweenBuildings + costBuilding2;
@@ -253,7 +253,7 @@ public class Algorithm {
             Node startElevatorTop = null;
             if(startFloor != 0) { // startPosition is not on floor 0
                 startElevatorTop = startElevatorTopN.get(i);
-                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString(), startPositionNode.floor); // Start -> TravelType1
+                costBuilding1 = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startElevatorTop.nodeId.toString()); // Start -> TravelType1
             }
 
             Node startElevatorDown = startElevatorDownN.get(i);
@@ -262,15 +262,15 @@ public class Algorithm {
                 Node endPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endPos);
                 Node endElevatorTop = null;
 
-                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString(), startPositionNode.floor); // Start -> End
-                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString(), startPositionNode.floor); // Start -> TraveType2
-                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString(), startElevatorDown.floor); // TravelType1 -> End
-                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString(), startElevatorDown.floor); // TravelType1 -> TraveType2
+                if(startFloor != 0 && endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endPositionNode.nodeId.toString()); // Start -> End
+                else if(startFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), endElevatorDown.nodeId.toString()); // Start -> TraveType2
+                else if(endFloor != 0) costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType1 -> End
+                else costBetweenBuildings = MapsActivity.setupGraph.graph.drawPath(startElevatorDown.nodeId.toString(), endElevatorDown.nodeId.toString()); // TravelType1 -> TraveType2
 
 
                 if(endFloor != 0) { // endPosition is not on floor 0
                     endElevatorTop = endElevatorTopN.get(j);
-                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString(), endElevatorTop.floor); // TravelType2 -> End
+                    costBuilding2 = MapsActivity.setupGraph.graph.drawPath(endElevatorTop.nodeId.toString(), endPositionNode.nodeId.toString()); // TravelType2 -> End
                 }
 
                 double cost = costBuilding1 + costBetweenBuildings + costBuilding2;
@@ -347,7 +347,7 @@ public class Algorithm {
         for(int i = 0; i < nodeList.size(); i = i+2) {
             Node start = nodeList.get(i);
             Node end = nodeList.get(i+1);
-            cost += MapsActivity.setupGraph.graph.drawPath(start.nodeId.toString(), end.nodeId.toString(), start.floor);
+            cost += MapsActivity.setupGraph.graph.drawPath(start.nodeId.toString(), end.nodeId.toString());
         }
         if(cost != 0.0) {
             String walkingSpeed = graphHandler.graph.calculateWalkingSpeed(cost);
@@ -404,11 +404,11 @@ public class Algorithm {
         for (int i = 0; i < endTravelTypeDownN.size(); i++) {
             Node startPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startPos);
             Node startTravelTypeTop = startTravelTypeTopN.get(i);
-            double costStartFloor = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startTravelTypeTop.nodeId.toString(), startPositionNode.floor);
+            double costStartFloor = MapsActivity.setupGraph.graph.drawPath(startPositionNode.nodeId.toString(), startTravelTypeTop.nodeId.toString());
 
             Node endTravelTypeDown = endTravelTypeDownN.get(i);
             Node endPositionNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endPos);
-            double costEndFloor = MapsActivity.setupGraph.graph.drawPath(endTravelTypeDown.nodeId.toString(), endPositionNode.nodeId.toString(), endTravelTypeDown.floor);
+            double costEndFloor = MapsActivity.setupGraph.graph.drawPath(endTravelTypeDown.nodeId.toString(), endPositionNode.nodeId.toString());
 
             double cost = costStartFloor + costEndFloor;
             if(shortestCost == 0.0) shortestCost = cost;
@@ -454,6 +454,141 @@ public class Algorithm {
 
     private static GraphHandler graphHandler = MapsActivity.setupGraph;
     //From Room -> To Room
+
+    //Called by methods
+    public static void navigate3(String start, String end) {
+        //Removes From -> To Fragement;
+        MapsActivity.fNavigationInfoBottom.setVisibility(View.INVISIBLE);
+        //Removes existing Polylines
+        MapDrawer.removePolylines();
+        MapDrawer.removeMarkers();
+
+        boolean sucess = navigateRoute(start, end);
+
+        if(sucess) {
+            Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
+            //animate
+            Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+            Animator.visibilityRepairList(Animator.Visibility.HIDE);
+            Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
+            Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
+            Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+        }
+    }
+
+    public static boolean navigateRoute3(String startPosition, String endPosition) {
+        double extraCost = 0.0;
+        LatLng startPositionLatLng;
+        LatLng endPositionLatLng;
+        Node endNode, startNode;
+        Room startRoom = null, endRoom = null;
+
+        //if not a custom location
+        if(MapsActivity.customStartPos == null) {
+            startRoom = graphHandler.rooms.getRoom(startPosition);
+
+            if (startRoom == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            startNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startRoom);
+            if(startNode == null) {
+                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter());
+                extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
+            }
+
+            startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
+        } else {
+            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos);
+            extraCost = CalcMath.measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.location.get(0), startNode.location.get(1));
+            startPositionLatLng = MapsActivity.customStartPos;
+        }
+
+        //if not a custom location
+        if(MapsActivity.customEndPos == null) {
+            String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
+            String re2="(\\d+)";	// Integer Number 1
+            String re3="(.)";	// Any Single Character 1
+            String re4="(\\d)";	// Any Single Digit 1
+            String re5="(\\d)";	// Any Single Digit 2
+
+            Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            Matcher m = p.matcher(endPosition);
+            if (m.matches()) {
+                endRoom = graphHandler.rooms.getRoom(endPosition);
+            } else {
+                List<Room> roomsWithName = graphHandler.rooms.getAllRoomsWithName(endPosition);
+                if(roomsWithName.size() != 1) {
+                    double tempCost = 0.0;
+                    Room tempRoom = null;
+                    for (Room room : roomsWithName) {
+                        Node node = graphHandler.getNodes().FindClosestNodeInsideRoom(room);
+                        //find shortest route to position
+                        if(node != null) {
+                            double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), node.nodeId.toString());
+                            if(tempCost == 0.0 && tempRoom == null) {
+                                tempCost = cost;
+                                tempRoom = room;
+                            }
+
+                            if (cost <= tempCost) {
+                                tempCost = cost;
+                                tempRoom = room;
+                            }
+                        }
+
+                    }
+                    MapDrawer.removePolylines();
+                    endRoom = tempRoom;
+                } else {
+                    endRoom = graphHandler.rooms.getRoom(endPosition);
+                }
+            }
+
+            if (endRoom == null) {
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To " + endPosition + " not found", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            endNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endRoom);
+            if (endNode == null) {
+                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter());
+                extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
+            }
+
+            endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
+        } else {
+            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos);
+            extraCost = CalcMath.measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.location.get(0), endNode.location.get(1));
+            endPositionLatLng = MapsActivity.customEndPos;
+        }
+
+        if(startNode == null || endNode == null) {
+            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation not found", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+        NavAlgo(startRoom, endRoom);
+        //double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString());
+        /*
+        if(cost != 0.0) {
+            cost += extraCost;
+            String walkingSpeed = graphHandler.graph.calculateWalkingSpeed(cost);
+            MapsActivity.textSpeed.setText("ETA: " + walkingSpeed);
+            MapsActivity.textSpeedCost.setText("(" + String.valueOf(Math.round(cost)) + "m)");
+
+            MapsActivity.textFrom.setText(startPosition);
+            MapsActivity.textTo.setText(endPosition);
+
+            MapDrawer.addMarker(startPositionLatLng, startPosition);
+            MapDrawer.addMarker(endPositionLatLng, endPosition);
+            return true;
+        }
+        */
+        return true;
+    }
 
     //Called by methods
     public static void navigate(String start, String end) {
@@ -526,7 +661,7 @@ public class Algorithm {
                         Node node = graphHandler.getNodes().FindClosestNodeInsideRoom(room);
                         //find shortest route to position
                         if(node != null) {
-                            double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), node.nodeId.toString(), startNode.floor);
+                            double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), node.nodeId.toString());
                             if(tempCost == 0.0 && tempRoom == null) {
                                 tempCost = cost;
                                 tempRoom = room;
@@ -569,142 +704,7 @@ public class Algorithm {
             return false;
         }
 
-
-        NavAlgo(startRoom, endRoom);
-        //double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString());
-        /*
-        if(cost != 0.0) {
-            cost += extraCost;
-            String walkingSpeed = graphHandler.graph.calculateWalkingSpeed(cost);
-            MapsActivity.textSpeed.setText("ETA: " + walkingSpeed);
-            MapsActivity.textSpeedCost.setText("(" + String.valueOf(Math.round(cost)) + "m)");
-
-            MapsActivity.textFrom.setText(startPosition);
-            MapsActivity.textTo.setText(endPosition);
-
-            MapDrawer.addMarker(startPositionLatLng, startPosition);
-            MapDrawer.addMarker(endPositionLatLng, endPosition);
-            return true;
-        }
-        */
-        return true;
-    }
-
-    //Called by methods
-    public static void navigate2(String start, String end) {
-        //Removes From -> To Fragement;
-        MapsActivity.fNavigationInfoBottom.setVisibility(View.INVISIBLE);
-        //Removes existing Polylines
-        MapDrawer.removePolylines();
-        MapDrawer.removeMarkers();
-
-        boolean sucess = navigateRoute2(start, end);
-
-        if(sucess) {
-            Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
-            //animate
-            Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
-            Animator.visibilityRepairList(Animator.Visibility.HIDE);
-            Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
-            Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
-            Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
-        }
-    }
-
-    public static boolean navigateRoute2(String startPosition, String endPosition) {
-        double extraCost = 0.0;
-        LatLng startPositionLatLng;
-        LatLng endPositionLatLng;
-        Node endNode, startNode;
-        Room startRoom = null, endRoom = null;
-
-        //if not a custom location
-        if(MapsActivity.customStartPos == null) {
-            startRoom = graphHandler.rooms.getRoom(startPosition);
-
-            if (startRoom == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            startNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startRoom);
-            if(startNode == null) {
-                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter());
-                extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
-            }
-
-            startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
-        } else {
-            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos);
-            extraCost = CalcMath.measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.location.get(0), startNode.location.get(1));
-            startPositionLatLng = MapsActivity.customStartPos;
-        }
-
-        //if not a custom location
-        if(MapsActivity.customEndPos == null) {
-            String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
-            String re2="(\\d+)";	// Integer Number 1
-            String re3="(.)";	// Any Single Character 1
-            String re4="(\\d)";	// Any Single Digit 1
-            String re5="(\\d)";	// Any Single Digit 2
-
-            Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-            Matcher m = p.matcher(endPosition);
-            if (m.matches()) {
-                endRoom = graphHandler.rooms.getRoom(endPosition);
-            } else {
-                List<Room> roomsWithName = graphHandler.rooms.getAllRoomsWithName(endPosition);
-                if(roomsWithName.size() != 1) {
-                    double tempCost = 0.0;
-                    Room tempRoom = null;
-                    for (Room room : roomsWithName) {
-                        Node node = graphHandler.getNodes().FindClosestNodeInsideRoom(room);
-                        //find shortest route to position
-                        if(node != null) {
-                            double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), node.nodeId.toString(), "0");
-                            if(tempCost == 0.0 && tempRoom == null) {
-                                tempCost = cost;
-                                tempRoom = room;
-                            }
-
-                            if (cost <= tempCost) {
-                                tempCost = cost;
-                                tempRoom = room;
-                            }
-                        }
-
-                    }
-                    MapDrawer.removePolylines();
-                    endRoom = tempRoom;
-                } else {
-                    endRoom = graphHandler.rooms.getRoom(endPosition);
-                }
-            }
-
-            if (endRoom == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To " + endPosition + " not found", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            endNode = graphHandler.getNodes().FindClosestNodeInsideRoom(endRoom);
-            if (endNode == null) {
-                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter());
-                extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.location.get(0), endNode.location.get(1));
-            }
-
-            endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
-        } else {
-            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos);
-            extraCost = CalcMath.measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.location.get(0), endNode.location.get(1));
-            endPositionLatLng = MapsActivity.customEndPos;
-        }
-
-        if(startNode == null || endNode == null) {
-            Toast.makeText(MapsActivity.getContext().getApplicationContext(), "Navigation not found", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString(), "0");
+        double cost = graphHandler.graph.drawPath(startNode.nodeId.toString(), endNode.nodeId.toString());
         if(cost != 0.0) {
             cost += extraCost;
             String walkingSpeed = graphHandler.graph.calculateWalkingSpeed(cost);
@@ -720,5 +720,5 @@ public class Algorithm {
         }
         return false;
     }
-    
+
 }

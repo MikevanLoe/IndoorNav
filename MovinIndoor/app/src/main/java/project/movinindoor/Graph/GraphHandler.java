@@ -98,7 +98,8 @@ public class GraphHandler {
                     default:
                         break;
                 }
-                graph.addVertex(n.nodeId, n.location.get(0), n.location.get(1), type);
+
+                graph.addVertex(n.nodeId, n.location.get(0), n.location.get(1), type, Integer.parseInt(n.floor));
             }
         }
     }
