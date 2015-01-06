@@ -2,6 +2,7 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+
 import java.net.MalformedURLException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,8 +81,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    public static Context getContext() { return context; }
-    public static GoogleMap getMap() { return mMap; }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static GoogleMap getMap() {
+        return mMap;
+    }
+
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     public static GraphHandler setupGraph;
 
@@ -95,13 +104,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private Room inRoom;
     public static LatLng customStartPos = null;
     public static LatLng customEndPos = null;
+    public static int customStartFloor = 0;
+    public static int customEndFloor = 0;
     public static JSONArray jitems;
 
     public static EditText editStart;
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
-    private Button btnCurrentFloor;
+    public static Button btnCurrentFloor;
     private ImageButton btnFloorUp, btnFloorDown;
 
     public static LinearLayout fNavigationMenu;
@@ -130,13 +141,13 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         getRegId();
 
-        fmMarkerDisplay       = getSupportFragmentManager();
+        fmMarkerDisplay = getSupportFragmentManager();
         fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
 
-        fmNavigationCard       = getSupportFragmentManager();
+        fmNavigationCard = getSupportFragmentManager();
         fNavigationCard = fmNavigationCard.findFragmentById(R.id.fNavigationCard);
 
-        fmFloorNavigator       = getSupportFragmentManager();
+        fmFloorNavigator = getSupportFragmentManager();
         fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
 
         fmRepairList = getSupportFragmentManager();
@@ -171,7 +182,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
 
-
         //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
         infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
@@ -183,13 +193,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 float minZoom = 16.0f;
                 LatLng position = cameraPosition.target;
 
-                if(cameraPosition.zoom < minZoom)
-                {
+                if (cameraPosition.zoom < minZoom) {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, minZoom);
                     mMap.moveCamera(cameraUpdate);
                 }
-                if(position.latitude < BOUNDS.southwest.latitude || position.longitude < BOUNDS.southwest.longitude || position.latitude > BOUNDS.northeast.latitude || position.longitude > BOUNDS.northeast.longitude)
-                {
+                if (position.latitude < BOUNDS.southwest.latitude || position.longitude < BOUNDS.southwest.longitude || position.latitude > BOUNDS.northeast.latitude || position.longitude > BOUNDS.northeast.longitude) {
                     LatLng correctedPosition = getLatLngCorrection(position);
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(correctedPosition, cameraPosition.zoom);
                     mMap.moveCamera(cameraUpdate);
@@ -202,8 +210,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
@@ -212,12 +219,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.radioCart:
-                    Graph.movingByFoot =false;
+                    Graph.movingByFoot = false;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
                     Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Graph.movingByFoot =true;
+                    Graph.movingByFoot = true;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
                     Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
                     break;
@@ -251,8 +258,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //OnClick FloorNavigator Button Up
     public void btnFloorUp(View view) {
         btnFloorDown.setVisibility(View.VISIBLE);
-       int currentFloor = MapDrawer.getFloor();
-        if(currentFloor < 10) {
+        int currentFloor = MapDrawer.getFloor();
+        if (currentFloor < 10) {
             MapDrawer.setFloor(currentFloor + 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor + 1));
 
@@ -278,7 +285,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
 
-
     //OnClick Select Custom Location
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
@@ -288,21 +294,23 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         RadioButton radioButton = (RadioButton) findViewById(selectedId);
         String text;
 
-        if(radioButton.getHint().toString().equals("to")) {
-            if(inRoom !=null) {
+        if (radioButton.getHint().toString().equals("to")) {
+            if (inRoom != null) {
                 customEndPos = null;
                 editEnd.setText(inRoom.getLocation());
             } else {
                 customEndPos = longClickMarker.getPosition();
+                customEndFloor = MapDrawer.getFloor();
                 editEnd.setText("Custom End Position");
             }
             text = "End";
-        } else if(radioButton.getHint().toString().equals("from")) {
-            if(inRoom !=null) {
+        } else if (radioButton.getHint().toString().equals("from")) {
+            if (inRoom != null) {
                 customStartPos = null;
                 editStart.setText(inRoom.getLocation());
             } else {
                 customStartPos = longClickMarker.getPosition();
+                customStartFloor = MapDrawer.getFloor();
                 editStart.setText("Custom Start Position");
             }
             text = "Start";
@@ -320,7 +328,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public void btnFloorDown(View view) {
         btnFloorUp.setVisibility(View.VISIBLE);
         int currentFloor = MapDrawer.getFloor();
-        if(currentFloor > 0) {
+        if (currentFloor > 0) {
             MapDrawer.setFloor(currentFloor - 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
             MapDrawer.hidePolylinesFloor(currentFloor);
@@ -338,6 +346,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
+        if(navigationRoute != null) navigationRoute.reset();
+        navigationRoute = null;
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
         //animate
@@ -357,9 +367,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //Onclick NavagationMenu
     public void btnNavBar(View view) {
-    try {
-        prepareListData();
-    } catch (NullPointerException e) {}
+        try {
+            prepareListData();
+        } catch (NullPointerException e) {
+        }
         //animate
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
@@ -367,6 +378,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     NavigationRoute navigationRoute = null;
+
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
@@ -377,6 +389,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String startPosition = editStart.getText().toString();
         String endPosition = editEnd.getText().toString();
 
+
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+        textView.setText("Start");
         Algorithm.navigate(startPosition, endPosition);
         navigationRoute = new NavigationRoute();
     }
@@ -387,13 +404,16 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
-
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+        textView.setText("Start");
         Algorithm.navigate(startRoom, EndRoom);
         navigationRoute = new NavigationRoute();
     }
 
     //OnClick Activate/Close Reparation
-    public void btnCheckRepair(View view){
+    public void btnCheckRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         final String tag = listAdapter.getChild(pos, 5).toString();
         final String stat = listAdapter.getChild(pos, 2).toString().substring(18);
@@ -406,7 +426,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpGet httpget;
-                    switch(stat) {
+                    switch (stat) {
                         case "Geaccepteerd":
                             httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
                             break;
@@ -447,49 +467,53 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
 
-
     public void showNextCardLocation(View view) {
         double count = 0.0;
-        for(int s = navigationRoute.getNum() ; s < navigationRoute.getLinkedList().size() - 1 ; s++) {
+        for (int s = navigationRoute.getNum(); s < navigationRoute.getLinkedList().size() - 1; s++) {
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
             //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
-            LatLng latLng2 = navigationRoute.getLinkedList().get(s+1).getLatLng();
-            Log.i("Routeee3/1", String.valueOf(latLng.latitude));
-            Log.i("Routeee3/2", String.valueOf(latLng.longitude));
-            Log.i("Routeee3/3", String.valueOf(latLng.latitude));
-            Log.i("Routeee3/4", String.valueOf(latLng.longitude));
-            count+= CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
+            LatLng latLng2 = navigationRoute.getLinkedList().get(s + 1).getLatLng();
+            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
+            count += CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
-            Log.i("Routeee3/5", String.valueOf(count));
-            Log.i("Routeee3/6", String.valueOf(CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude)));
         }
-       String cost = Graph.calculateWalkingSpeed(count);
-        Log.i("Routeee1", String.valueOf(count));
-        Log.i("Routeee2", cost);
+        String cost = Graph.calculateWalkingSpeed(count);
         textSpeed.setText("ETA: " + cost);
         textSpeedCost.setText("(" + String.valueOf(Math.round(count)) + "m)");
-       // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
-        if(navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
-            ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+
+        // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
+        if (navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
+
             String[] split = navigationRoute.getNextCard().split(",");
             switch (split[0]) {
-                case "GoStraight":      imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
-                                break;
-                case "GoRight":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
-                                break;
-                case "GoLeft":    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
-                                break;
-                case "GoSlightlyRight":  imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
-                                break;
-                case "GoSlightlyLeft":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
-                                break;
+                case "GoStraight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
+                    break;
+                case "GoRight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
+                    break;
+                case "GoLeft":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
+                    break;
+                case "GoSlightlyRight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
+                    break;
+                case "GoSlightlyLeft":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
+                    break;
             }
 
-            if(navigationRoute.getNum() == navigationRoute.getLinkedList().size()) imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
+
+            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size())
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
             //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
-            TextView textView = (TextView) findViewById(R.id.txtCardText);
+
             textView.setText(split[1]);
         }
+
     }
 
     @Override
@@ -499,7 +523,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState){
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
     }
 
@@ -586,115 +610,113 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     private void prepareListData() {
         try {
-        setupGraph.getRepairReader().bindToRepairList(jitems);
-        listDataHeader = setupGraph.getRepairReader().listDataHeader;
-        listDataChild = setupGraph.getRepairReader().listDataChild;
+            setupGraph.getRepairReader().bindToRepairList(jitems);
+            listDataHeader = setupGraph.getRepairReader().listDataHeader;
+            listDataChild = setupGraph.getRepairReader().listDataChild;
 
-        // Navigation drawer items
-        listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
-        expListView.setAdapter(listAdapter);
+            // Navigation drawer items
+            listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
 
-        // Listview on child click listener
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            // Listview on child click listener
+            expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                if (childPosition == 4) {
-                    String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
+                    // TODO Auto-generated method stub
+                    if (childPosition == 4) {
+                        String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
 
-                    TextView textView = (TextView) v.findViewById(R.id.lblListItem);
+                        TextView textView = (TextView) v.findViewById(R.id.lblListItem);
 
-                    DFragment alertdFragment = new DFragment();
-                    alertdFragment.setEditText(textView.getText().toString().substring(10));
-                    alertdFragment.setRepairId(Rid);
-                    alertdFragment.show(fm, "Edit Comment");
-
-
-                    // Show Alert DialogFragment
-
-                    //textView.setText("Comment:  " + editText.getText());
+                        DFragment alertdFragment = new DFragment();
+                        alertdFragment.setEditText(textView.getText().toString().substring(10));
+                        alertdFragment.setRepairId(Rid);
+                        alertdFragment.show(fm, "Edit Comment");
 
 
+                        // Show Alert DialogFragment
+
+                        //textView.setText("Comment:  " + editText.getText());
 
 
+                    }
 
+                    return false;
                 }
+            });
 
-                return false;
-            }
-        });
-
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
     }
-
 
 
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
         double longitude = cameraPosition.longitude;
 
-        if(cameraPosition.latitude < BOUNDS.southwest.latitude) {
+        if (cameraPosition.latitude < BOUNDS.southwest.latitude) {
             latitude = BOUNDS.southwest.latitude;
         }
-        if(cameraPosition.longitude < BOUNDS.southwest.longitude) {
+        if (cameraPosition.longitude < BOUNDS.southwest.longitude) {
             longitude = BOUNDS.southwest.longitude;
         }
-        if(cameraPosition.latitude > BOUNDS.northeast.latitude) {
+        if (cameraPosition.latitude > BOUNDS.northeast.latitude) {
             latitude = BOUNDS.northeast.latitude;
         }
-        if(cameraPosition.longitude > BOUNDS.northeast.longitude) {
+        if (cameraPosition.longitude > BOUNDS.northeast.longitude) {
             longitude = BOUNDS.northeast.longitude;
         }
         return new LatLng(latitude, longitude);
     }
 
-    public void getRegId(){
-            new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-                    String msg = "";
+    public void getRegId() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
                     try {
-                        if (gcm == null) {
-                            gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                        }
-                        try {
                         regid = gcm.register(PROJECT_NUMBER);
 
-                        } catch (NullPointerException e) {}
-                        msg = "Device registered, registration ID=" + regid;
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
+                    } catch (NullPointerException e) {
+                    }
+                    msg = "Device registered, registration ID=" + regid;
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
 
-                        try {
-                            // Add your data
-                            List<NameValuePair> nameValuePairs = new ArrayList<>();
-                            nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
-                            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    try {
+                        // Add your data
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-                            // Execute HTTP Post Request
-                            HttpResponse response = httpclient.execute(httppost);
+                        // Execute HTTP Post Request
+                        HttpResponse response = httpclient.execute(httppost);
 
-                        } catch (ClientProtocolException e) {
-                            // TODO Auto-generated catch block
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                        }
-
-                        // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                        //Log.i("GCM", msg);
-
-                    } catch (IOException ex) {
-                        msg = "Error :" + ex.getMessage();
-
+                    } catch (ClientProtocolException e) {
+                        // TODO Auto-generated catch block
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
                     }
 
-                    return msg;
+                    // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
+                    //Log.i("GCM", msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
                 }
 
+                return msg;
+            }
 
-            }.execute(null, null, null);
+
+        }.execute(null, null, null);
     }
 
 

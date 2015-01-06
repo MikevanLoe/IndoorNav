@@ -636,7 +636,7 @@ public class Algorithm {
 
             startPositionLatLng = new LatLng(startNode.location.get(0), startNode.location.get(1));
         } else {
-            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos, String.valueOf(MapDrawer.getFloor()));
+            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos, String.valueOf(MapsActivity.customStartFloor));
             extraCost = CalcMath.measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.location.get(0), startNode.location.get(1));
             startPositionLatLng = MapsActivity.customStartPos;
         }
@@ -700,7 +700,7 @@ public class Algorithm {
             endPositionLatLng = new LatLng(endNode.location.get(0), endNode.location.get(1));
         } else {
 
-            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos, String.valueOf(MapDrawer.getFloor()));
+            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos, String.valueOf(MapsActivity.customEndFloor));
             extraCost = CalcMath.measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.location.get(0), endNode.location.get(1));
             endPositionLatLng = MapsActivity.customEndPos;
         }
