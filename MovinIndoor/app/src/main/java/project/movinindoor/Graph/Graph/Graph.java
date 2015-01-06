@@ -1,16 +1,20 @@
 package project.movinindoor.Graph.Graph;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 
@@ -20,20 +24,24 @@ import project.movinindoor.MapsActivity;
 public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
-    public static boolean movingByWalk = true;
+    public static boolean movingByFoot = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+    public static List<Vertex> walkingPath = new LinkedList<>();
 
-    //function to add edges, sourcename is the source of the edge and the destname will be the destination of the edge.
-    //the edge will be added to the vertex.adj list of the sourcename vertex.
-    public void addEdge(String sourcename, String destname, double cost) {
+    public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
         Vertex v2 = vertexMap.get(destname);
-        v.adj.add(new Edge(v2, cost));
+        if((v.type == Vertex.Vertextype.Elevator || v.type == Vertex.Vertextype.Stairs) && (v2.type == Vertex.Vertextype.Elevator || v2.type == Vertex.Vertextype.Stairs)){
+            Log.i("STAIRS", "added 30 meters to a stair");
+            cost = cost + 10000;
+        }
+        v.adj.add(new Edge(v2, cost, actions));
     }
 
+    
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
-    public void addVertex(String name, double lat1, double long1) {
-        Vertex v = new Vertex(name, lat1, long1);
+    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
+        Vertex v = new Vertex(name, lat1, long1, type, floor);
         vertexMap.put(name, v);
     }
 
@@ -79,17 +87,25 @@ public class Graph {
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
     private void drawPath(Vertex v) {
-        MapDrawer.addPolyline(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE);
+
+        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
+
+        MapDrawer.hidePolylines();
         if (v.prev.prev != null) {
+            walkingPath.add(v);
             drawPath(v.prev);
         } else {
+            MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
+            MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
 
+
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
     public double drawPath(String startName, String destName) {
+        walkingPath.clear();
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {
@@ -151,8 +167,9 @@ public class Graph {
     }
 
 
+
     public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = (movingByWalk) ? 5000 : 4000;
+        int walkingSpeed = (movingByFoot) ? 5000 : 4000;
         int minuteInSec = 3600;
         float walkingspeedPerSecond = ((float) walkingSpeed) / minuteInSec;
         double time;

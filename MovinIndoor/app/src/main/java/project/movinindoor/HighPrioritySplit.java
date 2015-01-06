@@ -5,7 +5,10 @@ import android.util.Log;
 import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
 
+import project.movinindoor.Readers.HttpJson;
+import project.movinindoor.Readers.RepairReader;
 import project.movinindoor.Reparation.Building;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Floor;
@@ -68,7 +71,7 @@ public class HighPrioritySplit {
                 }
             }
         }
-        return input;
+        return statusSplit(input);
     }
 
     /**
@@ -122,9 +125,42 @@ public class HighPrioritySplit {
                 }
             }
         }
-        return input;
+        return statusSplit(input);
     }
 
+    /**
+     * Splits the input based on the status of the repairs.
+     * Takes the accepted repairs, followed by the appointed repairs and
+     *  the new repairs.
+     *
+     * @param input the buildings object you want to split
+     */
+    public static Buildings statusSplit(Buildings input){
+        try {
+            for (Building b : input.order) {
+                for (Floor f : b.order) {
+                    for (Reparation r : f.highOrder) {
+                        if (r.Status == Reparation.StatusEnum.ACCEPTED) {
+                            input.acceptedWork.add(r);
+                            f.highOrder.remove(r);
+                        }
+                    }
+                }
+            }
+            for (Building b : input.order) {
+                for (Floor f : b.order) {
+                    for (Reparation r : f.lowOrder) {
+                        if (r.Status == Reparation.StatusEnum.ACCEPTED) {
+                            input.acceptedWork.add(r);
+                            f.lowOrder.remove(r);
+                        }
+                    }
+                }
+            }
+        }
+        catch(NullPointerException e) {}
+        return input;
+    }
     /*
     public static void HighTestMethod (Buildings input){
         Log.i(HighPrioritySplit.LOG_TAG, "Test number 1");

@@ -2,6 +2,7 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -48,9 +48,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import java.net.HttpURLConnection;
+
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,12 +57,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
-import project.movinindoor.Fragment.AlertDFragment;
+import project.movinindoor.Algorithm.NavigationRoute;
 import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
 import project.movinindoor.Fragment.NavigationBar;
+import project.movinindoor.Fragment.ShowNavigationCardFragment;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Readers.HttpJson;
@@ -73,7 +73,7 @@ import project.movinindoor.Models.Room;
 import project.movinindoor.Readers.RepairReader;
 
 
-public class MapsActivity extends FragmentActivity implements MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
 
     GoogleCloudMessaging gcm;
     String regid;
@@ -81,8 +81,15 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    public static Context getContext() { return context; }
-    public static GoogleMap getMap() { return mMap; }
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static GoogleMap getMap() {
+        return mMap;
+    }
+
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     public static GraphHandler setupGraph;
 
@@ -97,19 +104,20 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     private Room inRoom;
     public static LatLng customStartPos = null;
     public static LatLng customEndPos = null;
+    public static int customStartFloor = 0;
+    public static int customEndFloor = 0;
     public static JSONArray jitems;
 
     public static EditText editStart;
     private EditText editEnd;
     public static TextView textSpeed, textSpeedCost, textFrom, textTo;
     public static GridLayout fNavigationInfoBottom;
-    private Button btnCurrentFloor;
+    public static Button btnCurrentFloor;
     private ImageButton btnFloorUp, btnFloorDown;
 
     public static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
-    private FragmentManager fmRepairList, fmNavigationInfoTop, fmFloorNavigator, fmMarkerDisplay;
-    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay;
+    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
     @Override
@@ -132,22 +140,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
         getRegId();
 
-        fmMarkerDisplay       = getSupportFragmentManager();
-        fMarkerDisplay = fmMarkerDisplay.findFragmentById(R.id.fMarkerDisplay);
-
-        fmFloorNavigator       = getSupportFragmentManager();
-        fFloorNavigator2 = fmFloorNavigator.findFragmentById(R.id.fFloorNavigator);
-
-        fmRepairList = getSupportFragmentManager();
-        fRepairList = fmRepairList.findFragmentById(R.id.fragment2);
-
-        fmNavigationInfoTop = getSupportFragmentManager();
-        fNavigationInfoTop = fmNavigationInfoTop.findFragmentById(R.id.fragment3);
+        fMarkerDisplay = fm.findFragmentById(R.id.fMarkerDisplay);
+        fNavigationCard = fm.findFragmentById(R.id.fNavigationCard);
+        fFloorNavigator2 = fm.findFragmentById(R.id.fFloorNavigator);
+        fRepairList = fm.findFragmentById(R.id.fragment2);
+        fNavigationInfoTop = fm.findFragmentById(R.id.fragment3);
 
         fRepairList.getView().setVisibility(View.INVISIBLE);
         fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
         fFloorNavigator2.getView().setVisibility(View.VISIBLE);
         fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+        fNavigationCard.getView().setVisibility(View.INVISIBLE);
 
         //onButtonClick
         editStart = (EditText) findViewById(R.id.editText);
@@ -169,7 +172,6 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
 
-
         //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
         infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
@@ -181,13 +183,11 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
                 float minZoom = 16.0f;
                 LatLng position = cameraPosition.target;
 
-                if(cameraPosition.zoom < minZoom)
-                {
+                if (cameraPosition.zoom < minZoom) {
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, minZoom);
                     mMap.moveCamera(cameraUpdate);
                 }
-                if(position.latitude < BOUNDS.southwest.latitude || position.longitude < BOUNDS.southwest.longitude || position.latitude > BOUNDS.northeast.latitude || position.longitude > BOUNDS.northeast.longitude)
-                {
+                if (position.latitude < BOUNDS.southwest.latitude || position.longitude < BOUNDS.southwest.longitude || position.latitude > BOUNDS.northeast.latitude || position.longitude > BOUNDS.northeast.longitude) {
                     LatLng correctedPosition = getLatLngCorrection(position);
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(correctedPosition, cameraPosition.zoom);
                     mMap.moveCamera(cameraUpdate);
@@ -200,8 +200,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
@@ -210,12 +209,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.radioCart:
-                    Graph.movingByWalk=false;
+                    Graph.movingByFoot = false;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
                     Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Graph.movingByWalk=true;
+                    Graph.movingByFoot = true;
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
                     Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
                     break;
@@ -249,13 +248,16 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     //OnClick FloorNavigator Button Up
     public void btnFloorUp(View view) {
         btnFloorDown.setVisibility(View.VISIBLE);
-       int currentFloor = MapDrawer.getFloor();
-        if(currentFloor < 10) {
+        int currentFloor = MapDrawer.getFloor();
+        if (currentFloor < 10) {
             MapDrawer.setFloor(currentFloor + 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor + 1));
 
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor + 1);
+
+            MapDrawer.hidePolylinesFloorNav(currentFloor);
+            MapDrawer.showPolylinesFloorNav(currentFloor + 1);
         }
 
         if (currentFloor >= 9) {
@@ -282,21 +284,23 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         RadioButton radioButton = (RadioButton) findViewById(selectedId);
         String text;
 
-        if(radioButton.getHint().toString().equals("to")) {
-            if(inRoom !=null) {
+        if (radioButton.getHint().toString().equals("to")) {
+            if (inRoom != null) {
                 customEndPos = null;
                 editEnd.setText(inRoom.getLocation());
             } else {
                 customEndPos = longClickMarker.getPosition();
+                customEndFloor = MapDrawer.getFloor();
                 editEnd.setText("Custom End Position");
             }
             text = "End";
-        } else if(radioButton.getHint().toString().equals("from")) {
-            if(inRoom !=null) {
+        } else if (radioButton.getHint().toString().equals("from")) {
+            if (inRoom != null) {
                 customStartPos = null;
                 editStart.setText(inRoom.getLocation());
             } else {
                 customStartPos = longClickMarker.getPosition();
+                customStartFloor = MapDrawer.getFloor();
                 editStart.setText("Custom Start Position");
             }
             text = "Start";
@@ -314,11 +318,14 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     public void btnFloorDown(View view) {
         btnFloorUp.setVisibility(View.VISIBLE);
         int currentFloor = MapDrawer.getFloor();
-        if(currentFloor > 0) {
+        if (currentFloor > 0) {
             MapDrawer.setFloor(currentFloor - 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
             MapDrawer.hidePolylinesFloor(currentFloor);
             MapDrawer.showPolylinesFloor(currentFloor - 1);
+
+            MapDrawer.hidePolylinesFloorNav(currentFloor);
+            MapDrawer.showPolylinesFloorNav(currentFloor - 1);
         }
 
         if (currentFloor <= 1) {
@@ -329,9 +336,12 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
+        if(navigationRoute != null) navigationRoute.reset();
+        navigationRoute = null;
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
         //animate
+        Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
@@ -347,14 +357,17 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     //Onclick NavagationMenu
     public void btnNavBar(View view) {
-    try {
-        prepareListData();
-    } catch (NullPointerException e) {}
+        try {
+            prepareListData();
+        } catch (NullPointerException e) {
+        }
         //animate
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
     }
+
+    NavigationRoute navigationRoute = null;
 
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
@@ -366,7 +379,13 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         String startPosition = editStart.getText().toString();
         String endPosition = editEnd.getText().toString();
 
+
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+        textView.setText("Start");
         Algorithm.navigate(startPosition, endPosition);
+        navigationRoute = new NavigationRoute();
     }
 
     //OnClick Navigate to Reparation
@@ -375,36 +394,49 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+        textView.setText("Start");
         Algorithm.navigate(startRoom, EndRoom);
+        navigationRoute = new NavigationRoute();
     }
 
     //OnClick Activate/Close Reparation
-    public void btnCheckRepair(View view){
+    public void btnCheckRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         final String tag = listAdapter.getChild(pos, 5).toString();
+        final String stat = listAdapter.getChild(pos, 2).toString().substring(18);
 
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                //sendPushNotification("Movin", "checked a repair");
                 String cTag = tag.substring(4);
-
+                //Log.i("MIKE", stat);
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                    HttpGet httpget;
+                    switch (stat) {
+                        case "Geaccepteerd":
+                            httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Gerepareerd");
+                            break;
+                        default:
+                            httpget = new HttpGet("http://movin.nvrstt.nl/statusdefect.php?defectid=" + cTag + "&status=Geaccepteerd");
+                            break;
+                    }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
-                    Log.i("MIKE", "ClientProtocol");
+                    //Log.i("MIKE", "ClientProtocol");
                 } catch (MalformedURLException u) {
-                    Log.i("MIKE", "URL chrash");
+                    //Log.i("MIKE", "URL chrash");
                 } catch (IOException e) {
-                    Log.i("MIKE", "IOException");
+                    //Log.i("MIKE", "IOException");
                 }
 
                 return "";
             }
-        }.execute(null,null,null);
-        view.setEnabled(false);
+        }.execute(null, null, null);
+        refreshList();
     }
 
     //OnClick Location From Reparation
@@ -424,6 +456,56 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
 
+
+    public void showNextCardLocation(View view) {
+        double count = 0.0;
+        for (int s = navigationRoute.getNum(); s < navigationRoute.getLinkedList().size() - 1; s++) {
+            LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
+            //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
+            LatLng latLng2 = navigationRoute.getLinkedList().get(s + 1).getLatLng();
+            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
+            count += CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
+
+        }
+        String cost = Graph.calculateWalkingSpeed(count);
+        textSpeed.setText("ETA: " + cost);
+        textSpeedCost.setText("(" + String.valueOf(Math.round(count)) + "m)");
+
+        ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
+        TextView textView = (TextView) findViewById(R.id.txtCardText);
+
+        // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
+        if (navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
+
+            String[] split = navigationRoute.getNextCard().split(",");
+            switch (split[0]) {
+                case "GoStraight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
+                    break;
+                case "GoRight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
+                    break;
+                case "GoLeft":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
+                    break;
+                case "GoSlightlyRight":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
+                    break;
+                case "GoSlightlyLeft":
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
+                    break;
+            }
+
+
+            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size())
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
+            //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+
+            textView.setText(split[1]);
+        }
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle your other action bar items...
@@ -431,7 +513,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState){
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
     }
 
@@ -475,7 +557,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         if (mMap == null) {
 
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+            mMap = ((SupportMapFragment) fm.findFragmentById(R.id.map))
                     .getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
@@ -508,6 +590,7 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -517,118 +600,122 @@ public class MapsActivity extends FragmentActivity implements MarkerInfoFragment
 
     private void prepareListData() {
         try {
-        setupGraph.getRepairReader().bindToRepairList(jitems);
-        listDataHeader = setupGraph.getRepairReader().listDataHeader;
-        listDataChild = setupGraph.getRepairReader().listDataChild;
+            setupGraph.getRepairReader().bindToRepairList(jitems);
+            listDataHeader = setupGraph.getRepairReader().listDataHeader;
+            listDataChild = setupGraph.getRepairReader().listDataChild;
 
-        // Navigation drawer items
-        listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
-        expListView.setAdapter(listAdapter);
+            // Navigation drawer items
+            listAdapter = new ExpandableListAdapterNew(this, listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
 
-        // Listview on child click listener
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            // Listview on child click listener
+            expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                if (childPosition == 4) {
-                    String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
+                    // TODO Auto-generated method stub
+                    if (childPosition == 4) {
+                        String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
 
-                    TextView textView = (TextView) v.findViewById(R.id.lblListItem);
+                        TextView textView = (TextView) v.findViewById(R.id.lblListItem);
 
-                    DFragment alertdFragment = new DFragment();
-                    alertdFragment.setEditText(textView.getText().toString().substring(10));
-                    alertdFragment.setRepairId(Rid);
-                    alertdFragment.show(fm, "Edit Comment");
-
-
-                    // Show Alert DialogFragment
-
-                    //textView.setText("Comment:  " + editText.getText());
+                        DFragment alertdFragment = new DFragment();
+                        alertdFragment.setEditText(textView.getText().toString().substring(10));
+                        alertdFragment.setRepairId(Rid);
+                        alertdFragment.show(fm, "Edit Comment");
 
 
+                        // Show Alert DialogFragment
+
+                        //textView.setText("Comment:  " + editText.getText());
 
 
+                    }
 
+                    return false;
                 }
+            });
 
-                return false;
-            }
-        });
-
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
     }
-
 
 
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
         double longitude = cameraPosition.longitude;
 
-        if(cameraPosition.latitude < BOUNDS.southwest.latitude) {
+        if (cameraPosition.latitude < BOUNDS.southwest.latitude) {
             latitude = BOUNDS.southwest.latitude;
         }
-        if(cameraPosition.longitude < BOUNDS.southwest.longitude) {
+        if (cameraPosition.longitude < BOUNDS.southwest.longitude) {
             longitude = BOUNDS.southwest.longitude;
         }
-        if(cameraPosition.latitude > BOUNDS.northeast.latitude) {
+        if (cameraPosition.latitude > BOUNDS.northeast.latitude) {
             latitude = BOUNDS.northeast.latitude;
         }
-        if(cameraPosition.longitude > BOUNDS.northeast.longitude) {
+        if (cameraPosition.longitude > BOUNDS.northeast.longitude) {
             longitude = BOUNDS.northeast.longitude;
         }
         return new LatLng(latitude, longitude);
     }
 
-    public void getRegId(){
-            new AsyncTask<Void, Void, String>() {
-                @Override
-                protected String doInBackground(Void... params) {
-                    String msg = "";
+    public void getRegId() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
                     try {
-                        if (gcm == null) {
-                            gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                        }
-                        try {
                         regid = gcm.register(PROJECT_NUMBER);
 
-                        } catch (NullPointerException e) {}
-                        msg = "Device registered, registration ID=" + regid;
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
+                    } catch (NullPointerException e) {
+                    }
+                    msg = "Device registered, registration ID=" + regid;
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
 
-                        try {
-                            // Add your data
-                            List<NameValuePair> nameValuePairs = new ArrayList<>();
-                            nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
-                            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    try {
+                        // Add your data
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-                            // Execute HTTP Post Request
-                            HttpResponse response = httpclient.execute(httppost);
+                        // Execute HTTP Post Request
+                        HttpResponse response = httpclient.execute(httppost);
 
-                        } catch (ClientProtocolException e) {
-                            // TODO Auto-generated catch block
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                        }
-
-                        // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                        //Log.i("GCM", msg);
-
-                    } catch (IOException ex) {
-                        msg = "Error :" + ex.getMessage();
-
+                    } catch (ClientProtocolException e) {
+                        // TODO Auto-generated catch block
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
                     }
 
-                    return msg;
+                    // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
+                    //Log.i("GCM", msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
                 }
 
+                return msg;
+            }
 
-            }.execute(null, null, null);
+
+        }.execute(null, null, null);
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        if(fm.getBackStackEntryCount() != 0){
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
