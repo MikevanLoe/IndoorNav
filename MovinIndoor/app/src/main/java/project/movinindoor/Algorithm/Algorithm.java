@@ -6,7 +6,6 @@
 
 package project.movinindoor.Algorithm;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -25,8 +24,6 @@ import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.ToNode;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
-import project.movinindoor.Models.Elevator;
-import project.movinindoor.Models.Stair;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Reparation;
 import project.movinindoor.Models.Room;
@@ -66,7 +63,7 @@ public class Algorithm {
                 navigate(startLocation, endLocation);
             } else { // if Same Building but Different Floor
                 // find all Elevators / Stairs
-                if(Graph.movingByWalk == true) { // If Traveling by Foot
+                if(Graph.movingByFoot == true) { // If Traveling by Foot
                     if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
                         // Find (primarly) Only Elevators
                         List<Node> nodeList = travelByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
@@ -84,7 +81,7 @@ public class Algorithm {
             }
         } else { // If Different Building
             if((buildingHaveBridge(startBuilding) && Math.abs(startFloor) >= 2 )|| (buildingHaveBridge(endBuilding) && Math.abs(startFloor)  >= 2 )) { //Calculate with Floor 2  And 0
-                if(Graph.movingByWalk == true) { // If Traveling by Foot
+                if(Graph.movingByFoot == true) { // If Traveling by Foot
                     if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
                         // Find (primarly) Only Elevators
                         List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.ELEVATOR, startPos, endPos);
@@ -100,7 +97,7 @@ public class Algorithm {
                     drawRoute(nodeList);
                 }
             } else { // Calculate with Floor 0
-                if(Graph.movingByWalk == true) { // If Traveling by Foot
+                if(Graph.movingByFoot == true) { // If Traveling by Foot
                     if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
                         // Find (primarly) Only Elevators
                         List<Node> nodeList = travelBetweenBuildingsByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
