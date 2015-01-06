@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import project.movinindoor.Graph.Graph.Edge;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.Graph.Vertex;
 import project.movinindoor.Graph.Node;
@@ -36,37 +37,48 @@ public class NavigationRoute {
         HashMap<String, Node> nodes = MapsActivity.setupGraph.getNodes().jsonList;
         linkedList = new LinkedList<>();
         for (int v = Graph.walkingPath.size() -1 ; v >= 0; v--) {
+            Vertex v2 = Graph.walkingPath.get(v);
+            /*
+            for (Edge e : v2.adj) {
+                if(v2.name) {
+
+                }
+                e.actions
+            }
+            */
             Node n = nodes.get(Graph.walkingPath.get(v).name);
             for (ToNode tn : n.toNode) {
                 for (edgeActions e : tn.actions) {
-                    if (e.toNodeID == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).nodeId)) {
-                        String text = "";
-                        String action = "";
-                        Node nq = nodes.get(tn.toNodeID);
-                        switch (e.action) {
-                            case "GoStraight":
-                                text = "Ga rechtdoor";
-                                action = "GoStraight";
-                                break;
-                            case "GoRight":
-                                text = "Ga naar links";
-                                action = "GoLeft";
-                                break;
-                            case "GoLeft":
-                                text = "Ga naar rechts";
-                                action = "GoRight";
-                                break;
-                            case "GoSlightlyRight":
-                                text = "Ga schuin naar links";
-                                action = "GoSlightlyLeft";
-                                break;
-                            case "GoSlightlyLeft":
-                                text = "Ga schuin naar rechts";
-                                action = "GoSlightlyRight";
-                                break;
+                    if(Graph.walkingPath.get(v).prev.prev != null) {
+                        if (e.toNodeID == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).nodeId)) {
+                            String text = "";
+                            String action = "";
+                            Node nq = nodes.get(tn.toNodeID);
+                            switch (e.action) {
+                                case "GoStraight":
+                                    text = "Ga rechtdoor";
+                                    action = "GoStraight";
+                                    break;
+                                case "GoRight":
+                                    text = "Ga naar links";
+                                    action = "GoLeft";
+                                    break;
+                                case "GoLeft":
+                                    text = "Ga naar rechts";
+                                    action = "GoRight";
+                                    break;
+                                case "GoSlightlyRight":
+                                    text = "Ga schuin naar links";
+                                    action = "GoSlightlyLeft";
+                                    break;
+                                case "GoSlightlyLeft":
+                                    text = "Ga schuin naar rechts";
+                                    action = "GoSlightlyRight";
+                                    break;
+                            }
+                            RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)));
+                            linkedList.add(routeStep);
                         }
-                        RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)));
-                        linkedList.add(routeStep);
                     }
                 }
             }
@@ -129,6 +141,8 @@ public class NavigationRoute {
                     .build();                   // Creates a CameraPosition from the builder
             MapsActivity.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             num++;
+        } else {
+            linkedList.clear();
         }
 
         return s;

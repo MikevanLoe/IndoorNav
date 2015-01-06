@@ -10,7 +10,7 @@ import project.movinindoor.Graph.edgeActions;
 public class Edge {
     protected Vertex dest;
     protected double cost;
-    protected ArrayList<edgeActions> actions;
+    public ArrayList<edgeActions> actions;
 
     public Edge(Vertex d, double c, ArrayList<edgeActions> actions) {
         dest = d;

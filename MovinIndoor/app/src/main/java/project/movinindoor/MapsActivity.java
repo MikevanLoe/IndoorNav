@@ -450,9 +450,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     public void showNextCardLocation(View view) {
         double count = 0.0;
-        for(int s = 0 ; s < navigationRoute.getLinkedList().size(); s++) {
+        for(int s = navigationRoute.getNum() ; s < navigationRoute.getLinkedList().size() - 1 ; s++) {
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
-            LatLng latLng2 = navigationRoute.getLinkedList().get(s++).getLatLng();
+            //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
+            LatLng latLng2 = navigationRoute.getLinkedList().get(s+1).getLatLng();
             Log.i("Routeee3/1", String.valueOf(latLng.latitude));
             Log.i("Routeee3/2", String.valueOf(latLng.longitude));
             Log.i("Routeee3/3", String.valueOf(latLng.latitude));
@@ -465,6 +466,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
        String cost = Graph.calculateWalkingSpeed(count);
         Log.i("Routeee1", String.valueOf(count));
         Log.i("Routeee2", cost);
+        textSpeed.setText("ETA: " + cost);
+        textSpeedCost.setText("(" + String.valueOf(Math.round(count)) + "m)");
        // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         if(navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
             ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
