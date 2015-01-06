@@ -135,6 +135,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             e.printStackTrace();
         }
 
+
         setUpMapIfNeeded();
         context = getApplicationContext();
         setupGraph = new GraphHandler();
