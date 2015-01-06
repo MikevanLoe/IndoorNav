@@ -18,9 +18,9 @@ public class Vertex {
     protected boolean scratch;
     protected double lat1;
     protected double long1;
-    protected int Floor;
     public enum Vertextype {Elevator, Stairs, Room, Hall};
     protected Vertextype type;
+    protected int Floor;
 
     public Vertex(String name, double lat1, double long1) {
         this.name = name;
@@ -30,11 +30,12 @@ public class Vertex {
         reset();
     }
 
-    public Vertex(String name, double lat1, double long1, Vertextype type){
+    public Vertex(String name, double lat1, double long1, Vertextype type, int floor){
         this.name = name;
         this.lat1 = lat1;
         this.long1 = long1;
         this.type = type;
+        this.Floor = floor;
         adj = new LinkedList<Edge>();
         reset();
     }
