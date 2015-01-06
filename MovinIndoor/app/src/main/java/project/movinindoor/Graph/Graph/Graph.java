@@ -105,6 +105,7 @@ public class Graph {
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
     public double drawPath(String startName, String destName) {
+        walkingPath.clear();
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {

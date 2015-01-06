@@ -96,6 +96,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private Room inRoom;
     public static LatLng customStartPos = null;
     public static LatLng customEndPos = null;
+    public static int customStartFloor = 0;
+    public static int customEndFloor = 0;
     public static JSONArray jitems;
 
     public static EditText editStart;
@@ -295,6 +297,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 editEnd.setText(inRoom.getLocation());
             } else {
                 customEndPos = longClickMarker.getPosition();
+                customEndFloor = MapDrawer.getFloor();
                 editEnd.setText("Custom End Position");
             }
             text = "End";
@@ -304,6 +307,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 editStart.setText(inRoom.getLocation());
             } else {
                 customStartPos = longClickMarker.getPosition();
+                customStartFloor = MapDrawer.getFloor();
                 editStart.setText("Custom Start Position");
             }
             text = "Start";
@@ -378,6 +382,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String startPosition = editStart.getText().toString();
         String endPosition = editEnd.getText().toString();
 
+        navigationRoute = null;
         Algorithm.navigate(startPosition, endPosition);
         navigationRoute = new NavigationRoute();
     }
@@ -388,7 +393,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
-
+        navigationRoute = null;
         Algorithm.navigate(startRoom, EndRoom);
         navigationRoute = new NavigationRoute();
     }
@@ -455,7 +460,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
             //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
             LatLng latLng2 = navigationRoute.getLinkedList().get(s+1).getLatLng();
-            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() + 1);
+            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
             count+= CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
                 }
@@ -478,6 +483,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 case "GoSlightlyLeft":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
                                 break;
             }
+
+            if(navigationRoute.getNum() == 0) imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
 
             if(navigationRoute.getNum() == navigationRoute.getLinkedList().size()) imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
             //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
