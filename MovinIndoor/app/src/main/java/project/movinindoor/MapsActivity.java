@@ -697,6 +697,28 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             }.execute(null, null, null);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(fm.getBackStackEntryCount() != 0){
+            fm.popBackStack();
+        }
+        else if(fmRepairList.getBackStackEntryCount() != 0){
+            fmRepairList.popBackStack();
+        }
+        else if(fmNavigationInfoTop.getBackStackEntryCount() != 0){
+            fmNavigationInfoTop.popBackStack();
+        }
+        else if(fmFloorNavigator.getBackStackEntryCount() != 0) {
+            fmFloorNavigator.popBackStack();
+        }
+        else if(fmMarkerDisplay.getBackStackEntryCount() != 0) {
+            fmMarkerDisplay.popBackStack();
+        }
+        else if(fmNavigationCard.getBackStackEntryCount() != 0){
+            fmNavigationCard.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
