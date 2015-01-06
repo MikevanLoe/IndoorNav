@@ -715,6 +715,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             fm.popBackStack();
         } else {
             super.onBackPressed();
+            setUpMapIfNeeded();
+            setUpGraphIfNeeded();
         }
     }
 }
