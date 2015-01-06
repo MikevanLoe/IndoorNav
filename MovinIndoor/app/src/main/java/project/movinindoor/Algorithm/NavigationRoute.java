@@ -1,5 +1,6 @@
 package project.movinindoor.Algorithm;
 
+import android.location.LocationManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -174,13 +175,35 @@ public class NavigationRoute {
                 MapsActivity.btnCurrentFloor.setText(String.valueOf(linkedList.get(num).getFloor()));
             }
 
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(linkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
-                    .zoom(20)                   // Sets the zoom
-                    .bearing(rotation % 360)               // Sets the orientation of the camera to east
-                    .tilt(45)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            MapsActivity.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            if(num != linkedList.size() - 1) {
+                double startLat = Math.toRadians(linkedList.get(num).getLatLng().latitude);
+                double startLong = Math.toRadians(linkedList.get(num).getLatLng().longitude);
+                double endLat = Math.toRadians(linkedList.get(num + 1).getLatLng().latitude);
+                double endLong = Math.toRadians(linkedList.get(num + 1).getLatLng().longitude);
+
+                double dLong = endLong - startLong;
+
+                double dPhi = Math.log(Math.tan(endLat/2.0+Math.PI/4.0)/Math.tan(startLat/2.0+Math.PI/4.0));
+                if (Math.abs(dLong) > Math.PI) {
+                    if (dLong > 0.0) {
+                        dLong = -(2.0 * Math.PI - dLong);
+                    } else {
+                        dLong = (2.0 * Math.PI + dLong);
+                    }
+                }
+
+                double bearing = (Math.toDegrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(linkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
+                        .zoom(20)                   // Sets the zoom
+                        .bearing((float) bearing)               // Sets the orientation of the camera to east
+                        .tilt(50)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                MapsActivity.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+
+
             num++;
 
         } else {
