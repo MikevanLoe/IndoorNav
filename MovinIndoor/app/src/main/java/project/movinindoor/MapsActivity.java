@@ -2,6 +2,7 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -454,6 +455,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
             //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
             LatLng latLng2 = navigationRoute.getLinkedList().get(s+1).getLatLng();
+            MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() + 1);
             count+= CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
                 }
