@@ -353,6 +353,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+
+        //TODO remove RepairList from stack
     }
 
     //Onclick NavagationMenu
@@ -365,6 +367,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
+
+        //TODO add Repairlist to stack
     }
 
     NavigationRoute navigationRoute = null;
@@ -450,6 +454,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+        //TODO add map to stack
     }
 
 
