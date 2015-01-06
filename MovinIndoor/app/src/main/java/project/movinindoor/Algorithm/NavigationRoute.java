@@ -32,7 +32,11 @@ public class NavigationRoute {
     private LinkedList<RouteStep> linkedList;
 
     public NavigationRoute() {
-//        linkedList.clear();
+        if(tempMarker != null) tempMarker.remove();
+        if(linkedList != null) {
+            linkedList.remove();
+            linkedList.clear();
+        }
         num = 0;
         HashMap<String, Node> nodes = MapsActivity.setupGraph.getNodes().jsonList;
         linkedList = new LinkedList<>();
@@ -76,7 +80,7 @@ public class NavigationRoute {
                                     action = "GoSlightlyRight";
                                     break;
                             }
-                            RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)));
+                            RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)), Integer.valueOf(nq.floor));
                             linkedList.add(routeStep);
                         }
                     }
@@ -85,7 +89,7 @@ public class NavigationRoute {
         }
 
 
-        RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng());
+        RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
         linkedList.add(routeStep);
 
         switch (linkedList.getFirst().getAction()) {
@@ -117,6 +121,7 @@ public class NavigationRoute {
         if(tempMarker != null) tempMarker.remove();
         String s = linkedList.get(num).getAction() + ", " + linkedList.get(num).getText();
         if (num < linkedList.size()) {
+
         switch (linkedList.get(num).getAction()) {
             case "GoRight":
                 rotation = rotation + 90;
@@ -132,6 +137,13 @@ public class NavigationRoute {
                 break;
         }
             tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(linkedList.get(num).getLatLng()).title(linkedList.get(num).getText()));
+            if(MapDrawer.getFloor() != linkedList.get(num).getFloor()) {
+                MapDrawer.setFloor(linkedList.get(num).getFloor());
+                MapDrawer.hidePolylines();
+                MapDrawer.showPolylinesFloor(linkedList.get(num).getFloor());
+                MapDrawer.showPolylinesFloorNav(linkedList.get(num).getFloor());
+                MapsActivity.btnCurrentFloor.setText(String.valueOf(linkedList.get(num).getFloor()));
+            }
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(linkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
@@ -143,6 +155,7 @@ public class NavigationRoute {
             num++;
         } else {
             linkedList.clear();
+            linkedList.remove();
         }
 
         return s;

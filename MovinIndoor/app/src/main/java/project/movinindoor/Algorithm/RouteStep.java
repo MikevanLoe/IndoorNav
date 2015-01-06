@@ -9,11 +9,17 @@ public class RouteStep {
     private String action;
     private String text;
     private LatLng latLng;
+    private int floor;
 
-    public RouteStep(String action, String text, LatLng latLng) {
+    public int getFloor() {
+        return floor;
+    }
+
+    public RouteStep(String action, String text, LatLng latLng, int floor) {
         this.action = action;
         this.text = text;
         this.latLng = latLng;
+        this.floor = floor;
     }
 
     public String getAction() {
