@@ -235,7 +235,7 @@ public class NodeReader {
         Node tempNode = null;
 
         for (Node n : jsonList.values()) {
-            if (n.floor == floor) {
+            if (n.floor.equals(floor)) {
                 double lat1 = n.location.get(0);
                 double long1 = n.location.get(1);
 

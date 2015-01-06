@@ -632,8 +632,6 @@ public class Algorithm {
             String floor = l[0].substring(1);
             startNode = graphHandler.getNodes().FindClosestNodeInsideRoom(startRoom);
             if(startNode == null) {
-                Log.i("ROOM1", floor);
-                Log.i("ROOM2", s);
                 startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), floor);
                 if(startNode!=null) extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.location.get(0), startNode.location.get(1));
                 else return false;
