@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -25,6 +26,7 @@ public class Graph {
     public static final double INFINITY = Double.MAX_VALUE;
     public static boolean movingByWalk = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
+    public static List<Vertex> walkingPath = new LinkedList<>();
 
     public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
@@ -83,11 +85,13 @@ public class Graph {
         MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
         if (v.prev.prev != null) {
             Log.i("ADDEDLINE", "name: " +  v.name + " Floor: " + v.Floor);
+            walkingPath.add(v);
             drawPath(v.prev);
         } else {
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
         }
     }
+
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.

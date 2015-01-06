@@ -58,6 +58,7 @@ import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Algorithm.NavigationRoute;
+import project.movinindoor.Algorithm.RouteStep;
 import project.movinindoor.Fragment.DFragment;
 import project.movinindoor.Fragment.FloorDisplayFragment;
 import project.movinindoor.Fragment.Fragment_FromToDisplay;
@@ -368,6 +369,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
     }
 
+    NavigationRoute navigationRoute = null;
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
@@ -379,6 +381,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String endPosition = editEnd.getText().toString();
 
         Algorithm.navigate(startPosition, endPosition);
+        navigationRoute = new NavigationRoute();
     }
 
     //OnClick Navigate to Reparation
@@ -387,7 +390,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
 
+
         Algorithm.navigate(startRoom, EndRoom);
+        navigationRoute = new NavigationRoute();
     }
 
     //OnClick Activate/Close Reparation
@@ -444,23 +449,39 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
 
-    NavigationRoute navigationRoute = new NavigationRoute();
+
 
     public void showNextCardLocation(View view) {
+        double count = 0.0;
+        for(int s = 0 ; s < navigationRoute.getLinkedList().size(); s++) {
+            LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
+            LatLng latLng2 = navigationRoute.getLinkedList().get(s++).getLatLng();
+            Log.i("Routeee3/1", String.valueOf(latLng.latitude));
+            Log.i("Routeee3/2", String.valueOf(latLng.longitude));
+            Log.i("Routeee3/3", String.valueOf(latLng.latitude));
+            Log.i("Routeee3/4", String.valueOf(latLng.longitude));
+            count+= CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
+
+            Log.i("Routeee3/5", String.valueOf(count));
+            Log.i("Routeee3/6", String.valueOf(CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude)));
+        }
+       String cost = Graph.calculateWalkingSpeed(count);
+        Log.i("Routeee1", String.valueOf(count));
+        Log.i("Routeee2", cost);
        // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         if(navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
             ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
             String[] split = navigationRoute.getNextCard().split(",");
             switch (split[0]) {
-                case "up":      imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
+                case "GoStraight":      imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_up_white_36dp));
                                 break;
-                case "right":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
+                case "GoRight":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_right_white_36dp));
                                 break;
-                case "left":    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
+                case "GoLeft":    imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_left_white_36dp));
                                 break;
-                case "sRight":  imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
+                case "GoSlightlyRight":  imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sright_white_36dp));
                                 break;
-                case "sLeft":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
+                case "GoSlightlyLeft":   imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_direction_sleft_white_36dp));
                                 break;
             }
 
