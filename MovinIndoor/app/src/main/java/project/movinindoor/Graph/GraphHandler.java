@@ -124,7 +124,7 @@ public class GraphHandler {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        //MapDrawer.addPolyline(t1, t2, t3, t4, Color.BLACK, Integer.parseInt(nNew.floor));
+                       // MapDrawer.addPolyline(t1, t2, t3, t4, Color.BLACK, Integer.parseInt(nNew.floor));
                     }
                 });
 
