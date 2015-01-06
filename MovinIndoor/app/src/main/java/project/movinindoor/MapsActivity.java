@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -412,7 +411,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             @Override
             protected String doInBackground(Void... params) {
                 String cTag = tag.substring(4);
-                //Log.i("MIKE", stat);
                 try {
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpGet httpget;
@@ -426,11 +424,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     }
                     HttpResponse response = httpclient.execute(httpget);
                 } catch (ClientProtocolException e) {
-                    //Log.i("MIKE", "ClientProtocol");
                 } catch (MalformedURLException u) {
-                    //Log.i("MIKE", "URL chrash");
                 } catch (IOException e) {
-                    //Log.i("MIKE", "IOException");
                 }
 
                 return "";
@@ -695,7 +690,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     }
 
                     // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-                    //Log.i("GCM", msg);
 
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
