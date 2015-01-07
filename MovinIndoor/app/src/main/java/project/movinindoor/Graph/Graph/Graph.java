@@ -143,7 +143,7 @@ public class Graph {
             while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
-                if (v.scratch || (!movingByFoot && v.type == Vertex.Vertextype.Stairs) ) // already processed v
+                if (v.scratch || (getMovement().equals(new moveByFoot()) && v.type == Vertex.Vertextype.Stairs) ) // already processed v
                 {
                     continue;
                 }
