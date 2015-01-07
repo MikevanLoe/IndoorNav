@@ -1,5 +1,7 @@
 package project.movinindoor.Graph;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 /**
@@ -7,19 +9,37 @@ import java.util.List;
  */
 public class Node {
 
-    public String nodeId;
-    public List<Double> location;
-    public String floor;
-    public List<ToNode> toNode;
-    public String type;
+    private String nodeId;
+    private LatLng latLng;
+    private int floor;
+    private List<ToNode> toNode;
+    private String type;
 
-    public Node(String nodeId, List<Double> location, String floor, List<ToNode> toNode, String type) {
+    public Node(String nodeId, LatLng latLng, int floor, List<ToNode> toNode, String type) {
         this.nodeId = nodeId;
-        this.location = location;
+        this.latLng = latLng;
         this.floor = floor;
         this.toNode = toNode;
         this.type = type;
     }
 
+    public String getNodeId() {
+        return nodeId;
+    }
 
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public List<ToNode> getToNode() {
+        return toNode;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

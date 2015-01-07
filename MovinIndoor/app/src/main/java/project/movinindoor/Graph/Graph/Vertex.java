@@ -1,5 +1,7 @@
 package project.movinindoor.Graph.Graph;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,26 +18,23 @@ public class Vertex {
     protected double dist;
     public Vertex prev;
     protected boolean scratch;
-    protected double lat1;
-    protected double long1;
+    protected LatLng latLng;
     public enum Vertextype {Elevator, Stairs, Room, Hall};
     protected Vertextype type;
-    protected int Floor;
+    protected int floor;
 
-    public Vertex(String name, double lat1, double long1) {
+    public Vertex(String name, LatLng latLng) {
         this.name = name;
-        this.lat1 = lat1;
-        this.long1 = long1;
+        this.latLng = latLng;
         adj = new LinkedList<Edge>() ;
         reset();
     }
 
-    public Vertex(String name, double lat1, double long1, Vertextype type, int floor){
+    public Vertex(String name, LatLng latLng, Vertextype type, int floor){
         this.name = name;
-        this.lat1 = lat1;
-        this.long1 = long1;
+        this.latLng = latLng;
         this.type = type;
-        this.Floor = floor;
+        this.floor = floor;
         adj = new LinkedList<Edge>();
         reset();
     }
@@ -46,4 +45,23 @@ public class Vertex {
         scratch = false;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<Edge> getAdj() {
+        return adj;
+    }
+
+    public Vertex getPrev() {
+        return prev;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
 }
