@@ -20,7 +20,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="van:"
+            android:text="From:"
             android:id="@+id/textView5"
             android:textColor="#FFFFFF"
             android:layout_row="0"
@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="naar:"
+            android:text="To:"
             android:id="@+id/textView6"
             android:textColor="#FFFFFF"
             android:layout_row="0"
