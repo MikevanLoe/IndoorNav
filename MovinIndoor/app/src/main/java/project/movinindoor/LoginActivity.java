@@ -7,9 +7,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 public class LoginActivity extends Activity {
+
+    Button btnLogin;
+    EditText textEmail;
+    EditText textPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,11 @@ public class LoginActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_login, menu);
         getActionBar().hide();
+
+        textEmail = (EditText)findViewById(R.id.etUserName);
+        textPassword = (EditText)findViewById(R.id.etPass);
+        btnLogin = (Button)findViewById(R.id.btnSingIn);
+
         return true;
     }
 
@@ -40,7 +51,7 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void startActivity(View view)
+    public void btnSignIn(View view)
     {
         Intent Loginintent = new Intent(this, MapsActivity.class);
         startActivity(Loginintent);
