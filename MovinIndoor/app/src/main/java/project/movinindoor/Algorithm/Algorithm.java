@@ -253,8 +253,8 @@ public class Algorithm {
 
             MapsActivity.textFrom.setText(startPosition);
             MapsActivity.textTo.setText(endPosition);
-            MapDrawer.setFloor(Integer.valueOf(startNode.getFloor()));
-            MapsActivity.btnCurrentFloor.setText(startNode.getFloor());
+            MapDrawer.setFloor(startNode.getFloor());
+            MapsActivity.btnCurrentFloor.setText(String.valueOf(startNode.getFloor()));
             MapDrawer.hidePolylines();
             MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
             MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());

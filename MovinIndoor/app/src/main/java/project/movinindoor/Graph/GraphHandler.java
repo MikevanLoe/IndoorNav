@@ -103,13 +103,14 @@ public class GraphHandler {
 
                 final LatLng t1 = n.getLatLng();
                 final String t3 = n.getType();
-               
+                final String t2,= n.getNodeId();
+
 
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                         MapDrawer.addMarker(t1, t3);
+                         MapDrawer.addMarker(t1, t3 + ": " + t2);
                     }
                 });
 
