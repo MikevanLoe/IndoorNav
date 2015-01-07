@@ -452,8 +452,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
-
-        //TODO remove RepairList from stack
     }
 
     //Onclick NavagationMenu
@@ -468,6 +466,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
 
         //TODO add Repairlist to stack
+
     }
 
     NavigationRoute navigationRoute = null;
@@ -712,7 +711,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v,
                                             int groupPosition, int childPosition, long id) {
-                    // TODO Auto-generated method stub
                     if (childPosition == 4) {
                         String Rid = listAdapter.getChild(groupPosition, 5).toString().substring(4);
 
@@ -787,9 +785,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                         HttpResponse response = httpclient.execute(httppost);
 
                     } catch (ClientProtocolException e) {
-                        // TODO Auto-generated catch block
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                     }
 
                     // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
@@ -808,13 +804,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     @Override
     public void onBackPressed() {
-        if(fm.getBackStackEntryCount() != 0){
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-            setUpMapIfNeeded();
-            setUpGraphIfNeeded();
-        }
+        setUpMapIfNeeded();
+        setUpGraphIfNeeded();
     }
 }
 
