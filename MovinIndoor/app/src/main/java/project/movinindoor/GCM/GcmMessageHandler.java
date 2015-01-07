@@ -51,9 +51,9 @@ public class GcmMessageHandler extends IntentService {
         //Log.i("GCM", "Received : "+ extras);
         sendPushNotification("New Repair", mes);
         try {
-            MapsActivity.jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            MapsActivity.setJitems(new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get());
             try {
-                MapsActivity.setupGraph.setRepairReader(new RepairReader());
+                MapsActivity.getSetupGraph().setRepairReader(new RepairReader());
             } catch (NullPointerException e) {}
         } catch (InterruptedException e) {
             e.printStackTrace();

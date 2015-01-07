@@ -265,7 +265,7 @@ public class NodeReader {
         String floor = l.substring(1);
         for (Node node : jsonList.values()) {
             LatLng latLng1 = new LatLng(node.getLatLng().latitude, node.getLatLng().longitude);
-            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1) && floor.equals(node.getFloor())) {
+            if (MapsActivity.getSetupGraph().getRooms().nodeInsideRoom(room, latLng1) && floor.equals(node.getFloor())) {
                 return node;
             }
         }

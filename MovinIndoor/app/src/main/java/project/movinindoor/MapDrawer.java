@@ -137,17 +137,34 @@ public class MapDrawer {
 
     }
 
-    public static void addMarker(double lat1, double long1, String name) {
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title(name)));
-    }
-
     public static void addMarker(LatLng latLng, String name) {
 
         markers.add(mMap.addMarker(new MarkerOptions().position(latLng).title(name)));
     }
 
-    public static void addMarker(double lat1, double long1) {
-        markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lat1, long1)).title("Marker")));
+    public static void addMarker(LatLng latLng, String name, int floor) {
+
+        markers.add(mMap.addMarker(new MarkerOptions().position(latLng).title(name).snippet(String.valueOf(floor))));
+    }
+
+    public static void hideMarkersFloor(int floor) {
+        for(Marker m : markers) {
+            if(m.getSnippet() != null) {
+                if (m.getSnippet().equals(String.valueOf(floor))) m.setVisible(false);
+            }
+        }
+    }
+
+    public static void hideMarkers() {
+        for(Marker m : markers) {
+           m.setVisible(false);
+        }
+    }
+
+    public static void showMarkersFloor(int floor) {
+        for(Marker m : markers) {
+            if(m.getSnippet().equals(String.valueOf(floor))) m.setVisible(true);
+        }
     }
 
     public static void removeMarkers() {
@@ -189,4 +206,23 @@ public class MapDrawer {
             if(p.getColor() != Color.BLACK) p.remove();
         }
     }
+
+    public static void showMarkersAndPolylinesFloor(int floor) {
+        showMarkersFloor(floor);
+        showPolylinesFloor(floor);
+        showPolylinesFloorNav(floor);
+    }
+
+    public static void hideMarkersAndPolylinesFloor(int floor) {
+        hideMarkersFloor(floor);
+        hidePolylinesFloor(floor);
+        hidePolylinesFloorNav(floor);
+    }
+
+    public static void hideAllMarkersAndPolylines() {
+        hidePolylines();
+        hideMarkers();
+    }
+
+
 }
