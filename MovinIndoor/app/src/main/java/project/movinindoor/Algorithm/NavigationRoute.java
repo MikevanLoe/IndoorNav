@@ -76,18 +76,18 @@ public class NavigationRoute {
             RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
             linkedList.add(routeStep);
 */
-            Node n = nodes.get(Graph.walkingPath.get(v).name);
-            for (ToNode tn : n.toNode) {
+            Node n = nodes.get(Graph.walkingPath.get(v).getName());
+            for (ToNode tn : n.getToNode()) {
                // Log.i("V", "=>");
-                for (edgeActions e : tn.actions) {
+                for (edgeActions e : tn.getActions()) {
                    // Log.i("V", "====>");
                     if (Graph.walkingPath.get(v).prev.prev != null) {
                        // Log.i("V", "=======>");
-                        if (e.toNodeID == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).nodeId)) {
+                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).getNodeId())) {
                             String text = "";
                             String action = "";
-                            Node nq = nodes.get(tn.toNodeID);
-                            switch (e.action) {
+                            Node nq = nodes.get(tn.getToNodeID());
+                            switch (e.getAction()) {
                                 case "GoStraight":
                                     text = "Ga rechtdoor";
                                     action = "GoStraight";
@@ -109,7 +109,7 @@ public class NavigationRoute {
                                     action = "GoSlightlyRight";
                                     break;
                             }
-                            RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)), Integer.valueOf(nq.floor));
+                            RouteStep routeStep = new RouteStep(action, text, nq.getLatLng(), Integer.valueOf(nq.getFloor()));
                             linkedList.add(routeStep);
 
                         }
