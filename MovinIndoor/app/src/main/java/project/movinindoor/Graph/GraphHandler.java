@@ -83,7 +83,7 @@ public class GraphHandler {
                         type = Vertex.Vertextype.Elevator;
                         break;
                     case "Stairs":
-                        type = Vertex.Vertextype.Hall;
+                        type = Vertex.Vertextype.Stairs;
                         break;
                     default:
                         break;
