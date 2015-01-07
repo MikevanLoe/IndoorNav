@@ -242,7 +242,7 @@ public class Algorithm {
         double cost = graphHandler.getGraph().drawPath(startNode.getNodeId(), endNode.getNodeId());
         if(cost != 0.0) {
             cost += extraCost;
-            String walkingSpeed = graphHandler.getGraph().calculateWalkingSpeed(cost);
+            String walkingSpeed = graphHandler.getGraph().getMovement().calculateMovingSpeed(cost);
             MapsActivity.getTextSpeed().setText("ETA: " + walkingSpeed);
             MapsActivity.getTextSpeedCost().setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
