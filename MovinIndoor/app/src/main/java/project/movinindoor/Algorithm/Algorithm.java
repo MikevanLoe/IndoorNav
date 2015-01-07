@@ -139,8 +139,6 @@ public class Algorithm {
             Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
             Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
             Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
-
-            //TODO Posible stack
         }
     }
 
