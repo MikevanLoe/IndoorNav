@@ -169,9 +169,8 @@ public class NavigationRoute {
             tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(linkedList.get(num).getLatLng()).title(linkedList.get(num).getText()));
             if (MapDrawer.getFloor() != linkedList.get(num).getFloor()) {
                 MapDrawer.setFloor(linkedList.get(num).getFloor());
-                MapDrawer.hidePolylines();
-                MapDrawer.showPolylinesFloor(linkedList.get(num).getFloor());
-                MapDrawer.showPolylinesFloorNav(linkedList.get(num).getFloor());
+                MapDrawer.hideAllMarkersAndPolylines();
+                MapDrawer.showMarkersAndPolylinesFloor(linkedList.get(num).getFloor());
                 MapsActivity.getBtnCurrentFloor().setText(String.valueOf(linkedList.get(num).getFloor()));
             }
 
