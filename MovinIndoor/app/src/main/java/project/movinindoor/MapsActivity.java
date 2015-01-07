@@ -303,12 +303,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.radioCart:
-                    Graph.setMovingByFoot(false);
+                    Graph.setMovement(false);
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
                     Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Graph.setMovingByFoot(true);
+                    Graph.setMovement(true);
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
                     Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
                     break;
@@ -467,9 +467,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
         Animator.visibilityRepairList(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
-
-        //TODO add Repairlist to stack
-
     }
 
     NavigationRoute navigationRoute = null;
@@ -557,7 +554,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
-        //TODO add map to stack
     }
 
 
@@ -571,7 +567,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             count += CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
         }
-        String cost = Graph.calculateWalkingSpeed(count);
+        String cost = Graph.getMovement().calculateMovingSpeed(count);
         textSpeed.setText("ETA: " + cost);
         textSpeedCost.setText("(" + String.valueOf(Math.round(count)) + "m)");
 
