@@ -427,7 +427,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public void btnCloseNavigate(View view) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(navigationRoute.getLinkedList().getLast().getLatLng())      // Sets the center of the map to Mountain View
-                //.zoom(20)                   // Sets the zoom
+                .zoom(20)                   // Sets the zoom
                 .bearing(0)               // Sets the orientation of the camera to east
                 .tilt(0)                   // Sets the tilt of the camera to 30 degrees
                 .build();                   // Creates a CameraPosition from the builder
