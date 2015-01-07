@@ -10,11 +10,15 @@ import project.movinindoor.Graph.edgeActions;
 public class Edge {
     protected Vertex dest;
     protected double cost;
-    public ArrayList<edgeActions> actions;
+    protected ArrayList<edgeActions> actions;
 
     public Edge(Vertex d, double c, ArrayList<edgeActions> actions) {
         dest = d;
         cost = c;
         this.actions = actions;
+    }
+
+    public ArrayList<edgeActions> getActions() {
+        return actions;
     }
 }

@@ -54,15 +54,15 @@ public class NodeReader {
 
         for (Node n : read.values()) {
 
-            lat1 = n.location.get(0);
-            long1 = n.location.get(1);
+            lat1 = n.getLatLng().latitude;
+            long1 = n.getLatLng().longitude;
 
 
-            for (ToNode tN : n.toNode) {
-                lat2 = read.get(tN.toNodeID).location.get(0);
-                long2 = read.get(tN.toNodeID).location.get(1);
+            for (ToNode tN : n.getToNode()) {
+                lat2 = read.get(tN.getToNodeID()).getLatLng().latitude;
+                long2 = read.get(tN.getToNodeID()).getLatLng().longitude;
                 double cost = CalcMath.measureMeters(lat1, long1, lat2, long2);
-                tN.cost = cost;
+                tN.setCost(cost);
             }
         }
         return read;
@@ -80,7 +80,7 @@ public class NodeReader {
         reader.beginArray();
         while (reader.hasNext()) {
             Node n = readNodes(reader);
-            nodes.put(n.nodeId, n);
+            nodes.put(n.getNodeId(), n);
         }
         reader.endArray();
         return nodes;
@@ -89,8 +89,8 @@ public class NodeReader {
 
     public Node readNodes(JsonReader reader) throws IOException {
         String nodeID = "";
-        List<Double> position = null;
-        String floor = null;
+        LatLng latLng = null;
+        int floor = 0;
         List<ToNode> nodeLinks = null;
         String type = "";
 
@@ -103,10 +103,10 @@ public class NodeReader {
                     nodeID = reader.nextString();
                     break;
                 case "position":
-                    position = readDoublesArray(reader);
+                    latLng = readDoublesArray(reader);
                     break;
                 case "floor":
-                    floor = reader.nextString();
+                    floor = Integer.valueOf(reader.nextString());
                     break;
                 case "nodeLinks":
                     List<ToNode> r = readNodeLinks(reader);
@@ -125,11 +125,11 @@ public class NodeReader {
             }
         }
         reader.endObject();
-        return new Node(nodeID, position, floor, nodeLinks, type);
+        return new Node(nodeID, latLng, floor, nodeLinks, type);
     }
 
 
-    public List<Double> readDoublesArray(JsonReader reader) throws IOException {
+    public LatLng readDoublesArray(JsonReader reader) throws IOException {
         List<Double> doubles = new ArrayList();
 
         reader.beginArray();
@@ -137,7 +137,7 @@ public class NodeReader {
             doubles.add(reader.nextDouble());
         }
         reader.endArray();
-        return doubles;
+        return new LatLng(doubles.get(0), doubles.get(1));
     }
 
     public List<ToNode> readNodeLinks(JsonReader reader) throws IOException {
@@ -205,8 +205,8 @@ public class NodeReader {
 
         for (Node n : jsonList.values()) {
 
-            double lat1 = n.location.get(0);
-            double long1 = n.location.get(1);
+            double lat1 = n.getLatLng().latitude;
+            double long1 = n.getLatLng().longitude;
 
             if (shortLng == 0.0 && shortLng == 0.0) {
                 shortLat = lat1;
@@ -226,7 +226,7 @@ public class NodeReader {
         return tempNode;
     }
 
-    public Node findNearestNode(LatLng latLng, String floor) {
+    public Node findNearestNode(LatLng latLng, int floor) {
         double startLat1 = latLng.latitude;
         double startLong1 = latLng.longitude;
 
@@ -235,9 +235,9 @@ public class NodeReader {
         Node tempNode = null;
 
         for (Node n : jsonList.values()) {
-            if (n.floor.equals(floor)) {
-                double lat1 = n.location.get(0);
-                double long1 = n.location.get(1);
+            if (n.getFloor() == floor) {
+                double lat1 = n.getLatLng().latitude;
+                double long1 = n.getLatLng().longitude;
 
                 if (shortLng == 0.0 && shortLng == 0.0) {
                     shortLat = lat1;
@@ -264,29 +264,8 @@ public class NodeReader {
         String l = s.split("\\.").toString();
         String floor = l.substring(1);
         for (Node node : jsonList.values()) {
-            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
-            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1) && floor.equals(node.floor)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    public Node FindClosestNodeInsideElevator(Elevator elevator) {
-
-        for (Node node : jsonList.values()) {
-            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
-            if (MapsActivity.setupGraph.getElevators().nodeInsideElevator(elevator, latLng1)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-    public Node FindClosestNodeInsideStair(Stair stair) {
-        for (Node node : jsonList.values()) {
-            LatLng latLng1 = new LatLng(node.location.get(0), node.location.get(1));
-            if (MapsActivity.setupGraph.getStairs().nodeInsideStair(stair, latLng1)) {
+            LatLng latLng1 = new LatLng(node.getLatLng().latitude, node.getLatLng().longitude);
+            if (MapsActivity.setupGraph.getRooms().nodeInsideRoom(room, latLng1) && floor.equals(node.getFloor())) {
                 return node;
             }
         }

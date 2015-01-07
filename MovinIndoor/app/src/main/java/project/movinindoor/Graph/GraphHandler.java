@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.Graph.Vertex;
 import project.movinindoor.MapDrawer;
@@ -81,8 +83,8 @@ public class GraphHandler {
     public void createVertices() {
         Vertex.Vertextype type = null;
         for (Node n : nodeReader.jsonList.values()) {
-            if (n.type != null) {
-                switch (n.type) {
+            if (n.getType() != null) {
+                switch (n.getType()) {
                     case "Hall":
                         type = Vertex.Vertextype.Hall;
                         break;
@@ -99,7 +101,20 @@ public class GraphHandler {
                         break;
                 }
 
-                graph.addVertex(n.nodeId, n.location.get(0), n.location.get(1), type, Integer.parseInt(n.floor));
+                final LatLng t1 = n.getLatLng();
+                final String t3 = n.getType();
+                final String t2 = n.getNodeId();
+
+
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                         MapDrawer.addMarker(t1, t3 + ": " + t2);
+                    }
+                });
+
+                graph.addVertex(n.getNodeId(), n.getLatLng().latitude, n.getLatLng().longitude, type, n.getFloor());
             }
         }
     }
@@ -107,12 +122,12 @@ public class GraphHandler {
         double lat1, long1, lat2, long2;
 
         for (Node n : nodeReader.jsonList.values()) {
-            lat1 = n.location.get(0);
-            long1 = n.location.get(1);
-            for (ToNode t : n.toNode) {
-                lat2 = nodeReader.jsonList.get(t.toNodeID).location.get(0);
-                long2 = nodeReader.jsonList.get(t.toNodeID).location.get(1);
-                graph.addEdge(n.nodeId, t.toNodeID, t.cost, t.actions);
+            lat1 = n.getLatLng().latitude;
+            long1 = n.getLatLng().longitude;
+            for (ToNode t : n.getToNode()) {
+                lat2 = nodeReader.jsonList.get(t.getToNodeID()).getLatLng().latitude;
+                long2 = nodeReader.jsonList.get(t.getToNodeID()).getLatLng().longitude;
+                graph.addEdge(n.getNodeId(), t.getToNodeID(), t.getCost(), t.getActions());
 
                 final double t1 = lat1;
                 final double t2 = long1;
@@ -142,50 +157,4 @@ public class GraphHandler {
         });
 
     }
-
-    /*
-    public Node findNearestNode(LatLng latLng) {
-        double startLat1 = latLng.latitude;
-        double startLong1 = latLng.longitude;
-
-        double shortLat = 0.0;
-        double shortLng = 0.0;
-        Node tempNode = null;
-
-        for (Node n : nodeReader.jsonList.values()) {
-
-            double lat1 = n.location.get(0);
-            double long1 = n.location.get(1);
-
-            if(shortLng == 0.0 && shortLng == 0.0) {
-                shortLat = lat1;
-                shortLng = long1;
-            }
-
-            double som1 = CalcMath.measureMeters(startLat1, startLong1, lat1, long1);
-            double som2 = CalcMath.measureMeters(startLat1, startLong1, shortLat, shortLng);
-
-            if(som1 <= som2) {
-                shortLat = lat1;
-                shortLng = long1;
-                tempNode = n;
-            }
-        }
-        MapDrawer.addPolyline(shortLat, shortLng, startLat1, startLong1, Color.BLUE);
-        return tempNode;
-    }
-
-    public Node FindClosestNodeInsideRoom(Room room) {
-
-        for (Node node : nodeReader.jsonList.values()) {
-            LatLng latLng1 =  new LatLng(node.location.get(0), node.location.get(1));
-            if(rooms.nodeInsideRoom(room, latLng1)) {
-                return node;
-            }
-        }
-        return null;
-    }
-    */
-
-
 }

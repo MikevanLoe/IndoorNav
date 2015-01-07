@@ -42,7 +42,7 @@ public class Graph {
     
     //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
-        Vertex v = new Vertex(name, lat1, long1, type, floor);
+        Vertex v = new Vertex(name, new LatLng(lat1, long1), type, floor);
         vertexMap.put(name, v);
     }
 
@@ -89,7 +89,7 @@ public class Graph {
     //returns the cost of the path.
     private void drawPath(Vertex v) {
 
-        MapDrawer.addPolylineNav(v.lat1, v.long1, v.prev.lat1, v.prev.long1, Color.BLUE, v.Floor);
+        MapDrawer.addPolylineNav(v.getLatLng().latitude, v.getLatLng().longitude, v.prev.latLng.latitude, v.prev.getLatLng().longitude, Color.BLUE, v.getFloor());
 
         MapDrawer.hidePolylines();
         if (v.prev.prev != null) {
@@ -98,7 +98,7 @@ public class Graph {
         } else {
             MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
             MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());
-            MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(v.lat1, v.long1), 20));
+            MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(v.latLng, 20));
         }
     }
 
