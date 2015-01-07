@@ -163,7 +163,9 @@ public class MapDrawer {
 
     public static void showMarkersFloor(int floor) {
         for(Marker m : markers) {
-            if(m.getSnippet().equals(String.valueOf(floor))) m.setVisible(true);
+            if(m.getSnippet() != null) {
+                if (m.getSnippet().equals(String.valueOf(floor))) m.setVisible(true);
+            }
         }
     }
 

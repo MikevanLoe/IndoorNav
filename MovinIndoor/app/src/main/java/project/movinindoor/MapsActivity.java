@@ -110,12 +110,20 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private static GridLayout fNavigationInfoBottom;
     private static Button btnCurrentFloor;
-    private ImageButton btnFloorUp, btnFloorDown;
+    private static ImageButton btnFloorUp, btnFloorDown;
 
     private static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
     private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
+
+    public static ImageButton getBtnFloorUp() {
+        return btnFloorUp;
+    }
+
+    public static ImageButton getBtnFloorDown() {
+        return btnFloorDown;
+    }
 
     public static GridLayout getfNavigationInfoBottom() {
         return fNavigationInfoBottom;
@@ -417,8 +425,17 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(navigationRoute.getLinkedList().getLast().getLatLng())      // Sets the center of the map to Mountain View
+                //.zoom(20)                   // Sets the zoom
+                .bearing(0)               // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
         if(navigationRoute != null) navigationRoute.reset();
         navigationRoute = null;
+
         MapDrawer.removePolylines();
        // MapDrawer.removeMarkers();
         //animate
@@ -427,6 +444,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+
     }
 
     public void btnCloseNavBar(View view) {
@@ -655,9 +673,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 18));
         //Set a marker on long click
         mMap.setOnMapLongClickListener(onMapLongClick);
     }
