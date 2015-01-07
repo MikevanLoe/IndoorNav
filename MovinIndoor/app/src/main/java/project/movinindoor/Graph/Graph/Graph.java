@@ -34,11 +34,6 @@ public class Graph {
     public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
         Vertex v2 = vertexMap.get(destname);
-        if((v.type == Vertex.Vertextype.Elevator || v.type == Vertex.Vertextype.Stairs) && (v2.type == Vertex.Vertextype.Elevator || v2.type == Vertex.Vertextype.Stairs)){
-            Log.i("STAIRS", "added 30 meters to a stair");
-            cost = cost + 100000;
-
-        }
         v.adj.add(new Edge(v2, cost, actions));
     }
 
@@ -113,7 +108,7 @@ public class Graph {
         if (!startName.equals(destName)) {
             Vertex start = vertexMap.get(startName);
             if (start == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "start vertex was not found", Toast.LENGTH_LONG).show();
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "starting point was not found", Toast.LENGTH_LONG).show();
                 return 0.0;
             }
             dijkstra(start);
@@ -127,7 +122,7 @@ public class Graph {
                     return 0.0;
                 }
             } else {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "end vertex was not found", Toast.LENGTH_LONG).show();
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "end point was not found", Toast.LENGTH_LONG).show();
                 return 0.0;
             }
         } else {
@@ -139,7 +134,6 @@ public class Graph {
 
     public void dijkstra(Vertex start) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
-
         if (start != null) {
             clearAll();
             pq.add(new Path(start, 0));
@@ -149,7 +143,7 @@ public class Graph {
             while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
-                if (v.scratch) // already processed v
+                if (v.scratch || (!movingByFoot && v.type == Vertex.Vertextype.Stairs) ) // already processed v
                 {
                     continue;
                 }
