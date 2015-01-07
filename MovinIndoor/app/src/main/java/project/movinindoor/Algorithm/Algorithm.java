@@ -12,21 +12,17 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import project.movinindoor.Animator;
 import project.movinindoor.CalcMath;
-import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Graph.Node;
-import project.movinindoor.Graph.ToNode;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
 import project.movinindoor.Reparation.Buildings;
-import project.movinindoor.Reparation.Reparation;
 import project.movinindoor.Models.Room;
 
 /**
@@ -119,12 +115,12 @@ public class Algorithm {
     }
     */
 
-    private static GraphHandler graphHandler = MapsActivity.setupGraph;
+    private static GraphHandler graphHandler = MapsActivity.getSetupGraph();
 
     //Called by methods
     public static void navigate(String start, String end) {
         //Removes From -> To Fragement;
-        MapsActivity.fNavigationInfoBottom.setVisibility(View.INVISIBLE);
+        MapsActivity.getfNavigationInfoBottom().setVisibility(View.INVISIBLE);
         //Removes existing Polylines
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
@@ -144,14 +140,13 @@ public class Algorithm {
 
     public static boolean navigateRoute(String startPosition, String endPosition) {
         double extraCost = 0.0;
-        LatLng startPositionLatLng;
-        LatLng endPositionLatLng;
+        LatLng startPositionLatLng, endPositionLatLng;
         Node endNode, startNode;
         Room startRoom = null, endRoom = null;
 
         //if not a custom location
-        if(MapsActivity.customStartPos == null && !MapsActivity.editStart.getText().toString().contains("Custom")) {
-            startRoom = graphHandler.rooms.getRoom(startPosition.toUpperCase());
+        if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom")) {
+            startRoom = graphHandler.getRooms().getRoom(startPosition.toUpperCase());
 
             if (startRoom == null) {
                 Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
@@ -170,13 +165,13 @@ public class Algorithm {
 
             startPositionLatLng = new LatLng(startNode.getLatLng().latitude, startNode.getLatLng().longitude);
         } else {
-            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.customStartPos, MapsActivity.customStartFloor);
-            extraCost = CalcMath.measureMeters(MapsActivity.customStartPos.latitude, MapsActivity.customStartPos.longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
-            startPositionLatLng = MapsActivity.customStartPos;
+            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomStartPos(), MapsActivity.getCustomStartFloor());
+            extraCost = CalcMath.measureMeters(MapsActivity.getCustomStartPos().latitude, MapsActivity.getCustomStartPos().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
+            startPositionLatLng = MapsActivity.getCustomStartPos();
         }
 
         //if not a custom location
-        if(MapsActivity.customEndPos == null  && !MapsActivity.editEnd.getText().toString().contains("Custom")) {
+        if(MapsActivity.getCustomEndPos() == null  && !MapsActivity.getEditEnd().getText().toString().contains("Custom")) {
             String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
             String re2="(\\d+)";	// Integer Number 1
             String re3="(.)";	// Any Single Character 1
@@ -186,9 +181,9 @@ public class Algorithm {
             Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
             Matcher m = p.matcher(endPosition);
             if (m.matches()) {
-                endRoom = graphHandler.rooms.getRoom(endPosition.toUpperCase());
+                endRoom = graphHandler.getRooms().getRoom(endPosition.toUpperCase());
             } else {
-                List<Room> roomsWithName = graphHandler.rooms.getAllRoomsWithName(endPosition);
+                List<Room> roomsWithName = graphHandler.getRooms().getAllRoomsWithName(endPosition);
                 if(roomsWithName.size() != 1) {
                     double tempCost = 0.0;
                     Room tempRoom = null;
@@ -196,7 +191,7 @@ public class Algorithm {
                         Node node = graphHandler.getNodes().FindClosestNodeInsideRoom(room);
                         //find shortest route to position
                         if(node != null) {
-                            double cost = graphHandler.graph.drawPath(startNode.getNodeId(), node.getNodeId());
+                            double cost = graphHandler.getGraph().drawPath(startNode.getNodeId(), node.getNodeId());
                             if(tempCost == 0.0 && tempRoom == null) {
                                 tempCost = cost;
                                 tempRoom = room;
@@ -212,7 +207,7 @@ public class Algorithm {
                     MapDrawer.removePolylines();
                     endRoom = tempRoom;
                 } else {
-                    endRoom = graphHandler.rooms.getRoom(endPosition);
+                    endRoom = graphHandler.getRooms().getRoom(endPosition);
                 }
             }
 
@@ -234,9 +229,9 @@ public class Algorithm {
             endPositionLatLng = new LatLng(endNode.getLatLng().latitude, endNode.getLatLng().longitude);
         } else {
 
-            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.customEndPos, MapsActivity.customEndFloor);
-            extraCost = CalcMath.measureMeters(MapsActivity.customEndPos.latitude, MapsActivity.customEndPos.longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
-            endPositionLatLng = MapsActivity.customEndPos;
+            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomEndPos(), MapsActivity.getCustomEndFloor());
+            extraCost = CalcMath.measureMeters(MapsActivity.getCustomEndPos().latitude, MapsActivity.getCustomEndPos().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
+            endPositionLatLng = MapsActivity.getCustomEndPos();
         }
 
         if(startNode == null || endNode == null) {
@@ -244,17 +239,17 @@ public class Algorithm {
             return false;
         }
 
-        double cost = graphHandler.graph.drawPath(startNode.getNodeId(), endNode.getNodeId());
+        double cost = graphHandler.getGraph().drawPath(startNode.getNodeId(), endNode.getNodeId());
         if(cost != 0.0) {
             cost += extraCost;
-            String walkingSpeed = graphHandler.graph.calculateWalkingSpeed(cost);
-            MapsActivity.textSpeed.setText("ETA: " + walkingSpeed);
-            MapsActivity.textSpeedCost.setText("(" + String.valueOf(Math.round(cost)) + "m)");
+            String walkingSpeed = graphHandler.getGraph().calculateWalkingSpeed(cost);
+            MapsActivity.getTextSpeed().setText("ETA: " + walkingSpeed);
+            MapsActivity.getTextSpeedCost().setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
-            MapsActivity.textFrom.setText(startPosition);
-            MapsActivity.textTo.setText(endPosition);
+            MapsActivity.getTextFrom().setText(startPosition);
+            MapsActivity.getTextTo().setText(endPosition);
             MapDrawer.setFloor(startNode.getFloor());
-            MapsActivity.btnCurrentFloor.setText(String.valueOf(startNode.getFloor()));
+            MapsActivity.getBtnCurrentFloor().setText(String.valueOf(startNode.getFloor()));
             MapDrawer.hidePolylines();
             MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
             MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());

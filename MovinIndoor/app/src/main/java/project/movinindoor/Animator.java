@@ -18,11 +18,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_top);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fNavigationMenu.startAnimation(showAnimation);
-            MapsActivity.fNavigationMenu.setVisibility(View.VISIBLE);
+            MapsActivity.getfNavigationMenu().startAnimation(showAnimation);
+            MapsActivity.getfNavigationMenu().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fNavigationMenu.startAnimation(hideAnimation);
-            MapsActivity.fNavigationMenu.setVisibility(View.INVISIBLE);
+            MapsActivity.getfNavigationMenu().startAnimation(hideAnimation);
+            MapsActivity.getfNavigationMenu().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -31,11 +31,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_bottom);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fMarkerDisplay.getView().startAnimation(showAnimation);
-            MapsActivity.fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+            MapsActivity.getfMarkerDisplay().getView().startAnimation(showAnimation);
+            MapsActivity.getfMarkerDisplay().getView().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fMarkerDisplay.getView().startAnimation(hideAnimation);
-            MapsActivity.fMarkerDisplay.getView().setVisibility(View.INVISIBLE);
+            MapsActivity.getfMarkerDisplay().getView().startAnimation(hideAnimation);
+            MapsActivity.getfMarkerDisplay().getView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -44,11 +44,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_top);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fRepairList.getView().startAnimation(showAnimation);
-            MapsActivity.fRepairList.getView().setVisibility(View.VISIBLE);
+            MapsActivity.getfRepairList().getView().startAnimation(showAnimation);
+            MapsActivity.getfRepairList().getView().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fRepairList.getView().startAnimation(hideAnimation);
-            MapsActivity.fRepairList.getView().setVisibility(View.INVISIBLE);
+            MapsActivity.getfRepairList().getView().startAnimation(hideAnimation);
+            MapsActivity.getfRepairList().getView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -57,11 +57,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_top);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fNavigationInfoTop.getView().startAnimation(showAnimation);
-            MapsActivity.fNavigationInfoTop.getView().setVisibility(View.VISIBLE);
+            MapsActivity.getfNavigationInfoTop().getView().startAnimation(showAnimation);
+            MapsActivity.getfNavigationInfoTop().getView().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fNavigationInfoTop.getView().startAnimation(hideAnimation);
-            MapsActivity.fNavigationInfoTop.getView().setVisibility(View.INVISIBLE);
+            MapsActivity.getfNavigationInfoTop().getView().startAnimation(hideAnimation);
+            MapsActivity.getfNavigationInfoTop().getView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -70,11 +70,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_bottom);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fNavigationInfoBottom.startAnimation(showAnimation);
-            MapsActivity.fNavigationInfoBottom.setVisibility(View.VISIBLE);
+            MapsActivity.getfNavigationInfoBottom().startAnimation(showAnimation);
+            MapsActivity.getfNavigationInfoBottom().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fNavigationInfoBottom.startAnimation(hideAnimation);
-            MapsActivity.fNavigationInfoBottom.setVisibility(View.INVISIBLE);
+            MapsActivity.getfNavigationInfoBottom().startAnimation(hideAnimation);
+            MapsActivity.getfNavigationInfoBottom().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -83,11 +83,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_fade_in);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fFloorNavigator2.getView().startAnimation(showAnimation);
-            MapsActivity.fFloorNavigator2.getView().setVisibility(View.VISIBLE);
+            MapsActivity.getfFloorNavigator2().getView().startAnimation(showAnimation);
+            MapsActivity.getfFloorNavigator2().getView().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fFloorNavigator2.getView().startAnimation(hideAnimation);
-            MapsActivity.fFloorNavigator2.getView().setVisibility(View.INVISIBLE);
+            MapsActivity.getfFloorNavigator2().getView().startAnimation(hideAnimation);
+            MapsActivity.getfFloorNavigator2().getView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -97,11 +97,11 @@ public class Animator {
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_fade_in);
 
         if(type.equals(Visibility.SHOW)) {
-            MapsActivity.fNavigationCard.getView().startAnimation(showAnimation);
-            MapsActivity.fNavigationCard.getView().setVisibility(View.VISIBLE);
+            MapsActivity.getfNavigationCard().getView().startAnimation(showAnimation);
+            MapsActivity.getfNavigationCard().getView().setVisibility(View.VISIBLE);
         } else {
-            MapsActivity.fNavigationCard.getView().startAnimation(hideAnimation);
-            MapsActivity.fNavigationCard.getView().setVisibility(View.INVISIBLE);
+            MapsActivity.getfNavigationCard().getView().startAnimation(hideAnimation);
+            MapsActivity.getfNavigationCard().getView().setVisibility(View.INVISIBLE);
         }
     }
 }

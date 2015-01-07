@@ -21,13 +21,10 @@ import project.movinindoor.Readers.RepairReader;
  */
 public class GraphHandler {
 
-    public Graph graph;
+    private Graph graph;
     private NodeReader nodeReader = new NodeReader();
     private RepairReader repairReader;
-    public Rooms rooms;
-    public Elevators elevators;
-    public Stairs stairs;
-
+    private Rooms rooms;
 
     public GraphHandler() {
 
@@ -49,15 +46,6 @@ public class GraphHandler {
         }).start();
 
 
-    }
-
-
-    public Elevators getElevators() {
-        return elevators;
-    }
-
-    public Stairs getStairs() {
-        return stairs;
     }
 
     public Graph getGraph() {
@@ -104,19 +92,28 @@ public class GraphHandler {
                 final LatLng t1 = n.getLatLng();
                 final String t3 = n.getType();
                 final String t2 = n.getNodeId();
+                final int t4 = n.getFloor();
 
 
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                         MapDrawer.addMarker(t1, t3 + ": " + t2);
+                         MapDrawer.addMarker(t1, t3 + ": " + t2, t4);
                     }
                 });
 
                 graph.addVertex(n.getNodeId(), n.getLatLng().latitude, n.getLatLng().longitude, type, n.getFloor());
             }
         }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                MapDrawer.hideMarkers();
+                MapDrawer.showMarkersFloor(0);
+            }
+        });
     }
     public void createEdges() {
         double lat1, long1, lat2, long2;
@@ -157,4 +154,6 @@ public class GraphHandler {
         });
 
     }
+
+
 }
