@@ -7,13 +7,29 @@ import java.util.ArrayList;
         */
 public class ToNode {
 
-    public String toNodeID;
-    public double cost;
-    public ArrayList<edgeActions> actions;
+    private String toNodeID;
+    private double cost;
+    private ArrayList<edgeActions> actions;
 
     public ToNode(String toNodeID, double cost, ArrayList actions) {
         this.cost = cost;
         this.toNodeID = toNodeID;
         this.actions = actions;
+    }
+
+    public String getToNodeID() {
+        return toNodeID;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public ArrayList<edgeActions> getActions() {
+        return actions;
     }
 }
