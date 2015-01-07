@@ -24,9 +24,9 @@ import project.movinindoor.MapsActivity;
 public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
-    public static boolean movingByFoot = true;
+    private static boolean movingByFoot = true;
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
-    public static List<Vertex> walkingPath = new LinkedList<>();
+    private static List<Vertex> walkingPath = new LinkedList<>();
 
     public void addEdge(String sourcename, String destname, double cost, ArrayList<edgeActions> actions){
         Vertex v = vertexMap.get(sourcename);
@@ -180,4 +180,15 @@ public class Graph {
         return String.format("%dm%02ds", minute, second);
     }
 
+    public static void setMovingByFoot(boolean movingByFoot) {
+        Graph.movingByFoot = movingByFoot;
+    }
+
+    public static List<Vertex> getWalkingPath() {
+        return walkingPath;
+    }
+
+    public static boolean isMovingByFoot() {
+        return movingByFoot;
+    }
 }
