@@ -425,19 +425,22 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(navigationRoute.getLinkedList().getLast().getLatLng())      // Sets the center of the map to Mountain View
-                .zoom(20)                   // Sets the zoom
-                .bearing(0)               // Sets the orientation of the camera to east
-                .tilt(0)                   // Sets the tilt of the camera to 30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        try {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(navigationRoute.getLinkedList().getLast().getLatLng())
+                    .zoom(20)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+        } catch (NullPointerException e) {};
 
         if(navigationRoute != null) navigationRoute.reset();
         navigationRoute = null;
 
         MapDrawer.removePolylines();
-       // MapDrawer.removeMarkers();
+        MapDrawer.removeMarkers();
         //animate
         Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
@@ -474,8 +477,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (NullPointerException e) {};
 
         //Get Start position
         String startPosition = editStart.getText().toString();

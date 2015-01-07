@@ -256,8 +256,7 @@ public class Algorithm {
             MapsActivity.getTextTo().setText(endPosition);
             MapDrawer.setFloor(startNode.getFloor());
             MapsActivity.getBtnCurrentFloor().setText(String.valueOf(startNode.getFloor()));
-            MapDrawer.hideAllMarkersAndPolylines();
-            MapDrawer.showMarkersAndPolylinesFloor(MapDrawer.getFloor());
+
 
             MapsActivity.getBtnFloorUp().setVisibility(View.VISIBLE);
             MapsActivity.getBtnFloorDown().setVisibility(View.VISIBLE);
@@ -266,6 +265,9 @@ public class Algorithm {
 
             MapDrawer.addMarker(startPositionLatLng, startPosition, startNode.getFloor());
             MapDrawer.addMarker(endPositionLatLng, endPosition, endNode.getFloor());
+
+            MapDrawer.hideAllMarkersAndPolylines();
+            MapDrawer.showMarkersAndPolylinesFloor(MapDrawer.getFloor());
             return true;
         }
         return false;

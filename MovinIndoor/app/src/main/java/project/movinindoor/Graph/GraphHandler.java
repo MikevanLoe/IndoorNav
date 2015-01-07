@@ -99,7 +99,7 @@ public class GraphHandler {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                         MapDrawer.addMarker(t1, t3 + ": " + t2, t4);
+                         //MapDrawer.addMarker(t1, t3 + ": " + t2, t4);
                     }
                 });
 
