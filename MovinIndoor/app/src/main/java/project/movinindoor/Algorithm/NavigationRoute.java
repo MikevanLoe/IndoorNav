@@ -33,11 +33,11 @@ public class NavigationRoute {
         if (tempMarker != null) tempMarker.remove();
 
         num = 0;
-        HashMap<String, Node> nodes = MapsActivity.setupGraph.getNodes().jsonList;
+        HashMap<String, Node> nodes = MapsActivity.getSetupGraph().getNodes().jsonList;
         linkedList = new LinkedList<>();
 
-        for (int v = Graph.walkingPath.size() - 1; v >= 0; v--) {
-            Vertex v2 = Graph.walkingPath.get(v);
+        for (int v = Graph.getWalkingPath().size() - 1; v >= 0; v--) {
+            Vertex v2 = Graph.getWalkingPath().get(v);
             /*
             for (Edge e1 : v2.adj) {
                 for (edgeActions e : e1.actions) {
@@ -76,14 +76,14 @@ public class NavigationRoute {
             RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
             linkedList.add(routeStep);
 */
-            Node n = nodes.get(Graph.walkingPath.get(v).getName());
+            Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
             for (ToNode tn : n.getToNode()) {
                // Log.i("V", "=>");
                 for (edgeActions e : tn.getActions()) {
                    // Log.i("V", "====>");
-                    if (Graph.walkingPath.get(v).prev.prev != null) {
+                    if (Graph.getWalkingPath().get(v).prev.prev != null) {
                        // Log.i("V", "=======>");
-                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.walkingPath.get(v).prev.prev.name).getNodeId())) {
+                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.name).getNodeId())) {
                             String text = "";
                             String action = "";
                             Node nq = nodes.get(tn.getToNodeID());
@@ -169,10 +169,9 @@ public class NavigationRoute {
             tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(linkedList.get(num).getLatLng()).title(linkedList.get(num).getText()));
             if (MapDrawer.getFloor() != linkedList.get(num).getFloor()) {
                 MapDrawer.setFloor(linkedList.get(num).getFloor());
-                MapDrawer.hidePolylines();
-                MapDrawer.showPolylinesFloor(linkedList.get(num).getFloor());
-                MapDrawer.showPolylinesFloorNav(linkedList.get(num).getFloor());
-                MapsActivity.btnCurrentFloor.setText(String.valueOf(linkedList.get(num).getFloor()));
+                MapDrawer.hideAllMarkersAndPolylines();
+                MapDrawer.showMarkersAndPolylinesFloor(linkedList.get(num).getFloor());
+                MapsActivity.getBtnCurrentFloor().setText(String.valueOf(linkedList.get(num).getFloor()));
             }
 
             if(num != linkedList.size() - 1) {

@@ -37,7 +37,7 @@ public class RepairReader {
             //Create buildings
             buildings = new Buildings(buildingsArray);
             try {
-                jitems = MapsActivity.jitems;
+                jitems = MapsActivity.getJitems();
             } catch (Exception e) {
                 jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
             }
@@ -55,7 +55,7 @@ public class RepairReader {
 
                 LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
                 try {
-                    Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
+                    Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                     Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
 
@@ -203,7 +203,7 @@ public class RepairReader {
                 String node = jitems.getJSONObject(i).getString("defectid");
 
                 LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                Rooms nodeRooms = MapsActivity.setupGraph.getRooms();
+                Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                 Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
                     String room = nodeRoom.getLocation();

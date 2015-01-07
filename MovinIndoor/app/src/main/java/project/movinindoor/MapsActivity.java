@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -90,7 +91,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
-    public static GraphHandler setupGraph;
+    private static GraphHandler setupGraph;
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -101,23 +102,116 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     private Marker longClickMarker = null;
     private Room inRoom;
-    public static LatLng customStartPos = null;
-    public static LatLng customEndPos = null;
-    public static int customStartFloor = 0;
-    public static int customEndFloor = 0;
-    public static JSONArray jitems;
+    private static LatLng customStartPos = null, customEndPos = null;
+    private static int customStartFloor = 0, customEndFloor = 0;
+    private static JSONArray jitems;
 
-    public static EditText editStart;
-    public static EditText editEnd;
-    public static TextView textSpeed, textSpeedCost, textFrom, textTo;
-    public static GridLayout fNavigationInfoBottom;
-    public static Button btnCurrentFloor;
-    private ImageButton btnFloorUp, btnFloorDown;
+    private static EditText editStart, editEnd;
+    private static TextView textSpeed, textSpeedCost, textFrom, textTo;
+    private static GridLayout fNavigationInfoBottom;
+    private static Button btnCurrentFloor;
+    private static ImageButton btnFloorUp, btnFloorDown;
 
-    public static LinearLayout fNavigationMenu;
+    private static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
-    public static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
+    private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
+
+    public static ImageButton getBtnFloorUp() {
+        return btnFloorUp;
+    }
+
+    public static ImageButton getBtnFloorDown() {
+        return btnFloorDown;
+    }
+
+    public static GridLayout getfNavigationInfoBottom() {
+        return fNavigationInfoBottom;
+    }
+
+    public static LinearLayout getfNavigationMenu() {
+        return fNavigationMenu;
+    }
+
+    public static Fragment getfRepairList() {
+        return fRepairList;
+    }
+
+    public static Fragment getfNavigationInfoTop() {
+        return fNavigationInfoTop;
+    }
+
+    public static Fragment getfFloorNavigator2() {
+        return fFloorNavigator2;
+    }
+
+    public static Fragment getfMarkerDisplay() {
+        return fMarkerDisplay;
+    }
+
+    public static Fragment getfNavigationCard() {
+        return fNavigationCard;
+    }
+
+    public static GraphHandler getSetupGraph() {
+        return setupGraph;
+    }
+
+    public static void setSetupGraph(GraphHandler setupGraph) {
+        MapsActivity.setupGraph = setupGraph;
+    }
+
+    public static JSONArray getJitems() {
+        return jitems;
+    }
+
+    public static void setJitems(JSONArray jitems) {
+        MapsActivity.jitems = jitems;
+    }
+
+    public static TextView getTextSpeed() {
+        return textSpeed;
+    }
+
+    public static TextView getTextSpeedCost() {
+        return textSpeedCost;
+    }
+
+    public static TextView getTextFrom() {
+        return textFrom;
+    }
+
+    public static TextView getTextTo() {
+        return textTo;
+    }
+
+    public static EditText getEditEnd() {
+        return editEnd;
+    }
+
+    public static EditText getEditStart() {
+        return editStart;
+    }
+
+    public static Button getBtnCurrentFloor() {
+        return btnCurrentFloor;
+    }
+
+    public static LatLng getCustomStartPos() {
+        return customStartPos;
+    }
+
+    public static LatLng getCustomEndPos() {
+        return customEndPos;
+    }
+
+    public static int getCustomStartFloor() {
+        return customStartFloor;
+    }
+
+    public static int getCustomEndFloor() {
+        return customEndFloor;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,12 +303,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.radioCart:
-                    Graph.movingByFoot = false;
+                    Graph.setMovingByFoot(false);
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
                     Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    Graph.movingByFoot = true;
+                    Graph.setMovingByFoot(true);
                     infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
                     Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
                     break;
@@ -245,6 +339,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
+
+
     //OnClick FloorNavigator Button Up
     public void btnFloorUp(View view) {
         btnFloorDown.setVisibility(View.VISIBLE);
@@ -252,12 +348,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if (currentFloor < 10) {
             MapDrawer.setFloor(currentFloor + 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor + 1));
-
-            MapDrawer.hidePolylinesFloor(currentFloor);
-            MapDrawer.showPolylinesFloor(currentFloor + 1);
-
-            MapDrawer.hidePolylinesFloorNav(currentFloor);
-            MapDrawer.showPolylinesFloorNav(currentFloor + 1);
+            MapDrawer.hideMarkersAndPolylinesFloor(currentFloor);
+            MapDrawer.showMarkersAndPolylinesFloor(currentFloor + 1);
         }
 
         if (currentFloor >= 9) {
@@ -272,8 +364,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         MapDrawer.removeMarkers();
         MapDrawer.removePolylines();
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
-
-        //TODO Possible stack?
     }
 
 
@@ -313,8 +403,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
-
-        //TODO Possible stack?
     }
 
 
@@ -325,11 +413,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if (currentFloor > 0) {
             MapDrawer.setFloor(currentFloor - 1);
             btnCurrentFloor.setText(String.valueOf(currentFloor - 1));
-            MapDrawer.hidePolylinesFloor(currentFloor);
-            MapDrawer.showPolylinesFloor(currentFloor - 1);
-
-            MapDrawer.hidePolylinesFloorNav(currentFloor);
-            MapDrawer.showPolylinesFloorNav(currentFloor - 1);
+            MapDrawer.hideMarkersAndPolylinesFloor(currentFloor);
+            MapDrawer.showMarkersAndPolylinesFloor(currentFloor - 1);
         }
 
         if (currentFloor <= 1) {
@@ -340,8 +425,20 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
+        try {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(navigationRoute.getLinkedList().getLast().getLatLng())
+                    .zoom(20)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+        } catch (NullPointerException e) {};
+
         if(navigationRoute != null) navigationRoute.reset();
         navigationRoute = null;
+
         MapDrawer.removePolylines();
         MapDrawer.removeMarkers();
         //animate
@@ -351,7 +448,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
 
-        //TODO Possible stack?
     }
 
     public void btnCloseNavBar(View view) {
@@ -359,9 +455,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
-
-        //TODO remove RepairList from stack
-
     }
 
     //Onclick NavagationMenu
@@ -376,6 +469,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
 
         //TODO add Repairlist to stack
+
     }
 
     NavigationRoute navigationRoute = null;
@@ -383,8 +477,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (NullPointerException e) {};
 
         //Get Start position
         String startPosition = editStart.getText().toString();
@@ -449,14 +545,14 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //OnClick Location From Reparation
     public void showLocation(View view) {
         MapDrawer.removePolylines();
-        MapDrawer.removeMarkers();
+       // MapDrawer.removeMarkers();
 
         int pos = Integer.valueOf(view.getTag().toString());
         String room = listAdapter.getChild(pos, 0).toString().substring(16);
         LatLng getRoom = setupGraph.getRooms().getRoom(room).getLatLngBoundsCenter();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getRoom, 20));
 
-        MapDrawer.addMarker(getRoom.latitude, getRoom.longitude, "Location");
+        MapDrawer.addMarker(new LatLng(getRoom.latitude, getRoom.longitude), "Location");
         //animate
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
@@ -581,9 +677,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 18));
         //Set a marker on long click
         mMap.setOnMapLongClickListener(onMapLongClick);
     }
@@ -715,13 +809,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     @Override
     public void onBackPressed() {
-        if(fm.getBackStackEntryCount() != 0){
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
-            setUpMapIfNeeded();
-            setUpGraphIfNeeded();
-        }
+        setUpMapIfNeeded();
+        setUpGraphIfNeeded();
     }
 }
 
