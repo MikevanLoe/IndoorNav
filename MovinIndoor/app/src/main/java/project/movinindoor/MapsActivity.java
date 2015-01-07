@@ -110,12 +110,20 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private static TextView textSpeed, textSpeedCost, textFrom, textTo;
     private static GridLayout fNavigationInfoBottom;
     private static Button btnCurrentFloor;
-    private ImageButton btnFloorUp, btnFloorDown;
+    private static ImageButton btnFloorUp, btnFloorDown;
 
     private static LinearLayout fNavigationMenu;
     FragmentManager fm = getSupportFragmentManager();
     private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
+
+    public static ImageButton getBtnFloorUp() {
+        return btnFloorUp;
+    }
+
+    public static ImageButton getBtnFloorDown() {
+        return btnFloorDown;
+    }
 
     public static GridLayout getfNavigationInfoBottom() {
         return fNavigationInfoBottom;
@@ -417,16 +425,29 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Close Navagation
     public void btnCloseNavigate(View view) {
+        try {
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(navigationRoute.getLinkedList().getLast().getLatLng())
+                    .zoom(20)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+        } catch (NullPointerException e) {};
+
         if(navigationRoute != null) navigationRoute.reset();
         navigationRoute = null;
+
         MapDrawer.removePolylines();
-       // MapDrawer.removeMarkers();
+        MapDrawer.removeMarkers();
         //animate
         Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+
     }
 
     public void btnCloseNavBar(View view) {
@@ -453,8 +474,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //OnClick Navigate Between Positions
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (NullPointerException e) {};
 
         //Get Start position
         String startPosition = editStart.getText().toString();
@@ -650,9 +673,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        //sendPushNotification("He mooie titel", "Goede text man");
         MapDrawer mapDrawer = new MapDrawer();
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.49985968094016, 6.0805946588516235), 18));
         //Set a marker on long click
         mMap.setOnMapLongClickListener(onMapLongClick);
     }

@@ -7,6 +7,7 @@
 package project.movinindoor.Algorithm;
 
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -123,7 +124,7 @@ public class Algorithm {
         MapsActivity.getfNavigationInfoBottom().setVisibility(View.INVISIBLE);
         //Removes existing Polylines
         MapDrawer.removePolylines();
-        MapDrawer.removeMarkers();
+        MapDrawer.hideMarkers();
 
         boolean sucess = navigateRoute(start, end);
 
@@ -246,16 +247,25 @@ public class Algorithm {
             MapsActivity.getTextSpeed().setText("ETA: " + walkingSpeed);
             MapsActivity.getTextSpeedCost().setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
+
+
+
             MapsActivity.getTextFrom().setText(startPosition);
             MapsActivity.getTextTo().setText(endPosition);
             MapDrawer.setFloor(startNode.getFloor());
             MapsActivity.getBtnCurrentFloor().setText(String.valueOf(startNode.getFloor()));
-            MapDrawer.hidePolylines();
-            MapDrawer.showPolylinesFloor(MapDrawer.getFloor());
-            MapDrawer.showPolylinesFloorNav(MapDrawer.getFloor());
+
+
+            MapsActivity.getBtnFloorUp().setVisibility(View.VISIBLE);
+            MapsActivity.getBtnFloorDown().setVisibility(View.VISIBLE);
+
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(startNode.getLatLng().latitude, startNode.getLatLng().longitude), 20));
-            MapDrawer.addMarker(startPositionLatLng, startPosition);
-            MapDrawer.addMarker(endPositionLatLng, endPosition);
+
+            MapDrawer.addMarker(startPositionLatLng, startPosition, startNode.getFloor());
+            MapDrawer.addMarker(endPositionLatLng, endPosition, endNode.getFloor());
+
+            MapDrawer.hideAllMarkersAndPolylines();
+            MapDrawer.showMarkersAndPolylinesFloor(MapDrawer.getFloor());
             return true;
         }
         return false;
