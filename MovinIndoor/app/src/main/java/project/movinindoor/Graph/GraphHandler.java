@@ -103,7 +103,7 @@ public class GraphHandler {
 
                 final LatLng t1 = n.getLatLng();
                 final String t3 = n.getType();
-                final String t2,= n.getNodeId();
+                final String t2 = n.getNodeId();
 
 
                 Handler handler = new Handler(Looper.getMainLooper());
