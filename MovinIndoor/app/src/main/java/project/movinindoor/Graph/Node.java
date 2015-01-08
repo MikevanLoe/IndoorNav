@@ -15,6 +15,14 @@ public class Node {
     private List<ToNode> toNode;
     private String type;
 
+    /**
+     *
+     * @param nodeId the id the node has
+     * @param latLng the location of the node
+     * @param floor the floor of the node
+     * @param toNode describes which connections this node has
+     * @param type the type of the node. can be Hall, Elevator, Room or Stairs
+     */
     public Node(String nodeId, LatLng latLng, int floor, List<ToNode> toNode, String type) {
         this.nodeId = nodeId;
         this.latLng = latLng;
@@ -23,6 +31,11 @@ public class Node {
         this.type = type;
     }
 
+
+    /**
+     *
+     * simple getters for all the variables
+     */
     public String getNodeId() {
         return nodeId;
     }

@@ -36,14 +36,23 @@ public class Graph {
         v.adj.add(new Edge(v2, cost, actions));
     }
 
-    
-    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
-    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
-        Vertex v = new Vertex(name, new LatLng(lat1, long1), type, floor);
-        vertexMap.put(name, v);
+
+    /**
+     * function to add vertex to the graph.
+     * @param VertexId the id of the vertex
+     * @param lat1 latitude of the vertex
+     * @param long1 longitude of the vertex
+     * @param type type of the vertex, a vertex can be a Hall, Elevator, Stair or Room
+     * @param floor the floor of the vertex
+     */
+    public void addVertex(String VertexId, double lat1, double long1, Vertex.Vertextype type, int floor) {
+        Vertex v = new Vertex(VertexId, new LatLng(lat1, long1), type, floor);
+        vertexMap.put(VertexId, v);
     }
 
-    //function to reset all vertices of their 'prev' 'dist' and 'scratch' value (dist gets set to INFINITY)
+    /**
+     * function to reset all verices values that are used to calculate the shortest path: (prev, dist (gets set to INFINITY) and scratch)
+     */
     private void clearAll() {
         for (Vertex v : vertexMap.values()) {
             v.reset();
@@ -51,15 +60,13 @@ public class Graph {
     }
 
     //function that you can run after running dijkstra, to get a list of the shortest path to that destination
+
+    /**
+     * function that returns the shortest path to the given destination
+     * @param destname the vertex you want a path to
+     */
     private void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
-    }
-
-    private String printPath(Vertex dest) {
-        if (dest.prev != null) {
-            return printPath(dest.prev) + " -> " + dest.NodeId;
-        }
-        return dest.NodeId;
     }
 
     private LinkedList getPath(String destname) {
@@ -68,6 +75,12 @@ public class Graph {
         return a;
     }
 
+    /**
+     * function function that returns the path most recently calculated by Dijkstra
+     * @param v the destination vertex
+     * @param l used for recursive. when first time calling give it an empty list
+     * @return a linkedlist of the path
+     */
     private LinkedList getPath(Vertex v, LinkedList l) {
         l.add(0, v);
         if (v.prev != null) {
@@ -76,14 +89,13 @@ public class Graph {
         return l;
     }
 
-    public double getCost(String destName) {
-        Vertex v = vertexMap.get(destName);
-        return v.dist;
-    }
-
-
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
+
+    /**
+     *
+     * @param v
+     */
     private void drawPath(Vertex v) {
 
         MapDrawer.addPolylineNav(v.getLatLng().latitude, v.getLatLng().longitude, v.prev.latLng.latitude, v.prev.getLatLng().longitude, Color.BLUE, v.getFloor());
