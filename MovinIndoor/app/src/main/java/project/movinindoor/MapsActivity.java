@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -426,7 +427,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     .tilt(0)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+            if(MapDrawer.getFloor() == navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
         } catch (NullPointerException e) {};
 
         if(navigationRoute != null) navigationRoute.reset();
