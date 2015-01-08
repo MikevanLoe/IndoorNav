@@ -2,7 +2,6 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import android.widget.TextView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -49,14 +46,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-
 import java.net.MalformedURLException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
 import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Algorithm.NavigationRoute;
 import project.movinindoor.Fragment.DFragment;
@@ -67,29 +62,18 @@ import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Fragment.ShowNavigationCardFragment;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
+import project.movinindoor.Graph.Node;
 import project.movinindoor.Readers.HttpJson;
-
-
 import project.movinindoor.Models.Room;
 import project.movinindoor.Readers.RepairReader;
 
-
 public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
-
     GoogleCloudMessaging gcm;
     String regid;
     String PROJECT_NUMBER = "607567241847";
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
-    public static Context getContext() {
-        return context;
-    }
-
-    public static GoogleMap getMap() {
-        return mMap;
-    }
 
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     private static GraphHandler setupGraph;
@@ -99,7 +83,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-
 
     private Marker longClickMarker = null;
     private Room inRoom;
@@ -118,102 +101,93 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
+    /**
+     *  Getters and Setters
+     */
+    public static Context getContext() {
+        return context;
+    }
+    public static GoogleMap getMap() {
+        return mMap;
+    }
     public static ImageButton getBtnFloorUp() {
         return btnFloorUp;
     }
-
     public static ImageButton getBtnFloorDown() {
         return btnFloorDown;
     }
-
     public static GridLayout getfNavigationInfoBottom() {
         return fNavigationInfoBottom;
     }
-
     public static LinearLayout getfNavigationMenu() {
         return fNavigationMenu;
     }
-
     public static Fragment getfRepairList() {
         return fRepairList;
     }
-
     public static Fragment getfNavigationInfoTop() {
         return fNavigationInfoTop;
     }
-
     public static Fragment getfFloorNavigator2() {
         return fFloorNavigator2;
     }
-
     public static Fragment getfMarkerDisplay() {
         return fMarkerDisplay;
     }
-
     public static Fragment getfNavigationCard() {
         return fNavigationCard;
     }
-
     public static GraphHandler getSetupGraph() {
         return setupGraph;
     }
-
     public static void setSetupGraph(GraphHandler setupGraph) {
         MapsActivity.setupGraph = setupGraph;
-    }
-
+    } //TODO Unused method removal
     public static JSONArray getJitems() {
         return jitems;
     }
-
     public static void setJitems(JSONArray jitems) {
         MapsActivity.jitems = jitems;
     }
-
     public static TextView getTextSpeed() {
         return textSpeed;
     }
-
     public static TextView getTextSpeedCost() {
         return textSpeedCost;
     }
-
     public static TextView getTextFrom() {
         return textFrom;
     }
-
     public static TextView getTextTo() {
         return textTo;
     }
-
     public static EditText getEditEnd() {
         return editEnd;
     }
-
     public static EditText getEditStart() {
         return editStart;
     }
-
     public static Button getBtnCurrentFloor() {
         return btnCurrentFloor;
     }
-
     public static LatLng getCustomStartPos() {
         return customStartPos;
     }
-
     public static LatLng getCustomEndPos() {
         return customEndPos;
     }
-
     public static int getCustomStartFloor() {
         return customStartFloor;
     }
-
     public static int getCustomEndFloor() {
         return customEndFloor;
     }
 
+    /**
+     * Initialize the aplication.
+     *
+     * @param savedInstanceState A bundle of information.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,12 +196,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         try {
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        }catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
 
         setUpMapIfNeeded();
         context = getApplicationContext();
@@ -266,7 +239,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
-
         //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
         infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
@@ -291,14 +263,19 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         });
 
         textSpeed.setText("");
-
     }
 
+    /**
+     * Changes the configuration when the user changes some settings.
+     *
+     * @param newConfig The new configuration of the application.
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
+    //TODO
     public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -317,6 +294,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
+    //TODO
     public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
@@ -340,9 +318,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
-
-
-    //OnClick FloorNavigator Button Up
+    /**
+     * Goes up one floor and show it on the map when the user presses the button.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnFloorUp(View view) {
         btnFloorDown.setVisibility(View.VISIBLE);
         int currentFloor = MapDrawer.getFloor();
@@ -358,8 +338,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-
-    //OnClick Close Button From Custom Marker
+    /**
+     * Removes the custom marker when the user presses the button
+     *
+     * @param view The button that is pressed.
+     */
     public void btnMarkerClose(View view) {
         longClickMarker.remove();
         MapDrawer.removeMarkers();
@@ -367,8 +350,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
     }
 
-
-    //OnClick Select Custom Location
+    /**
+     * Selects the custom marker as either the start or end point
+     *  when the user presses the button.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
 
@@ -406,8 +393,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
     }
 
-
-    //OnClick FloorNavigator Button Down
+    /**
+     * Goes down one floor and show it on the map when the user presses the button.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnFloorDown(View view) {
         btnFloorUp.setVisibility(View.VISIBLE);
         int currentFloor = MapDrawer.getFloor();
@@ -423,8 +413,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-
-    //OnClick Close Navagation
+    /**
+     * Closes the navigation overlay and returns to the map
+     *  when the user presses the button.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnCloseNavigate(View view) {
         try {
             CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -434,7 +428,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     .tilt(0)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            if(MapDrawer.getFloor() == navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+            if(MapDrawer.getFloor() != navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
         } catch (NullPointerException e) {};
 
         if(navigationRoute != null) navigationRoute.reset();
@@ -448,9 +442,14 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
-
     }
 
+    /**
+     * Close the navigation menu and returns to the map
+     *  when the user presses the button.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnCloseNavBar(View view) {
         //animate
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
@@ -458,7 +457,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
     }
 
-    //Onclick NavagationMenu
+    /**
+     * Opens the navigation menu
+     *
+     * @param view The button that is pressed.
+     */
     public void btnNavBar(View view) {
         try {
             prepareListData();
@@ -470,15 +473,22 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
     }
 
+    //TODO
     NavigationRoute navigationRoute = null;
 
-    //OnClick Navigate Between Positions
+    /**
+     * Opens the navigation overlay and plots a route between
+     *  two points when the user presses it.
+     *
+     * @param view The button that is pressed.
+     */
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        } catch (NullPointerException e) {};
+        } catch (NullPointerException e) {
+        }
 
         //Get Start position
         String startPosition = editStart.getText().toString();
@@ -489,11 +499,16 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
         textView.setText("Start");
-        Algorithm.navigate(startPosition, endPosition);
-        navigationRoute = new NavigationRoute();
+
+        boolean succes = Algorithm.navigate(startPosition, endPosition);
+        if(succes) navigationRoute = new NavigationRoute();
     }
 
     //OnClick Navigate to Reparation
+    /**
+     *
+     * @param view
+     */
     public void btnNavigateRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
@@ -503,11 +518,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
         textView.setText("Start");
-        Algorithm.navigate(startRoom, EndRoom);
-        navigationRoute = new NavigationRoute();
+        boolean succes = Algorithm.navigate(startRoom, EndRoom);
+        if(succes) navigationRoute = new NavigationRoute();
     }
 
     //OnClick Activate/Close Reparation
+    /**
+     *
+     * @param view
+     */
     public void btnCheckRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         final String tag = listAdapter.getChild(pos, 5).toString();
@@ -541,23 +560,37 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     //OnClick Location From Reparation
+    /**
+     *
+     * @param view
+     */
     public void showLocation(View view) {
-        MapDrawer.removePolylines();
-       // MapDrawer.removeMarkers();
-
         int pos = Integer.valueOf(view.getTag().toString());
         String room = listAdapter.getChild(pos, 0).toString().substring(16);
-        LatLng getRoom = setupGraph.getRooms().getRoom(room).getLatLngBoundsCenter();
+        Room room1 = setupGraph.getRooms().getRoom(room);
+        Node node = setupGraph.getNodes().FindClosestNodeInsideRoom(room1);
+        int floor = (node == null) ? room1.getFloor(): node.getFloor();
+        LatLng getRoom = room1.getLatLngBoundsCenter();
+        if(MapDrawer.getFloor() != floor) {
+            MapDrawer.hideMarkersAndPolylinesFloor(MapDrawer.getFloor());
+            MapDrawer.showMarkersAndPolylinesFloor(floor);
+            MapDrawer.setFloor(floor);
+        }
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getRoom, 20));
 
-        MapDrawer.addMarker(new LatLng(getRoom.latitude, getRoom.longitude), "Location");
+
+        MapDrawer.addMarker(new LatLng(getRoom.latitude, getRoom.longitude), room1.getLocation(), floor);
         //animate
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
     }
 
-
+    /**
+     *
+     * @param view
+     */
     public void showNextCardLocation(View view) {
         double count = 0.0;
         for (int s = navigationRoute.getNum(); s < navigationRoute.getLinkedList().size() - 1; s++) {
@@ -607,17 +640,31 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle your other action bar items...
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
     }
 
+    /**
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -625,6 +672,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         return true;
     }
 
+    /**
+     *
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -632,6 +682,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         setUpGraphIfNeeded();
     }
 
+    /**
+     *
+     */
     private void setUpGraphIfNeeded() {
         if (setupGraph == null) {
             setupGraph = new GraphHandler();
@@ -679,6 +732,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         mMap.setOnMapLongClickListener(onMapLongClick);
     }
 
+    /**
+     *
+     */
     public void refreshList() {
         try {
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
@@ -692,11 +748,18 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
+    /**
+     *
+     * @param uri
+     */
     @Override
     public void onFragmentInteraction(Uri uri) {
         MapDrawer mapDrawer = new MapDrawer();
     }
 
+    /**
+     *
+     */
     private void prepareListData() {
         try {
             setupGraph.getRepairReader().bindToRepairList(jitems);
@@ -739,7 +802,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-
+    /**
+     *
+     * @param cameraPosition
+     * @return
+     */
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
         double longitude = cameraPosition.longitude;
@@ -759,6 +826,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         return new LatLng(latitude, longitude);
     }
 
+    /**
+     *
+     */
     public void getRegId() {
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -804,10 +874,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }.execute(null, null, null);
     }
 
+    /**
+     *
+     */
     @Override
     public void onBackPressed() {
         setUpMapIfNeeded();
         setUpGraphIfNeeded();
     }
 }
-

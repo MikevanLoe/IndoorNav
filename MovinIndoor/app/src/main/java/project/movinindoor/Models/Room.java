@@ -14,11 +14,20 @@ public class Room {
 
     private String location;
     private ArrayList<ArrayList<Double>> latLngBounds;
+    private int floor;
 
     public Room(String location, ArrayList<ArrayList<Double>> latLngBounds) {
         this.location = location;
         this.latLngBounds = latLngBounds;
+        this.floor = 0;
     }
+
+    public Room(String location, ArrayList<ArrayList<Double>> latLngBounds, int floor) {
+        this.location = location;
+        this.latLngBounds = latLngBounds;
+        this.floor = floor;
+    }
+
 
     public String getLocation() {
         return location;
@@ -53,4 +62,7 @@ public class Room {
         return new LatLng(centroid[0], centroid[1]);
     }
 
+    public int getFloor() {
+        return floor;
+    }
 }

@@ -48,10 +48,10 @@ public class GcmMessageHandler extends IntentService {
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        mes = extras.getString("name");
+        mes = extras.getString("NodeId");
         type = extras.getString("type");
 
-        //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
+        //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("NodeId"));
         //Log.i("GCM", "Received : "+ extras);
         sendPushNotification(mes, type);
         try {
