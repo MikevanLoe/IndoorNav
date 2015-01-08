@@ -22,6 +22,11 @@ public class GraphHandler {
     private RepairReader repairReader;
     private Rooms rooms;
 
+    /**
+     * constructor that creates 2 threads.
+     * one to create all vertices and edges
+     * other one to create the rooms and the repairlist
+     */
     public GraphHandler() {
 
         new Thread(new Runnable() {
@@ -44,18 +49,34 @@ public class GraphHandler {
 
     }
 
+    /**
+     *
+     * @return Graph
+     */
     public Graph getGraph() {
         return graph;
     }
 
+    /**
+     *
+     * @return returns the repairreader so we can get the list of repairments
+     */
     public RepairReader getRepairReader() {
         return repairReader;
     }
 
+    /**
+     * setter for repairReader
+     * @param repairReader
+     */
     public void setRepairReader(RepairReader repairReader) {
         this.repairReader = repairReader;
     }
 
+    /**
+     * 
+     * @return
+     */
     public NodeReader getNodes() {
         return nodeReader;
     }
