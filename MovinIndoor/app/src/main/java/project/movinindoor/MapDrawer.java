@@ -60,6 +60,17 @@ public class MapDrawer {
     public static void setFloor(int floor) {
         tileOverlay.clearTileCache();
         floorNumber = floor;
+        MapsActivity.getBtnCurrentFloor().setText(String.valueOf(floor));
+        MapsActivity.getBtnFloorUp().setVisibility(View.VISIBLE);
+        MapsActivity.getBtnFloorDown().setVisibility(View.VISIBLE);
+
+        if (floor > 9) {
+            MapsActivity.getBtnFloorUp().setVisibility(View.INVISIBLE);
+        }
+
+        if (floor < 1) {
+            MapsActivity.getBtnFloorDown().setVisibility(View.INVISIBLE);
+        }
     }
 
     public static int getFloor() {

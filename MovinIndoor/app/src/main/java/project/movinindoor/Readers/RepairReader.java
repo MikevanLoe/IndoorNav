@@ -3,7 +3,6 @@ package project.movinindoor.Readers;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 
@@ -60,12 +59,12 @@ public class RepairReader {
                     Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                     Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
+
                     int floor1 = Integer.valueOf(floor);
                     String location = " location " + customRoomCount;
                     Reparation.BuildingEnum buildingEnum = Reparation.BuildingEnum.Custom;
 
                     if (nodeRoom == null) {
-                        //Log.i("new room", clat);
                         ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
                         ArrayList<Double> latitide = new  ArrayList<>();
                         ArrayList<Double> longitude = new ArrayList<>();
@@ -73,10 +72,9 @@ public class RepairReader {
                         longitude.add(Double.valueOf(clong));
                         latLngBounds.add(longitude);
                         latLngBounds.add(latitide);
-                        Room customRoom = new Room("Custom location " + customRoomCount, latLngBounds);
+                        Room customRoom = new Room("Custom location " + customRoomCount, latLngBounds, floor1);
                         nodeRooms.getRooms().put("Custom location " + customRoomCount, customRoom);
                         customRoomCount++;
-                        nodeRoom = customRoom;
                     } else {
                         String room = nodeRoom.getLocation();
                         String building = room.substring(0, 1);
@@ -227,10 +225,7 @@ public class RepairReader {
                 LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
                 Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                 Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
-                Log.i("new room", nodeRoom.toString());
-                Log.i("new room2", title);
                 if (nodeRoom == null) {
-                    Log.i("new room", clat);
                     ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
                     ArrayList<Double> latitide = new  ArrayList<>();
                     ArrayList<Double> longitude = new ArrayList<>();

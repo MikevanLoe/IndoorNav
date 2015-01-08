@@ -67,6 +67,7 @@ import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Fragment.ShowNavigationCardFragment;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
+import project.movinindoor.Graph.Node;
 import project.movinindoor.Readers.HttpJson;
 
 
@@ -434,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     .tilt(0)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            if(MapDrawer.getFloor() == navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+            if(MapDrawer.getFloor() != navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
         } catch (NullPointerException e) {};
 
         if(navigationRoute != null) navigationRoute.reset();
@@ -545,15 +546,22 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     //OnClick Location From Reparation
     public void showLocation(View view) {
-        MapDrawer.removePolylines();
-       // MapDrawer.removeMarkers();
-
         int pos = Integer.valueOf(view.getTag().toString());
         String room = listAdapter.getChild(pos, 0).toString().substring(16);
-        LatLng getRoom = setupGraph.getRooms().getRoom(room).getLatLngBoundsCenter();
+        Room room1 = setupGraph.getRooms().getRoom(room);
+        Node node = setupGraph.getNodes().FindClosestNodeInsideRoom(room1);
+        int floor = (node == null) ? room1.getFloor(): node.getFloor();
+        LatLng getRoom = room1.getLatLngBoundsCenter();
+        if(MapDrawer.getFloor() != floor) {
+            MapDrawer.hideMarkersAndPolylinesFloor(MapDrawer.getFloor());
+            MapDrawer.showMarkersAndPolylinesFloor(floor);
+            MapDrawer.setFloor(floor);
+        }
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getRoom, 20));
 
-        MapDrawer.addMarker(new LatLng(getRoom.latitude, getRoom.longitude), "Location");
+
+        MapDrawer.addMarker(new LatLng(getRoom.latitude, getRoom.longitude), room1.getLocation(), floor);
         //animate
         Animator.visibilityRepairList(Animator.Visibility.HIDE);
         Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
