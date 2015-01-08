@@ -11,7 +11,7 @@ import java.util.List;
 public class Vertex {
 
     //basic data for the class
-    public String NodeId;
+    public String VertexId;
     protected LatLng latLng;
     protected int floor;
     public List<Edge> adj;
@@ -24,15 +24,15 @@ public class Vertex {
     public Vertex prev;
     protected boolean scratch;
 
-    public Vertex(String name, LatLng latLng) {
-        this.NodeId = name;
+    public Vertex(String VertexId, LatLng latLng) {
+        this.VertexId = VertexId;
         this.latLng = latLng;
         adj = new LinkedList<Edge>() ;
         reset();
     }
 
-    public Vertex(String name, LatLng latLng, Vertextype type, int floor){
-        this.NodeId = name;
+    public Vertex(String VertexId, LatLng latLng, Vertextype type, int floor){
+        this.VertexId = VertexId;
         this.latLng = latLng;
         this.type = type;
         this.floor = floor;
@@ -46,8 +46,8 @@ public class Vertex {
         scratch = false;
     }
 
-    public String getName() {
-        return NodeId;
+    public String getVertexId() {
+        return VertexId;
     }
 
     public List<Edge> getAdj() {
