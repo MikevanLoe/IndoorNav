@@ -1,5 +1,7 @@
 package project.movinindoor.Algorithm;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Marker;
@@ -75,11 +77,11 @@ public class NavigationRoute {
 
             Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
             for (ToNode tn : n.getToNode()) {
-               // Log.i("V", "=>");
+
                 for (edgeActions e : tn.getActions()) {
-                   // Log.i("V", "====>");
+
                     if (Graph.getWalkingPath().get(v).prev.prev != null) {
-                       // Log.i("V", "=======>");
+
                         if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.NodeId).getNodeId())) {
                             String text = "";
                             String action = "";
@@ -147,7 +149,6 @@ public class NavigationRoute {
     public String getNextCard() {
         if (tempMarker != null) tempMarker.remove();
         String s = LinkedList.get(num).getAction() + ", " + LinkedList.get(num).getText();
-        if (num == LinkedList.size()) num += -1;
         if (num < LinkedList.size()) {
 
             switch (LinkedList.get(num).getAction()) {
@@ -213,6 +214,10 @@ public class NavigationRoute {
 
     public int getNum() {
         return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public void reset() {
