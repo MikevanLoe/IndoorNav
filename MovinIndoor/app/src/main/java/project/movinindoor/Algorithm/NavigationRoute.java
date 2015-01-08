@@ -1,11 +1,7 @@
 package project.movinindoor.Algorithm;
 
-import android.location.LocationManager;
-import android.util.Log;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -41,7 +37,7 @@ public class NavigationRoute {
             /*
             for (Edge e1 : v2.adj) {
                 for (edgeActions e : e1.actions) {
-                    if (v2.name) {
+                    if (v2.NodeId) {
                         String text = "";
                         String action = "";
                         Node nq = nodes.get(e1.toNodeID);
@@ -76,14 +72,14 @@ public class NavigationRoute {
             RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
             linkedList.add(routeStep);
 */
-            Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
+            Node n = nodes.get(Graph.getWalkingPath().get(v).getNodeId());
             for (ToNode tn : n.getToNode()) {
                // Log.i("V", "=>");
                 for (edgeActions e : tn.getActions()) {
                    // Log.i("V", "====>");
                     if (Graph.getWalkingPath().get(v).prev.prev != null) {
                        // Log.i("V", "=======>");
-                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.name).getNodeId())) {
+                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.NodeId).getNodeId())) {
                             String text = "";
                             String action = "";
                             Node nq = nodes.get(tn.getToNodeID());

@@ -104,7 +104,7 @@ public class NavigationBar extends android.support.v4.app.Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        // TODO: Update argument type and NodeId
         public void onFragmentInteraction(Uri uri);
     }
 
