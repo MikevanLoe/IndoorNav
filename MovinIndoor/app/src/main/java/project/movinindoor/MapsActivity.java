@@ -265,10 +265,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     * Changes the configuration when the user changes some settings.
-     *
-     * @param newConfig The new configuration of the application.
-     */
+    * Changes the configuration when the user changes some settings.
+    *
+            * @param newConfig The new configuration of the application.
+            */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
