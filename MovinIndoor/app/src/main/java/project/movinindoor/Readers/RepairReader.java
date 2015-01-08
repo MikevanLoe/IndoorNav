@@ -185,8 +185,8 @@ public class RepairReader {
                 subList.add("Priority:          " + PrioName);
                 subList.add("Status:           " + statusName);
                 subList.add("Description:  " + r.Description);
-                subList.add("Comment:  " + r.Comment);
-                subList.add("id: " + r.Id);
+                if(r.Comment.equals("null")) subList.add("Comment:  ");
+                else subList.add("id: " + r.Id);
                 listDataChild.put(r.ShortDescription, subList);
             }
             return true;
