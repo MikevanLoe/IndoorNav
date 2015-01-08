@@ -74,17 +74,25 @@ public class GraphHandler {
     }
 
     /**
-     * 
-     * @return
+     *
+     * @return nodeReader
      */
     public NodeReader getNodes() {
         return nodeReader;
     }
 
+    /**
+     *
+     * @return rooms
+     */
     public Rooms getRooms() {
         return rooms;
     }
 
+    /**
+     * creates all the Vertices from nodes.
+     *
+     */
     public void createVertices() {
         Vertex.Vertextype type = null;
         for (Node n : nodeReader.jsonList.values()) {
@@ -132,6 +140,10 @@ public class GraphHandler {
             }
         });
     }
+
+    /**
+     * adds edges to the vertices and calculates the distances of those edges.
+     */
     public void createEdges() {
         double lat1, long1, lat2, long2;
 

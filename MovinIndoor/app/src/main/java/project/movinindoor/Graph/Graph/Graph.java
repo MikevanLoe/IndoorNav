@@ -36,14 +36,23 @@ public class Graph {
         v.adj.add(new Edge(v2, cost, actions));
     }
 
-    
-    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
-    public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
-        Vertex v = new Vertex(name, new LatLng(lat1, long1), type, floor);
-        vertexMap.put(name, v);
+
+    /**
+     * function to add vertex to the graph.
+     * @param VertexId the id of the vertex
+     * @param lat1 latitude of the vertex
+     * @param long1 longitude of the vertex
+     * @param type type of the vertex, a vertex can be a Hall, Elevator, Stair or Room
+     * @param floor the floor of the vertex
+     */
+    public void addVertex(String VertexId, double lat1, double long1, Vertex.Vertextype type, int floor) {
+        Vertex v = new Vertex(VertexId, new LatLng(lat1, long1), type, floor);
+        vertexMap.put(VertexId, v);
     }
 
-    //function to reset all vertices of their 'prev' 'dist' and 'scratch' value (dist gets set to INFINITY)
+    /**
+     * function to reset all verices values that are used to calculate the shortest path: (prev, dist (gets set to INFINITY) and scratch)
+     */
     private void clearAll() {
         for (Vertex v : vertexMap.values()) {
             v.reset();
@@ -51,15 +60,20 @@ public class Graph {
     }
 
     //function that you can run after running dijkstra, to get a list of the shortest path to that destination
+
+    /**
+     * function that returns the shortest path to the given destination
+     * @param destname the vertex you want a path to
+     */
     private void printPath(String destname) {
         Vertex dest = vertexMap.get(destname);
     }
 
     private String printPath(Vertex dest) {
         if (dest.prev != null) {
-            return printPath(dest.prev) + " -> " + dest.NodeId;
+            return printPath(dest.prev) + " -> " + dest.VertexId;
         }
-        return dest.NodeId;
+        return dest.VertexId;
     }
 
     private LinkedList getPath(String destname) {
