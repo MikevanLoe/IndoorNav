@@ -17,10 +17,15 @@ public class LoginActivity extends Activity {
     EditText textEmail;
     EditText textPassword;
 
+    Intent Loginintent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Loginintent = new Intent(this, MapsActivity.class);
+
     }
 
     @Override
@@ -53,7 +58,7 @@ public class LoginActivity extends Activity {
 
     public void btnSignIn(View view)
     {
-        Intent Loginintent = new Intent(this, MapsActivity.class);
+
         startActivity(Loginintent);
         finish();
     }

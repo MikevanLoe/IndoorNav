@@ -5,9 +5,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.LinkedList;
 import java.util.List;
 
-import project.movinindoor.Models.Elevator;
-import project.movinindoor.Models.Stairs;
-
 /**
  * Created by Wietse on 24-11-2014.
  */

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
 
+import project.movinindoor.LoginActivity;
 import project.movinindoor.MapsActivity;
 import project.movinindoor.R;
 import project.movinindoor.Readers.HttpJson;
@@ -27,6 +28,7 @@ import project.movinindoor.Readers.RepairReader;
 public class GcmMessageHandler extends IntentService {
 
     String mes = "";
+    String type = "";
     private Handler handler;
     public GcmMessageHandler() {
         super("GcmMessageHandler");
@@ -47,9 +49,11 @@ public class GcmMessageHandler extends IntentService {
         String messageType = gcm.getMessageType(intent);
 
         mes = extras.getString("name");
+        type = extras.getString("type");
+
         //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
         //Log.i("GCM", "Received : "+ extras);
-        sendPushNotification("New Repair", mes);
+        sendPushNotification(mes, type);
         try {
             MapsActivity.setJitems(new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get());
             try {
@@ -72,17 +76,13 @@ public class GcmMessageHandler extends IntentService {
 
     public void sendPushNotification(String title, String text) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(MapsActivity.getContext().NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(this, MapsActivity.class);
+        Intent notificationIntent = new Intent(this, LoginActivity.class);
         PendingIntent intent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
         Notification notification = new Notification.Builder(this)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.movin_push)
-
-                .addAction(R.drawable.movin_push, "View", intent)
-                .addAction(0, "Remind", intent)
-
                 .build();
 
         notification.flags |= Notification.FLAG_AUTO_CANCEL;

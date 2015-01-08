@@ -29,7 +29,7 @@ public class  Reparation implements Comparable<Reparation>{
     }
 
     public enum BuildingEnum {
-    A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
+    Custom, A, B, C, D, E, F, G, H, S, T, X, Z, P1, P2, P3
     }
 
     public enum StatusEnum {
