@@ -631,7 +631,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 Log.i("blablabla4", a);
                 boolean succes = Algorithm.navigate(currentRepair, a);
                 currentRepair = a;
-                if (succes) navigationRoute = new NavigationRoute();
+
+                if (succes) {
+                    navigationRoute.reset();
+                    navigationRoute = new NavigationRoute();
+                }
             } else{
                 textView.setText("Eind");
             }
