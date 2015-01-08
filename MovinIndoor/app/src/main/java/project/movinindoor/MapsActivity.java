@@ -140,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
     public static void setSetupGraph(GraphHandler setupGraph) {
         MapsActivity.setupGraph = setupGraph;
-    }
+    } //TODO Unused method removal
     public static JSONArray getJitems() {
         return jitems;
     }
@@ -182,8 +182,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Initialize the aplication.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState A bundle of information.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,12 +194,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
         try {
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        }catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
 
         setUpMapIfNeeded();
         context = getApplicationContext();
@@ -237,7 +237,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         // Layout
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
-
         //Select Walking With Cart or By Foot
         RadioGroup radioGroupMovingBy = (RadioGroup) findViewById(R.id.radioGroupMovingBy);
         infoWalkingBy = (ImageView) findViewById(R.id.infoWalkingBy);
@@ -262,12 +261,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         });
 
         textSpeed.setText("");
-
     }
 
     /**
+     * Changes the configuration when the user changes some settings.
      *
-     * @param newConfig
+     * @param newConfig The new configuration of the application.
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -317,10 +316,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
-    //OnClick FloorNavigator Button Up
     /**
+     * Goes up one floor and show it on the map when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnFloorUp(View view) {
         btnFloorDown.setVisibility(View.VISIBLE);
@@ -337,10 +336,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-    //OnClick Close Button From Custom Marker
     /**
+     * Removes the custom marker when the user presses the button
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnMarkerClose(View view) {
         longClickMarker.remove();
@@ -349,10 +348,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
     }
 
-    //OnClick Select Custom Location
     /**
+     * Selects the custom marker as either the start or end point
+     *  when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnMarkerSelect(View view) {
         longClickMarker.remove();
@@ -391,10 +391,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
     }
 
-    //OnClick FloorNavigator Button Down
     /**
+     * Goes down one floor and show it on the map when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnFloorDown(View view) {
         btnFloorUp.setVisibility(View.VISIBLE);
@@ -411,10 +411,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-    //OnClick Close Navagation
     /**
+     * Closes the navigation overlay and returns to the map
+     *  when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnCloseNavigate(View view) {
         try {
@@ -439,12 +440,13 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
-
     }
 
     /**
+     * Close the navigation menu and returns to the map
+     *  when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnCloseNavBar(View view) {
         //animate
@@ -453,10 +455,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
     }
 
-    //Onclick NavagationMenu
     /**
+     * Opens the navigation menu
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnNavBar(View view) {
         try {
@@ -472,17 +474,19 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     //TODO
     NavigationRoute navigationRoute = null;
 
-    //OnClick Navigate Between Positions
     /**
+     * Opens the navigation overlay and plots a route between
+     *  two points when the user presses it.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnNavigate(View view) {
         //Hide keyboard on navigate
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        } catch (NullPointerException e) {};
+        } catch (NullPointerException e) {
+        }
 
         //Get Start position
         String startPosition = editStart.getText().toString();
