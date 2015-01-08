@@ -22,8 +22,14 @@ import project.movinindoor.Reparation.Reparation;
  */
 public class RepairReader {
 
+    public List<String> listDataHeader;
+    public HashMap<String, List<String>> listDataChild;
     private Buildings buildings;
     private ArrayList<Reparation> al;
+
+    public ArrayList<Reparation> getAl() {
+        return al;
+    }
 
     public RepairReader() {
         try {
@@ -66,7 +72,7 @@ public class RepairReader {
 
                     if (nodeRoom == null) {
                         ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
-                        ArrayList<Double> latitide = new  ArrayList<>();
+                        ArrayList<Double> latitide = new ArrayList<>();
                         ArrayList<Double> longitude = new ArrayList<>();
                         latitide.add(Double.valueOf(clat));
                         longitude.add(Double.valueOf(clong));
@@ -93,54 +99,41 @@ public class RepairReader {
                     Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
                     LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
 
+                    switch (status) {
+                        case "Nieuw":
+                            statusEnum = Reparation.StatusEnum.NEW;
+                            break;
+                        case "Geaccepteerd":
+                            statusEnum = Reparation.StatusEnum.ACCEPTED;
+                            break;
+                        case "Toegekend":
+                            statusEnum = Reparation.StatusEnum.ASSIGNED;
+                            break;
+                        case "Gerepareerd":
+                            statusEnum = Reparation.StatusEnum.DONE;
+                            break;
+                        case "Afgemeld":
+                            statusEnum = Reparation.StatusEnum.REPAIRED;
+                            break;
+                    }
 
-
-
-
-                switch (status) {
-                    case "Nieuw":
-                        statusEnum = Reparation.StatusEnum.NEW;
-                        break;
-                    case "Geaccepteerd":
-                        statusEnum = Reparation.StatusEnum.ACCEPTED;
-                        break;
-                    case "Toegekend":
-                        statusEnum = Reparation.StatusEnum.ASSIGNED;
-                        break;
-                    case "Gerepareerd":
-                        statusEnum = Reparation.StatusEnum.DONE;
-                        break;
-                    case "Afgemeld":
-                        statusEnum = Reparation.StatusEnum.REPAIRED;
-                        break;
+                    Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
+                    buildings.addRepair(reparation);
+                } catch (NullPointerException e) {
                 }
-
-                Reparation reparation = new Reparation(nodeId, buildingEnum, floor1, location, latLng1, statusEnum, Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)], title, description, comments);
-                buildings.addRepair(reparation);
-                } catch (NullPointerException e) {}
             }
 
             Buildings high = HighPrioritySplit.highSplit(buildings);
-            //Buildings low = HighPrioritySplit.lowSplit(buildings);
-
-
             al = high.getList();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public List<String> listDataHeader;
-    public HashMap<String, List<String>> listDataChild;
-
     public void bindToRepairList(JSONArray jitems) {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
+        listDataHeader = new ArrayList<>();
+        listDataChild = new HashMap<>();
 
-        //List<Reparation> t = new ArrayList<Reparation>();
         try {
             for (Reparation r : al) {
                 String statusName = "Nieuw";
@@ -184,120 +177,19 @@ public class RepairReader {
                         PrioName = "Erg laag";
                         break;
                 }
-            List<String> subList = new ArrayList<String>();
-            listDataHeader.add(r.ShortDescription);
-            if (r.Building.equals(Reparation.BuildingEnum.Custom)) subList.add("Location:       " + r.Building + "" + r.Location);
-            else subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
-            subList.add("Priority:          " + PrioName);
-            subList.add("Status:           " + statusName);
-            subList.add("Description:  " + r.Description);
-            subList.add("Comment:  " + r.Comment);
-            subList.add("id: " + r.Id);
-            listDataChild.put(r.ShortDescription, subList);
+                List<String> subList = new ArrayList<String>();
+                listDataHeader.add(r.ShortDescription);
+                if (r.Building.equals(Reparation.BuildingEnum.Custom))
+                    subList.add("Location:       " + r.Building + "" + r.Location);
+                else subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
+                subList.add("Priority:          " + PrioName);
+                subList.add("Status:           " + statusName);
+                subList.add("Description:  " + r.Description);
+                subList.add("Comment:  " + r.Comment);
+                subList.add("id: " + r.Id);
+                listDataChild.put(r.ShortDescription, subList);
             }
         } catch (NullPointerException e) {
-
         }
     }
-
-    public void prepareListData(JSONArray jitems) {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-        int customRoomCount = 1;
-        // Navigation drawer items
-
-        try {
-            //Loop though my JSONArray
-            for (Integer i = 0; i < jitems.length(); i++) {
-                //Get My JSONObject and grab the String Value that I want.
-                String title = jitems.getJSONObject(i).getString("shortdescription");
-                // String building = jitems.getJSONObject(i).getString("building");
-                String floor = jitems.getJSONObject(i).getString("floor");
-                String priority = jitems.getJSONObject(i).getString("priority");
-                String description = jitems.getJSONObject(i).getString("description");
-                String clong = jitems.getJSONObject(i).getString("clong");
-                String clat = jitems.getJSONObject(i).getString("clat");
-                String comments = jitems.getJSONObject(i).getString("comments");
-                String status = jitems.getJSONObject(i).getString("status");
-                String node = jitems.getJSONObject(i).getString("defectid");
-
-                LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
-                Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
-                if (nodeRoom == null) {
-                    ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
-                    ArrayList<Double> latitide = new  ArrayList<>();
-                    ArrayList<Double> longitude = new ArrayList<>();
-                    latitide.add(Double.valueOf(clat));
-                    longitude.add(Double.valueOf(clat));
-                    latLngBounds.add(latitide);
-                    latLngBounds.add(longitude);
-                    Room customRoom = new Room("Custom location" + customRoomCount, latLngBounds);
-                    nodeRooms.getRooms().put("Custom location" + customRoomCount, customRoom);
-                    customRoomCount++;
-                    nodeRoom = customRoom;
-                }
-
-                    String room = nodeRoom.getLocation();
-                    String statusName = "Nieuw";
-                    String PrioName = "Normaal";
-
-                    switch(status) {
-                        case "NEW":
-                            statusName = "Nieuw";
-                            break;
-                        case "ACCEPTED":
-                            statusName = "Geaccepteerd";
-                            break;
-                        case "ASSIGNED":
-                            statusName = "Toegekend";
-                            break;
-                        case "DONE":
-                            statusName = "Gerepareerd";
-                            break;
-                        case "REPAIRED":
-                            statusName = "Afgemeld";
-                            break;
-                    }
-
-                    switch(priority) {
-                        case "6":
-                            PrioName = "Urgent";
-                            break;
-                        case "5":
-                            PrioName = "Erg belangrijk";
-                            break;
-                        case "4":
-                            PrioName = "Belangrijk";
-                            break;
-                        case "3":
-                            PrioName = "Normaal";
-                            break;
-                        case "2":
-                            PrioName = "Laag";
-                            break;
-                        case "1":
-                            PrioName = "Erg laag";
-                            break;
-                    }
-
-                    List<String> subList = new ArrayList<String>();
-                    listDataHeader.add(title);
-                    if(room != null) subList.add("Location:       " + room);
-                    else subList.add("Location:       " + "C" + floor + "." + "16");
-                    subList.add("Priority:          " + PrioName + "|" +Reparation.PriorityType.values()[Integer.valueOf(Integer.valueOf(priority) - 1)]);
-                    subList.add("Status:           " + status);
-                    subList.add("Description:  " + description);
-                    subList.add("Comment:  " + comments);
-                    subList.add("Id: " + node);
-                    listDataChild.put(title, subList);
-            }
-            //listAdapter = new ExpandableListAdapterNew(MapsActivity.getContext(), listDataHeader, listDataChild);
-            //expListView.setAdapter(listAdapter);
-        } catch (Exception e) {
-            Log.e("items_error: ", e.toString());
-        }
-    }
-
-
 }

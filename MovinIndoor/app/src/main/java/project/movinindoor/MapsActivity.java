@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -65,6 +66,7 @@ import project.movinindoor.Graph.Node;
 import project.movinindoor.Readers.HttpJson;
 import project.movinindoor.Models.Room;
 import project.movinindoor.Readers.RepairReader;
+import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
     GoogleCloudMessaging gcm;
@@ -508,10 +510,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      *
      * @param view
      */
+    String currentRepair = "";
     public void btnNavigateRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
+        currentRepair = EndRoom;
 
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
@@ -607,6 +611,35 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
 
+        if (navigationRoute.getNum() == navigationRoute.getLinkedList().size() + 1) navigationRoute.setNum(Integer.MAX_VALUE);
+
+        if(navigationRoute.getNum() == Integer.MAX_VALUE) {
+            int countRepair = 0;
+            int currentIntRepair = 0;
+            for(Reparation r : setupGraph.getRepairReader().getAl()) {
+                String a = (r.Building.equals(Reparation.BuildingEnum.Custom)) ? r.Building + "" + r.Location : r.Building + "" + r.Floor + "." + r.Location;
+                if(currentRepair.equals(a)) currentIntRepair = countRepair;
+                countRepair++;
+            }
+            if((currentIntRepair + 1) < setupGraph.getRepairReader().getAl().size()) {
+                Reparation nextRepair = setupGraph.getRepairReader().getAl().get(currentIntRepair+1);
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+                textView.setText("Start");
+
+                MapDrawer.removePolylines();
+                MapDrawer.removeMarkers();
+                navigationRoute.reset();
+
+                String a = (nextRepair.Building.equals(Reparation.BuildingEnum.Custom)) ? nextRepair.Building + "" + nextRepair.Location : nextRepair.Building + "" + nextRepair.Floor + "." + nextRepair.Location;
+                boolean succes = Algorithm.navigate(currentRepair, a);
+                currentRepair = a;
+
+                if (succes) navigationRoute = new NavigationRoute();
+            } else{
+                textView.setText("Eind");
+            }
+        }
+
         // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
         if (navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
 
@@ -629,12 +662,17 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     break;
             }
 
-
-            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size())
+            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size()) {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
-            //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                navigationRoute.setNum(navigationRoute.getNum() + 1);
+                textView.setText(split[1] + "\n >Volgende reparatie<");
+            } else {
+                textView.setText(split[1]);
+            }
 
-            textView.setText(split[1]);
+
+
         }
 
     }
