@@ -69,13 +69,6 @@ public class Graph {
         Vertex dest = vertexMap.get(destname);
     }
 
-    private String printPath(Vertex dest) {
-        if (dest.prev != null) {
-            return printPath(dest.prev) + " -> " + dest.VertexId;
-        }
-        return dest.VertexId;
-    }
-
     private LinkedList getPath(String destname) {
         LinkedList a = new LinkedList();
         a = getPath(vertexMap.get(destname), a);
