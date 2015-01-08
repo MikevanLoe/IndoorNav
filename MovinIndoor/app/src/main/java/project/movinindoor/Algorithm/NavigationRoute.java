@@ -23,14 +23,14 @@ public class NavigationRoute {
 
     private int num = 0;
     private int rotation = 0;
-    private LinkedList<RouteStep> linkedList;
+    private LinkedList<RouteStep> Route;
 
     public NavigationRoute() {
         if (tempMarker != null) tempMarker.remove();
 
         num = 0;
         HashMap<String, Node> nodes = MapsActivity.getSetupGraph().getNodes().jsonList;
-        linkedList = new LinkedList<>();
+        Route = new LinkedList<>();
 
         for (int v = Graph.getWalkingPath().size() - 1; v >= 0; v--) {
             Vertex v2 = Graph.getWalkingPath().get(v);
@@ -65,12 +65,12 @@ public class NavigationRoute {
                         }
 
                         RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)), Integer.valueOf(nq.floor));
-                        linkedList.add(routeStep);
+                        Route.add(routeStep);
                     }
                 }
             }
-            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
-            linkedList.add(routeStep);
+            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", Route.getLast().getLatLng(), Route.getLast().getFloor());
+            Route.add(routeStep);
 */
             Node n = nodes.get(Graph.getWalkingPath().get(v).getNodeId());
             for (ToNode tn : n.getToNode()) {
@@ -106,7 +106,7 @@ public class NavigationRoute {
                                     break;
                             }
                             RouteStep routeStep = new RouteStep(action, text, nq.getLatLng(), Integer.valueOf(nq.getFloor()));
-                            linkedList.add(routeStep);
+                            Route.add(routeStep);
 
                         }
                     }
@@ -116,12 +116,12 @@ public class NavigationRoute {
 
 
 
-        if(linkedList.getLast() != null) {
-            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
-            linkedList.add(routeStep);
+        if(Route.getLast() != null) {
+            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", Route.getLast().getLatLng(), Route.getLast().getFloor());
+            Route.add(routeStep);
         }
 
-        switch (linkedList.getFirst().getAction()) {
+        switch (Route.getFirst().getAction()) {
             case "GoRight":
                 rotation = rotation - 90;
                 break;
@@ -137,18 +137,18 @@ public class NavigationRoute {
         }
     }
 
-    public LinkedList<RouteStep> getLinkedList() {
-        return linkedList;
+    public LinkedList<RouteStep> getRoute() {
+        return Route;
     }
 
     Marker tempMarker = null;
 
     public String getNextCard() {
         if (tempMarker != null) tempMarker.remove();
-        String s = linkedList.get(num).getAction() + ", " + linkedList.get(num).getText();
-        if (num < linkedList.size()) {
+        String s = Route.get(num).getAction() + ", " + Route.get(num).getText();
+        if (num < Route.size()) {
 
-            switch (linkedList.get(num).getAction()) {
+            switch (Route.get(num).getAction()) {
                 case "GoRight":
                     rotation = rotation + 90;
                     break;
@@ -162,19 +162,19 @@ public class NavigationRoute {
                     rotation = rotation - 45;
                     break;
             }
-            tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(linkedList.get(num).getLatLng()).title(linkedList.get(num).getText()));
-            if (MapDrawer.getFloor() != linkedList.get(num).getFloor()) {
-                MapDrawer.setFloor(linkedList.get(num).getFloor());
+            tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(Route.get(num).getLatLng()).title(Route.get(num).getText()));
+            if (MapDrawer.getFloor() != Route.get(num).getFloor()) {
+                MapDrawer.setFloor(Route.get(num).getFloor());
                 MapDrawer.hideAllMarkersAndPolylines();
-                MapDrawer.showMarkersAndPolylinesFloor(linkedList.get(num).getFloor());
-                MapsActivity.getBtnCurrentFloor().setText(String.valueOf(linkedList.get(num).getFloor()));
+                MapDrawer.showMarkersAndPolylinesFloor(Route.get(num).getFloor());
+                MapsActivity.getBtnCurrentFloor().setText(String.valueOf(Route.get(num).getFloor()));
             }
 
-            if(num != linkedList.size() - 1) {
-                double startLat = Math.toRadians(linkedList.get(num).getLatLng().latitude);
-                double startLong = Math.toRadians(linkedList.get(num).getLatLng().longitude);
-                double endLat = Math.toRadians(linkedList.get(num + 1).getLatLng().latitude);
-                double endLong = Math.toRadians(linkedList.get(num + 1).getLatLng().longitude);
+            if(num != Route.size() - 1) {
+                double startLat = Math.toRadians(Route.get(num).getLatLng().latitude);
+                double startLong = Math.toRadians(Route.get(num).getLatLng().longitude);
+                double endLat = Math.toRadians(Route.get(num + 1).getLatLng().latitude);
+                double endLong = Math.toRadians(Route.get(num + 1).getLatLng().longitude);
 
                 double dLong = endLong - startLong;
 
@@ -190,7 +190,7 @@ public class NavigationRoute {
                 double bearing = (Math.toDegrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(linkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
+                        .target(Route.get(num).getLatLng())      // Sets the center of the map to Mountain View
                         .zoom(20)                   // Sets the zoom
                         .bearing((float) bearing)               // Sets the orientation of the camera to east
                         .tilt(50)                   // Sets the tilt of the camera to 30 degrees
@@ -202,8 +202,8 @@ public class NavigationRoute {
             num++;
 
         } else {
-            linkedList.clear();
-            linkedList.remove();
+            Route.clear();
+            Route.remove();
         }
 
         return s;
@@ -215,7 +215,7 @@ public class NavigationRoute {
 
     public void reset() {
         num = 0;
-        linkedList.clear();
+        Route.clear();
         if(tempMarker != null) tempMarker.remove();
     }
 }

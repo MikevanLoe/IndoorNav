@@ -2,14 +2,12 @@ package project.movinindoor;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -428,13 +426,13 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public void btnCloseNavigate(View view) {
         try {
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(navigationRoute.getLinkedList().getLast().getLatLng())
+                    .target(navigationRoute.getRoute().getLast().getLatLng())
                     .zoom(20)
                     .bearing(0)
                     .tilt(0)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            if(MapDrawer.getFloor() == navigationRoute.getLinkedList().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getLinkedList().getLast().getFloor());
+            if(MapDrawer.getFloor() == navigationRoute.getRoute().getLast().getFloor()) MapDrawer.setFloor(navigationRoute.getRoute().getLast().getFloor());
         } catch (NullPointerException e) {};
 
         if(navigationRoute != null) navigationRoute.reset();
@@ -564,10 +562,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     public void showNextCardLocation(View view) {
         double count = 0.0;
-        for (int s = navigationRoute.getNum(); s < navigationRoute.getLinkedList().size() - 1; s++) {
-            LatLng latLng = navigationRoute.getLinkedList().get(s).getLatLng();
-            //int s1 = (s+1 == navigationRoute.getLinkedList().size()) ? s+1: s;
-            LatLng latLng2 = navigationRoute.getLinkedList().get(s + 1).getLatLng();
+        for (int s = navigationRoute.getNum(); s < navigationRoute.getRoute().size() - 1; s++) {
+            LatLng latLng = navigationRoute.getRoute().get(s).getLatLng();
+            //int s1 = (s+1 == navigationRoute.getRoute().size()) ? s+1: s;
+            LatLng latLng2 = navigationRoute.getRoute().get(s + 1).getLatLng();
             //MapDrawer.addPolylineNav(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude, Color.GREEN, MapDrawer.getFloor() - 1);
             count += CalcMath.measureMeters(latLng.latitude, latLng.longitude, latLng2.latitude, latLng2.longitude);
 
@@ -580,7 +578,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         TextView textView = (TextView) findViewById(R.id.txtCardText);
 
         // Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
-        if (navigationRoute.getNum() < navigationRoute.getLinkedList().size()) {
+        if (navigationRoute.getNum() < navigationRoute.getRoute().size()) {
 
             String[] split = navigationRoute.getNextCard().split(",");
             switch (split[0]) {
@@ -602,7 +600,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             }
 
 
-            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size())
+            if (navigationRoute.getNum() == navigationRoute.getRoute().size())
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
             //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
 
