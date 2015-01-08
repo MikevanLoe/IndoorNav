@@ -465,13 +465,20 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      */
     public void btnNavBar(View view) {
         try {
-            prepareListData();
+            boolean stat = prepareListData();
+            if (stat) {
+                //animate
+                Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
+                Animator.visibilityRepairList(Animator.Visibility.SHOW);
+                Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
+            } else {
+                Toast.makeText(getContext(), "Repairs not loaded yet", Toast.LENGTH_SHORT).show();
+            }
+
         } catch (NullPointerException e) {
+            Toast.makeText(getContext(), "Repairs not loaded", Toast.LENGTH_SHORT).show();
         }
-        //animate
-        Animator.visibilityNavigationMenu(Animator.Visibility.HIDE);
-        Animator.visibilityRepairList(Animator.Visibility.SHOW);
-        Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
+
     }
 
     //TODO
@@ -536,6 +543,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         int pos = Integer.valueOf(view.getTag().toString());
         final String tag = listAdapter.getChild(pos, 5).toString();
         final String stat = listAdapter.getChild(pos, 2).toString().substring(18);
+
 
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -799,9 +807,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     /**
      *
      */
-    private void prepareListData() {
+    private boolean prepareListData() {
         try {
-            setupGraph.getRepairReader().bindToRepairList(jitems);
+            boolean stat = setupGraph.getRepairReader().bindToRepairList();
             listDataHeader = setupGraph.getRepairReader().listDataHeader;
             listDataChild = setupGraph.getRepairReader().listDataChild;
 
@@ -836,9 +844,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                     return false;
                 }
             });
-
+            return stat;
         } catch (NullPointerException e) {
         }
+        return false;
     }
 
     /**
