@@ -91,6 +91,11 @@ public class Graph {
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
+
+    /**
+     *
+     * @param v
+     */
     private void drawPath(Vertex v) {
 
         MapDrawer.addPolylineNav(v.getLatLng().latitude, v.getLatLng().longitude, v.prev.latLng.latitude, v.prev.getLatLng().longitude, Color.BLUE, v.getFloor());

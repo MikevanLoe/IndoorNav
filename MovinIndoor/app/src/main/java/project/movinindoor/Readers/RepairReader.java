@@ -128,7 +128,6 @@ public class RepairReader {
 
 
         } catch (Exception e) {
-            Log.i("ERROR123", "something went wrong with this for-loop");
             e.printStackTrace();
         }
     }
