@@ -112,7 +112,7 @@ public class Rooms {
                         reader.beginObject();
                         while (reader.hasNext()) {
                             String name3 = reader.nextName();
-                            if (name3.equals("NodeId")) {
+                            if (name3.equals("name")) {
                                 location = reader.nextString();
                             } else {
                                 reader.skipValue();
