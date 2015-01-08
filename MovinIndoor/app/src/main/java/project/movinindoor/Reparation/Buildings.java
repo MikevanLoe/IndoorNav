@@ -50,7 +50,7 @@ public class Buildings {
     /**
      * Adds a building to the list.
      *
-     * @param name the name of the building.
+     * @param name the NodeId of the building.
      * @param obj the building.
      */
     public void Add(Reparation.BuildingEnum name, Building obj) {

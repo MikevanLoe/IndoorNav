@@ -10,25 +10,29 @@ import java.util.List;
  */
 public class Vertex {
 
-    public String name;
+    //basic data for the class
+    public String NodeId;
+    protected LatLng latLng;
+    protected int floor;
     public List<Edge> adj;
+    protected Vertextype type;
+    public enum Vertextype {Elevator, Stairs, Room, Hall};
+
+
+    //data used to determine shortest path
     protected double dist;
     public Vertex prev;
     protected boolean scratch;
-    protected LatLng latLng;
-    public enum Vertextype {Elevator, Stairs, Room, Hall};
-    protected Vertextype type;
-    protected int floor;
 
-    public Vertex(String name, LatLng latLng) {
-        this.name = name;
+    public Vertex(String NodeId, LatLng latLng) {
+        this.NodeId = NodeId;
         this.latLng = latLng;
         adj = new LinkedList<Edge>() ;
         reset();
     }
 
-    public Vertex(String name, LatLng latLng, Vertextype type, int floor){
-        this.name = name;
+    public Vertex(String NodeId, LatLng latLng, Vertextype type, int floor){
+        this.NodeId = NodeId;
         this.latLng = latLng;
         this.type = type;
         this.floor = floor;
@@ -42,8 +46,8 @@ public class Vertex {
         scratch = false;
     }
 
-    public String getName() {
-        return name;
+    public String getNodeId() {
+        return NodeId;
     }
 
     public List<Edge> getAdj() {

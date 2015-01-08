@@ -1,7 +1,6 @@
 package project.movinindoor.Graph.Graph;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,7 +34,7 @@ public class Graph {
     }
 
     
-    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
+    //function to add vertex to the graph. a vertex has a NodeId which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
         Vertex v = new Vertex(name, new LatLng(lat1, long1), type, floor);
         vertexMap.put(name, v);
@@ -55,9 +54,9 @@ public class Graph {
 
     private String printPath(Vertex dest) {
         if (dest.prev != null) {
-            return printPath(dest.prev) + " -> " + dest.name;
+            return printPath(dest.prev) + " -> " + dest.NodeId;
         }
-        return dest.name;
+        return dest.NodeId;
     }
 
     private LinkedList getPath(String destname) {
@@ -127,7 +126,6 @@ public class Graph {
             return 0.0;
         }
     }
-
 
     public void dijkstra(Vertex start) {
         PriorityQueue<Path> pq = new PriorityQueue<Path>();
