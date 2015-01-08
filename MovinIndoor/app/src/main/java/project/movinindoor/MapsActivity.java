@@ -65,7 +65,6 @@ import project.movinindoor.Readers.HttpJson;
 import project.movinindoor.Models.Room;
 import project.movinindoor.Readers.RepairReader;
 
-
 public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
     GoogleCloudMessaging gcm;
     String regid;
@@ -73,14 +72,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
-    public static Context getContext() {
-        return context;
-    }
-
-    public static GoogleMap getMap() {
-        return mMap;
-    }
 
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     private static GraphHandler setupGraph;
@@ -90,7 +81,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private ExpandableListView expListView;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listDataChild;
-
 
     private Marker longClickMarker = null;
     private Room inRoom;
@@ -109,102 +99,92 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
+    /**
+     *  Getters and Setters
+     */
+    public static Context getContext() {
+        return context;
+    }
+    public static GoogleMap getMap() {
+        return mMap;
+    }
     public static ImageButton getBtnFloorUp() {
         return btnFloorUp;
     }
-
     public static ImageButton getBtnFloorDown() {
         return btnFloorDown;
     }
-
     public static GridLayout getfNavigationInfoBottom() {
         return fNavigationInfoBottom;
     }
-
     public static LinearLayout getfNavigationMenu() {
         return fNavigationMenu;
     }
-
     public static Fragment getfRepairList() {
         return fRepairList;
     }
-
     public static Fragment getfNavigationInfoTop() {
         return fNavigationInfoTop;
     }
-
     public static Fragment getfFloorNavigator2() {
         return fFloorNavigator2;
     }
-
     public static Fragment getfMarkerDisplay() {
         return fMarkerDisplay;
     }
-
     public static Fragment getfNavigationCard() {
         return fNavigationCard;
     }
-
     public static GraphHandler getSetupGraph() {
         return setupGraph;
     }
-
     public static void setSetupGraph(GraphHandler setupGraph) {
         MapsActivity.setupGraph = setupGraph;
     }
-
     public static JSONArray getJitems() {
         return jitems;
     }
-
     public static void setJitems(JSONArray jitems) {
         MapsActivity.jitems = jitems;
     }
-
     public static TextView getTextSpeed() {
         return textSpeed;
     }
-
     public static TextView getTextSpeedCost() {
         return textSpeedCost;
     }
-
     public static TextView getTextFrom() {
         return textFrom;
     }
-
     public static TextView getTextTo() {
         return textTo;
     }
-
     public static EditText getEditEnd() {
         return editEnd;
     }
-
     public static EditText getEditStart() {
         return editStart;
     }
-
     public static Button getBtnCurrentFloor() {
         return btnCurrentFloor;
     }
-
     public static LatLng getCustomStartPos() {
         return customStartPos;
     }
-
     public static LatLng getCustomEndPos() {
         return customEndPos;
     }
-
     public static int getCustomStartFloor() {
         return customStartFloor;
     }
-
     public static int getCustomEndFloor() {
         return customEndFloor;
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -285,11 +265,16 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
+    /**
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
+    //TODO
     public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -308,9 +293,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
-    /**
-     *
-     */
+    //TODO
     public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
@@ -334,8 +317,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
-
-
     //OnClick FloorNavigator Button Up
     /**
      *
@@ -356,7 +337,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     }
 
-
     //OnClick Close Button From Custom Marker
     /**
      *
@@ -368,7 +348,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         MapDrawer.removePolylines();
         Animator.visibilityMarkerInfo(Animator.Visibility.HIDE);
     }
-
 
     //OnClick Select Custom Location
     /**
@@ -412,7 +391,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Toast.makeText(getContext(), text + " location added", Toast.LENGTH_SHORT).show();
     }
 
-
     //OnClick FloorNavigator Button Down
     /**
      *
@@ -432,7 +410,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             btnFloorDown.setVisibility(View.INVISIBLE);
         }
     }
-
 
     //OnClick Close Navagation
     /**
@@ -892,4 +869,3 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         setUpGraphIfNeeded();
     }
 }
-
