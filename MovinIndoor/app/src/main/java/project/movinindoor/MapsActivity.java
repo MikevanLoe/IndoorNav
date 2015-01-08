@@ -635,11 +635,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             if (navigationRoute.getNum() == navigationRoute.getLinkedList().size()) {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
                 //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
-                navigationRoute.ge
+
                 textView.setText(split[1] + "\n Klik voor volgende reparatie");
             }
 
-            if(navigationRoute.getNum() == -1)
+            if(navigationRoute.getNum() == -1) {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
                 textView.setText("Start");
                 boolean succes = Algorithm.navigate(currentRepair, currentRepair);
