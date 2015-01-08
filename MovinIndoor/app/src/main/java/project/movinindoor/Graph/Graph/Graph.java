@@ -75,6 +75,12 @@ public class Graph {
         return a;
     }
 
+    /**
+     * function function that returns the path most recently calculated by Dijkstra
+     * @param v the destination vertex
+     * @param l used for recursive. when first time calling give it an empty list
+     * @return a linkedlist of the path
+     */
     private LinkedList getPath(Vertex v, LinkedList l) {
         l.add(0, v);
         if (v.prev != null) {
@@ -82,12 +88,6 @@ public class Graph {
         }
         return l;
     }
-
-    public double getCost(String destName) {
-        Vertex v = vertexMap.get(destName);
-        return v.dist;
-    }
-
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.
