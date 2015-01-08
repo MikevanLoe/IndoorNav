@@ -269,8 +269,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     /**
     * Changes the configuration when the user changes some settings.
     *
-            * @param newConfig The new configuration of the application.
-            */
+    * @param newConfig The new configuration of the application.
+    */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -479,7 +479,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     /**
      * Opens the navigation overlay and plots a route between
-     *  two points when the user presses it.
+     *  two points given by the user when the user presses it.
      *
      * @param view The button that is pressed.
      */
@@ -505,10 +505,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if(succes) navigationRoute = new NavigationRoute();
     }
 
-    //OnClick Navigate to Reparation
     /**
+     * Opens the navigation overlay and plots a route between
+     *  two reparations when the user presses it.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     String currentRepair = "";
     public void btnNavigateRepair(View view) {
@@ -525,10 +526,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if(succes) navigationRoute = new NavigationRoute();
     }
 
-    //OnClick Activate/Close Reparation
     /**
+     * Updates the status of a reparation to accepted on first press, and
+     *  to repaired on the second press by the user.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnCheckRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
@@ -562,10 +564,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         refreshList();
     }
 
-    //OnClick Location From Reparation
     /**
+     * Shows the location of the reparation when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void showLocation(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
