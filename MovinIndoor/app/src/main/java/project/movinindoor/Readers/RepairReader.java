@@ -128,7 +128,7 @@ public class RepairReader {
         }
     }
 
-    public void bindToRepairList(JSONArray jitems) {
+    public boolean bindToRepairList() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
 
@@ -187,7 +187,9 @@ public class RepairReader {
                 subList.add("id: " + r.Id);
                 listDataChild.put(r.ShortDescription, subList);
             }
+            return true;
         } catch (NullPointerException e) {
+            return false;
         }
     }
 }

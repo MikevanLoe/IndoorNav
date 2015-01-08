@@ -100,11 +100,12 @@ public class ExpandableListAdapterNew extends BaseExpandableListAdapter {
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
-        ImageButton Button1= (ImageButton)  convertView.findViewById(R.id.imageButton);
-        ImageButton Button2= (ImageButton)  convertView.findViewById(R.id.imageButton2);
-        ImageButton Button3= (ImageButton)  convertView.findViewById(R.id.imageButton3);
+        ImageButton Button1 = (ImageButton)  convertView.findViewById(R.id.imageButton);
+        ImageButton Button2 = (ImageButton)  convertView.findViewById(R.id.imageButton2);
+        ImageButton Button3 = (ImageButton)  convertView.findViewById(R.id.imageButton3);
         String status = getChild(groupPosition, 2).toString().substring(18);
-        if(status.equals("Geaccepteerd")) Button2.setImageDrawable(MapsActivity.getContext().getResources().getDrawable(R.drawable.ic_beenhere_black_24dp));
+        if(status.equals("Geaccepteerd")) Button2.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_beenhere_black_24dp));
+        else Button2.setImageDrawable(convertView.getResources().getDrawable(R.drawable.ic_check_black_24dp));
         Button1.setTag(groupPosition);
         Button2.setTag(groupPosition);
         Button3.setTag(groupPosition);
