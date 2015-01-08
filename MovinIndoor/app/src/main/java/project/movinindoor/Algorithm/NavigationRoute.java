@@ -74,6 +74,7 @@ public class NavigationRoute {
             RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", LinkedList.getLast().getLatLng(), LinkedList.getLast().getFloor());
             LinkedList.add(routeStep);
 */
+
             Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
             for (ToNode tn : n.getToNode()) {
 
