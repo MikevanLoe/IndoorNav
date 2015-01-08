@@ -52,6 +52,12 @@ public class Animator {
         }
     }
 
+    public static boolean isRepairListVisible() {
+       int visible = MapsActivity.getfRepairList().getView().getVisibility();
+       return (visible == View.VISIBLE) ? true: false;
+
+    }
+
     public static void visibilityNavigationInfoTop(Visibility type) {
         Animation hideAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_out_top);
         Animation showAnimation = AnimationUtils.loadAnimation(MapsActivity.getContext(), R.anim.abc_slide_in_top);
