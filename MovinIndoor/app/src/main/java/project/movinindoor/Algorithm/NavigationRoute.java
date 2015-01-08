@@ -146,6 +146,7 @@ public class NavigationRoute {
     public String getNextCard() {
         if (tempMarker != null) tempMarker.remove();
         String s = linkedList.get(num).getAction() + ", " + linkedList.get(num).getText();
+        if (num == linkedList.size()) num += -1;
         if (num < linkedList.size()) {
 
             switch (linkedList.get(num).getAction()) {

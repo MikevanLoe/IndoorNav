@@ -267,9 +267,6 @@ public class Algorithm {
             MapsActivity.getTextSpeed().setText("ETA: " + walkingSpeed);
             MapsActivity.getTextSpeedCost().setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
-
-
-
             MapsActivity.getTextFrom().setText(startPosition);
             MapsActivity.getTextTo().setText(endPosition);
             MapDrawer.setFloor(startNode.getFloor());

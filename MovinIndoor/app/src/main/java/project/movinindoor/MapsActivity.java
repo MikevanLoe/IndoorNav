@@ -509,10 +509,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      *
      * @param view
      */
+    String currentRepair = "";
     public void btnNavigateRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
         String EndRoom = listAdapter.getChild(pos, 0).toString().substring(16);
+        currentRepair = EndRoom;
 
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
@@ -631,11 +633,19 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             }
 
 
-            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size())
+            if (navigationRoute.getNum() == navigationRoute.getLinkedList().size()) {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
-            //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                navigationRoute.ge
+                textView.setText(split[1] + "\n Klik voor volgende reparatie");
+            }
 
-            textView.setText(split[1]);
+            if(navigationRoute.getNum() == -1)
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
+                textView.setText("Start");
+                boolean succes = Algorithm.navigate(currentRepair, currentRepair);
+                if (succes) navigationRoute = new NavigationRoute();
+            }
         }
 
     }
