@@ -17,6 +17,9 @@ import java.util.PriorityQueue;
 import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
+import project.movinindoor.MovingBehaviour.MovingBehaviour;
+import project.movinindoor.MovingBehaviour.moveByCart;
+import project.movinindoor.MovingBehaviour.moveByFoot;
 
 /**
  * Created by Wietse on 24-11-2014.
@@ -24,7 +27,7 @@ import project.movinindoor.MapsActivity;
 public class Graph {
 
     public static final double INFINITY = Double.MAX_VALUE;
-    private static boolean movingByFoot = true;
+    private static MovingBehaviour movement = new moveByFoot();
     private Map<String, Vertex> vertexMap = new HashMap<String, Vertex>();
     private static List<Vertex> walkingPath = new LinkedList<>();
 
@@ -140,7 +143,7 @@ public class Graph {
             while (!pq.isEmpty() && nodesSeen < vertexMap.size()) {
                 Path vrec = pq.remove();
                 Vertex v = vrec.getDest();
-                if (v.scratch || (!movingByFoot && v.type == Vertex.Vertextype.Stairs) ) // already processed v
+                if (v.scratch || (getMovement().equals(new moveByFoot()) && v.type == Vertex.Vertextype.Stairs) ) // already processed v
                 {
                     continue;
                 }
@@ -161,28 +164,20 @@ public class Graph {
         }
     }
 
-
-
-    public static String calculateWalkingSpeed(double cost) {
-        int walkingSpeed = (movingByFoot) ? 5000 : 4000;
-        int minuteInSec = 3600;
-        float walkingspeedPerSecond = ((float) walkingSpeed) / minuteInSec;
-        double time;
-        time = (cost / walkingspeedPerSecond);
-        int minute = (int) time / 60;
-        int second = (int) time % 60;
-        return String.format("%dm%02ds", minute, second);
-    }
-
-    public static void setMovingByFoot(boolean movingByFoot) {
-        Graph.movingByFoot = movingByFoot;
-    }
-
     public static List<Vertex> getWalkingPath() {
         return walkingPath;
     }
 
-    public static boolean isMovingByFoot() {
-        return movingByFoot;
+    public static MovingBehaviour getMovement(){
+        return movement;
+    }
+
+    public static void setMovement(boolean movingByFoot){
+        if (movingByFoot){
+            movement = new moveByFoot();
+        }
+        else{
+            movement = new moveByCart();
+        }
     }
 }
