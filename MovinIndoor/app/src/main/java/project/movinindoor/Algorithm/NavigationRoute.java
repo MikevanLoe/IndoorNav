@@ -37,7 +37,7 @@ public class NavigationRoute {
             /*
             for (Edge e1 : v2.adj) {
                 for (edgeActions e : e1.actions) {
-                    if (v2.NodeId) {
+                    if (v2.name) {
                         String text = "";
                         String action = "";
                         Node nq = nodes.get(e1.toNodeID);
@@ -72,7 +72,7 @@ public class NavigationRoute {
             RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", LinkedList.getLast().getLatLng(), LinkedList.getLast().getFloor());
             LinkedList.add(routeStep);
 */
-            Node n = nodes.get(Graph.getWalkingPath().get(v).getNodeId());
+            Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
             for (ToNode tn : n.getToNode()) {
                // Log.i("V", "=>");
                 for (edgeActions e : tn.getActions()) {

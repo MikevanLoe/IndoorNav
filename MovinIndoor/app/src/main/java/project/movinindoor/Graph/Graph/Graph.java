@@ -37,7 +37,7 @@ public class Graph {
     }
 
     
-    //function to add vertex to the graph. a vertex has a NodeId which will be the way to later get your vertex back, and a position; latitude and longitude.
+    //function to add vertex to the graph. a vertex has a name which will be the way to later get your vertex back, and a position; latitude and longitude.
     public void addVertex(String name, double lat1, double long1, Vertex.Vertextype type, int floor) {
         Vertex v = new Vertex(name, new LatLng(lat1, long1), type, floor);
         vertexMap.put(name, v);

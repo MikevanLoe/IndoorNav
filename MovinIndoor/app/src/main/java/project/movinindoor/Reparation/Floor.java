@@ -28,7 +28,7 @@ public class Floor implements Comparable<Floor>{
     /**
      * Adds a floor to the building.
      *
-     * @param name the NodeId of the floor being added.
+     * @param name the name of the floor being added.
      * @param obj the floor being added.
      */
     public void Add(String name, Reparation obj) {
