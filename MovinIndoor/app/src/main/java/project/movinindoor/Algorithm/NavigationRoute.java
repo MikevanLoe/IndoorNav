@@ -75,14 +75,14 @@ public class NavigationRoute {
             LinkedList.add(routeStep);
 */
 
-            Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
+            Node n = nodes.get(Graph.getWalkingPath().get(v).getVertexId());
             for (ToNode tn : n.getToNode()) {
 
                 for (edgeActions e : tn.getActions()) {
 
                     if (Graph.getWalkingPath().get(v).prev.prev != null) {
-
-                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.NodeId).getNodeId())) {
+                       // Log.i("V", "=======>");
+                        if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.VertexId).getNodeId())) {
                             String text = "";
                             String action = "";
                             Node nq = nodes.get(tn.getToNodeID());
