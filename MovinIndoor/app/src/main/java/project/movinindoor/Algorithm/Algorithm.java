@@ -6,6 +6,7 @@
 
 package project.movinindoor.Algorithm;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -168,7 +169,7 @@ public class Algorithm {
         } else {
             if (!startPosition.contains("Custom Start")) {
                 startRoom = graphHandler.getRooms().getRoom(startPosition);
-                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), MapsActivity.getCustomStartFloor());
+                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), startRoom.getFloor());
                 extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
                 startPositionLatLng = startRoom.getLatLngBoundsCenter();
             } else {
@@ -239,7 +240,8 @@ public class Algorithm {
         } else {
             if (!startPosition.contains("Custom End")) {
                 endRoom = graphHandler.getRooms().getRoom(endPosition);
-                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), MapsActivity.getCustomEndFloor());
+                Log.i("BLABLABLABLA", String.valueOf(endRoom.getFloor()));
+                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), endRoom.getFloor());
                 extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
                 endPositionLatLng = endRoom.getLatLngBoundsCenter();
             } else {
