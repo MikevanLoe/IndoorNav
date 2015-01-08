@@ -23,21 +23,21 @@ public class NavigationRoute {
 
     private int num = 0;
     private int rotation = 0;
-    private LinkedList<RouteStep> linkedList;
+    private LinkedList<RouteStep> LinkedList;
 
     public NavigationRoute() {
         if (tempMarker != null) tempMarker.remove();
 
         num = 0;
         HashMap<String, Node> nodes = MapsActivity.getSetupGraph().getNodes().jsonList;
-        linkedList = new LinkedList<>();
+        LinkedList = new LinkedList<>();
 
         for (int v = Graph.getWalkingPath().size() - 1; v >= 0; v--) {
             Vertex v2 = Graph.getWalkingPath().get(v);
             /*
             for (Edge e1 : v2.adj) {
                 for (edgeActions e : e1.actions) {
-                    if (v2.NodeId) {
+                    if (v2.name) {
                         String text = "";
                         String action = "";
                         Node nq = nodes.get(e1.toNodeID);
@@ -65,14 +65,14 @@ public class NavigationRoute {
                         }
 
                         RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)), Integer.valueOf(nq.floor));
-                        linkedList.add(routeStep);
+                        LinkedList.add(routeStep);
                     }
                 }
             }
-            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
-            linkedList.add(routeStep);
+            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", LinkedList.getLast().getLatLng(), LinkedList.getLast().getFloor());
+            LinkedList.add(routeStep);
 */
-            Node n = nodes.get(Graph.getWalkingPath().get(v).getNodeId());
+            Node n = nodes.get(Graph.getWalkingPath().get(v).getName());
             for (ToNode tn : n.getToNode()) {
                // Log.i("V", "=>");
                 for (edgeActions e : tn.getActions()) {
@@ -106,7 +106,7 @@ public class NavigationRoute {
                                     break;
                             }
                             RouteStep routeStep = new RouteStep(action, text, nq.getLatLng(), Integer.valueOf(nq.getFloor()));
-                            linkedList.add(routeStep);
+                            LinkedList.add(routeStep);
 
                         }
                     }
@@ -116,12 +116,12 @@ public class NavigationRoute {
 
 
 
-        if(linkedList.getLast() != null) {
-            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", linkedList.getLast().getLatLng(), linkedList.getLast().getFloor());
-            linkedList.add(routeStep);
+        if(LinkedList.getLast() != null) {
+            RouteStep routeStep = new RouteStep("GoStraight", "U bent gearriveerd", LinkedList.getLast().getLatLng(), LinkedList.getLast().getFloor());
+            LinkedList.add(routeStep);
         }
 
-        switch (linkedList.getFirst().getAction()) {
+        switch (LinkedList.getFirst().getAction()) {
             case "GoRight":
                 rotation = rotation - 90;
                 break;
@@ -138,17 +138,17 @@ public class NavigationRoute {
     }
 
     public LinkedList<RouteStep> getLinkedList() {
-        return linkedList;
+        return LinkedList;
     }
 
     Marker tempMarker = null;
 
     public String getNextCard() {
         if (tempMarker != null) tempMarker.remove();
-        String s = linkedList.get(num).getAction() + ", " + linkedList.get(num).getText();
-        if (num < linkedList.size()) {
+        String s = LinkedList.get(num).getAction() + ", " + LinkedList.get(num).getText();
+        if (num < LinkedList.size()) {
 
-            switch (linkedList.get(num).getAction()) {
+            switch (LinkedList.get(num).getAction()) {
                 case "GoRight":
                     rotation = rotation + 90;
                     break;
@@ -162,19 +162,19 @@ public class NavigationRoute {
                     rotation = rotation - 45;
                     break;
             }
-            tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(linkedList.get(num).getLatLng()).title(linkedList.get(num).getText()));
-            if (MapDrawer.getFloor() != linkedList.get(num).getFloor()) {
-                MapDrawer.setFloor(linkedList.get(num).getFloor());
+            tempMarker = MapsActivity.getMap().addMarker(new MarkerOptions().position(LinkedList.get(num).getLatLng()).title(LinkedList.get(num).getText()));
+            if (MapDrawer.getFloor() != LinkedList.get(num).getFloor()) {
+                MapDrawer.setFloor(LinkedList.get(num).getFloor());
                 MapDrawer.hideAllMarkersAndPolylines();
-                MapDrawer.showMarkersAndPolylinesFloor(linkedList.get(num).getFloor());
-                MapsActivity.getBtnCurrentFloor().setText(String.valueOf(linkedList.get(num).getFloor()));
+                MapDrawer.showMarkersAndPolylinesFloor(LinkedList.get(num).getFloor());
+                MapsActivity.getBtnCurrentFloor().setText(String.valueOf(LinkedList.get(num).getFloor()));
             }
 
-            if(num != linkedList.size() - 1) {
-                double startLat = Math.toRadians(linkedList.get(num).getLatLng().latitude);
-                double startLong = Math.toRadians(linkedList.get(num).getLatLng().longitude);
-                double endLat = Math.toRadians(linkedList.get(num + 1).getLatLng().latitude);
-                double endLong = Math.toRadians(linkedList.get(num + 1).getLatLng().longitude);
+            if(num != LinkedList.size() - 1) {
+                double startLat = Math.toRadians(LinkedList.get(num).getLatLng().latitude);
+                double startLong = Math.toRadians(LinkedList.get(num).getLatLng().longitude);
+                double endLat = Math.toRadians(LinkedList.get(num + 1).getLatLng().latitude);
+                double endLong = Math.toRadians(LinkedList.get(num + 1).getLatLng().longitude);
 
                 double dLong = endLong - startLong;
 
@@ -190,7 +190,7 @@ public class NavigationRoute {
                 double bearing = (Math.toDegrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(linkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
+                        .target(LinkedList.get(num).getLatLng())      // Sets the center of the map to Mountain View
                         .zoom(20)                   // Sets the zoom
                         .bearing((float) bearing)               // Sets the orientation of the camera to east
                         .tilt(50)                   // Sets the tilt of the camera to 30 degrees
@@ -202,8 +202,8 @@ public class NavigationRoute {
             num++;
 
         } else {
-            linkedList.clear();
-            linkedList.remove();
+            LinkedList.clear();
+            LinkedList.remove();
         }
 
         return s;
@@ -215,7 +215,7 @@ public class NavigationRoute {
 
     public void reset() {
         num = 0;
-        linkedList.clear();
+        LinkedList.clear();
         if(tempMarker != null) tempMarker.remove();
     }
 }
