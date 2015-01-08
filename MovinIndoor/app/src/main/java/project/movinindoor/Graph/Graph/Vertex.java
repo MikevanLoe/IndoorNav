@@ -24,15 +24,15 @@ public class Vertex {
     public Vertex prev;
     protected boolean scratch;
 
-    public Vertex(String NodeId, LatLng latLng) {
-        this.NodeId = NodeId;
+    public Vertex(String name, LatLng latLng) {
+        this.NodeId = name;
         this.latLng = latLng;
         adj = new LinkedList<Edge>() ;
         reset();
     }
 
-    public Vertex(String NodeId, LatLng latLng, Vertextype type, int floor){
-        this.NodeId = NodeId;
+    public Vertex(String name, LatLng latLng, Vertextype type, int floor){
+        this.NodeId = name;
         this.latLng = latLng;
         this.type = type;
         this.floor = floor;
@@ -46,7 +46,7 @@ public class Vertex {
         scratch = false;
     }
 
-    public String getNodeId() {
+    public String getName() {
         return NodeId;
     }
 
