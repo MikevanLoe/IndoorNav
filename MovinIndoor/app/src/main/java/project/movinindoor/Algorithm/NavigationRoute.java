@@ -81,7 +81,6 @@ public class NavigationRoute {
                 for (edgeActions e : tn.getActions()) {
 
                     if (Graph.getWalkingPath().get(v).prev.prev != null) {
-                       // Log.i("V", "=======>");
                         if (e.getToNodeID() == Integer.valueOf(nodes.get(Graph.getWalkingPath().get(v).prev.prev.VertexId).getNodeId())) {
                             String text = "";
                             String action = "";
