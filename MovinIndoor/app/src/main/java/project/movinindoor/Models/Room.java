@@ -1,5 +1,7 @@
 package project.movinindoor.Models;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -30,6 +32,9 @@ public class Room {
     public LatLng getLatLngBoundsCenter() {
 
         List<LatLng> points = new ArrayList<LatLng>();
+
+        if(latLngBounds.get(0).size() == 1) return new LatLng(latLngBounds.get(1).get(0), latLngBounds.get(0).get(0));
+
         for(int i = 0; i < latLngBounds.get(0).size(); i++) {
             points.add(new LatLng(latLngBounds.get(1).get(i), latLngBounds.get(0).get(i)));
         }

@@ -3,6 +3,7 @@ package project.movinindoor.Readers;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 
@@ -41,6 +42,7 @@ public class RepairReader {
             } catch (Exception e) {
                 jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
             }
+            int customRoomCount = 1;
 
             for (Integer i = 0; i < jitems.length(); i++) {
                 String title = jitems.getJSONObject(i).getString("shortdescription");
@@ -58,26 +60,44 @@ public class RepairReader {
                     Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                     Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
 
+                    int floor1 = Integer.valueOf(floor);
+                    String location = " location " + customRoomCount;
+                    Reparation.BuildingEnum buildingEnum = Reparation.BuildingEnum.Custom;
+
+                    if (nodeRoom == null) {
+                        //Log.i("new room", clat);
+                        ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
+                        ArrayList<Double> latitide = new  ArrayList<>();
+                        ArrayList<Double> longitude = new ArrayList<>();
+                        latitide.add(Double.valueOf(clat));
+                        longitude.add(Double.valueOf(clong));
+                        latLngBounds.add(longitude);
+                        latLngBounds.add(latitide);
+                        Room customRoom = new Room("Custom location " + customRoomCount, latLngBounds);
+                        nodeRooms.getRooms().put("Custom location " + customRoomCount, customRoom);
+                        customRoomCount++;
+                        nodeRoom = customRoom;
+                    } else {
+                        String room = nodeRoom.getLocation();
+                        String building = room.substring(0, 1);
+
+                        String[] splitFloor = room.split("\\.");
+                        floor1 = Integer.valueOf(splitFloor[0].substring(1));
+                        location = splitFloor[1];
+                        try {
+                            buildingEnum = Reparation.BuildingEnum.valueOf(building);
+                        } catch (IllegalArgumentException ex) {
+                            buildingEnum = Reparation.BuildingEnum.A;
+                        }
+                    }
+
+                    int nodeId = Integer.valueOf(node);
+                    Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
+                    LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
 
 
-                String room = nodeRoom.getLocation();
-                String building = room.substring(0, 1);
-
-                String[] splitFloor = room.split("\\.");
-
-                int nodeId = Integer.valueOf(node);
-                Reparation.BuildingEnum buildingEnum;
-                int floor1 = Integer.valueOf(splitFloor[0].substring(1));
-                String location = splitFloor[1];
-                LatLng latLng1 = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
-                Reparation.StatusEnum statusEnum = Reparation.StatusEnum.NEW;
 
 
-                try {
-                    buildingEnum = Reparation.BuildingEnum.valueOf(building);
-                } catch (IllegalArgumentException ex) {
-                    buildingEnum = Reparation.BuildingEnum.A;
-                }
 
                 switch (status) {
                     case "Nieuw":
@@ -169,7 +189,8 @@ public class RepairReader {
                 }
             List<String> subList = new ArrayList<String>();
             listDataHeader.add(r.ShortDescription);
-            subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
+            if (r.Building.equals(Reparation.BuildingEnum.Custom)) subList.add("Location:       " + r.Building + "" + r.Location);
+            else subList.add("Location:       " + r.Building + "" + r.Floor + "." + r.Location);
             subList.add("Priority:          " + PrioName);
             subList.add("Status:           " + statusName);
             subList.add("Description:  " + r.Description);
@@ -185,6 +206,7 @@ public class RepairReader {
     public void prepareListData(JSONArray jitems) {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
+        int customRoomCount = 1;
         // Navigation drawer items
 
         try {
@@ -205,6 +227,22 @@ public class RepairReader {
                 LatLng latLng = new LatLng(Double.valueOf(clat), Double.valueOf(clong));
                 Rooms nodeRooms = MapsActivity.getSetupGraph().getRooms();
                 Room nodeRoom = nodeRooms.nodeInsideRoom(latLng, Integer.valueOf(floor));
+                Log.i("new room", nodeRoom.toString());
+                Log.i("new room2", title);
+                if (nodeRoom == null) {
+                    Log.i("new room", clat);
+                    ArrayList<ArrayList<Double>> latLngBounds = new ArrayList<>();
+                    ArrayList<Double> latitide = new  ArrayList<>();
+                    ArrayList<Double> longitude = new ArrayList<>();
+                    latitide.add(Double.valueOf(clat));
+                    longitude.add(Double.valueOf(clat));
+                    latLngBounds.add(latitide);
+                    latLngBounds.add(longitude);
+                    Room customRoom = new Room("Custom location" + customRoomCount, latLngBounds);
+                    nodeRooms.getRooms().put("Custom location" + customRoomCount, customRoom);
+                    customRoomCount++;
+                    nodeRoom = customRoom;
+                }
 
                     String room = nodeRoom.getLocation();
                     String statusName = "Nieuw";

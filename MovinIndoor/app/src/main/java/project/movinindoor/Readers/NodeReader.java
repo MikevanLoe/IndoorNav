@@ -3,7 +3,6 @@ package project.movinindoor.Readers;
 
 import android.graphics.Color;
 import android.util.JsonReader;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,9 +20,7 @@ import project.movinindoor.Graph.ToNode;
 import project.movinindoor.Graph.edgeActions;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
-import project.movinindoor.Models.Elevator;
 import project.movinindoor.Models.Room;
-import project.movinindoor.Models.Stair;
 
 /**
  * Created by Davey on 25-11-2014.

@@ -148,7 +148,7 @@ public class Algorithm {
         Room startRoom = null, endRoom = null;
 
         //if not a custom location
-        if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom")) {
+        if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom") && !startPosition.contains("Custom")) {
             startRoom = graphHandler.getRooms().getRoom(startPosition.toUpperCase());
 
             if (startRoom == null) {
@@ -168,13 +168,21 @@ public class Algorithm {
 
             startPositionLatLng = new LatLng(startNode.getLatLng().latitude, startNode.getLatLng().longitude);
         } else {
-            startNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomStartPos(), MapsActivity.getCustomStartFloor());
-            extraCost = CalcMath.measureMeters(MapsActivity.getCustomStartPos().latitude, MapsActivity.getCustomStartPos().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
-            startPositionLatLng = MapsActivity.getCustomStartPos();
+            if (!startPosition.contains("Custom Start")) {
+                startRoom = graphHandler.getRooms().getRoom(startPosition);
+                startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), MapsActivity.getCustomStartFloor());
+                extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
+                startPositionLatLng = startRoom.getLatLngBoundsCenter();
+            } else {
+                startNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomStartPos(), MapsActivity.getCustomStartFloor());
+                extraCost = CalcMath.measureMeters(MapsActivity.getCustomStartPos().latitude, MapsActivity.getCustomStartPos().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
+                startPositionLatLng = MapsActivity.getCustomStartPos();
+            }
+
         }
 
         //if not a custom location
-        if(MapsActivity.getCustomEndPos() == null  && !MapsActivity.getEditEnd().getText().toString().contains("Custom")) {
+        if(MapsActivity.getCustomEndPos() == null  && !MapsActivity.getEditEnd().getText().toString().contains("Custom") && !endPosition.contains("Custom")) {
             String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
             String re2="(\\d+)";	// Integer Number 1
             String re3="(.)";	// Any Single Character 1
@@ -231,10 +239,17 @@ public class Algorithm {
 
             endPositionLatLng = new LatLng(endNode.getLatLng().latitude, endNode.getLatLng().longitude);
         } else {
+            if (!startPosition.contains("Custom End")) {
+                endRoom = graphHandler.getRooms().getRoom(endPosition);
+                endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), MapsActivity.getCustomEndFloor());
+                extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
+                endPositionLatLng = endRoom.getLatLngBoundsCenter();
+            } else {
+                endNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomEndPos(), MapsActivity.getCustomEndFloor());
+                extraCost = CalcMath.measureMeters(MapsActivity.getCustomEndPos().latitude, MapsActivity.getCustomEndPos().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
+                endPositionLatLng = MapsActivity.getCustomEndPos();
+            }
 
-            endNode = graphHandler.getNodes().findNearestNode(MapsActivity.getCustomEndPos(), MapsActivity.getCustomEndFloor());
-            extraCost = CalcMath.measureMeters(MapsActivity.getCustomEndPos().latitude, MapsActivity.getCustomEndPos().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
-            endPositionLatLng = MapsActivity.getCustomEndPos();
         }
 
         if(startNode == null || endNode == null) {
