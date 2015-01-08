@@ -27,6 +27,10 @@ public class RepairReader {
     private Buildings buildings;
     private ArrayList<Reparation> al;
 
+    public ArrayList<Reparation> getAl() {
+        return al;
+    }
+
     public RepairReader() {
         try {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();

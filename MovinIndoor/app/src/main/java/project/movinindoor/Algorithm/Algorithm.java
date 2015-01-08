@@ -130,7 +130,7 @@ public class Algorithm {
         boolean sucess = navigateRoute(start, end);
 
         if(sucess) {
-            Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
             //animate
             Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
             Animator.visibilityRepairList(Animator.Visibility.HIDE);
