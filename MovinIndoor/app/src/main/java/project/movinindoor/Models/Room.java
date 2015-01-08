@@ -1,7 +1,5 @@
 package project.movinindoor.Models;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
