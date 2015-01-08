@@ -477,7 +477,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     /**
      * Opens the navigation overlay and plots a route between
-     *  two points when the user presses it.
+     *  two points given by the user when the user presses it.
      *
      * @param view The button that is pressed.
      */
@@ -503,10 +503,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         if(succes) navigationRoute = new NavigationRoute();
     }
 
-    //OnClick Navigate to Reparation
     /**
+     * Opens the navigation overlay and plots a route between
+     *  two reparations when the user presses it.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void btnNavigateRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
