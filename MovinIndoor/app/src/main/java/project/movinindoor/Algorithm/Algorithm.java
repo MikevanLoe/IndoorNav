@@ -130,13 +130,25 @@ public class Algorithm {
         boolean sucess = navigateRoute(start, end);
 
         if(sucess) {
-           // Toast.makeText(MapsActivity.getContext(), "Navigation started", Toast.LENGTH_SHORT).show();
             //animate
-            Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
-            Animator.visibilityRepairList(Animator.Visibility.HIDE);
-            Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
-            Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
-            Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+            if(Animator.isRepairListVisible()) {
+                Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                Animator.visibilityRepairList(Animator.Visibility.HIDE);
+                Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
+                Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
+                Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+            } else {
+                Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
+                Animator.visibilityNavigationInfoTop(Animator.Visibility.SHOW);
+                Animator.visibilityNavigationInfoBottom(Animator.Visibility.SHOW);
+                Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
+            }
+        } else{
+            Animator.visibilityCardNavigator(Animator.Visibility.HIDE);
+            Animator.visibilityRepairList(Animator.Visibility.SHOW);
+            Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
+            Animator.visibilityNavigationInfoBottom(Animator.Visibility.HIDE);
+            Animator.visibilityFloorNavagator(Animator.Visibility.HIDE);
         }
         return sucess;
     }
@@ -149,10 +161,11 @@ public class Algorithm {
 
         //if not a custom location
         if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom") && !startPosition.contains("Custom")) {
-            startRoom = graphHandler.getRooms().getRoom(startPosition.toUpperCase());
+            startRoom = graphHandler.getRooms().getRoom(startPosition);
+            if (startRoom == null) startRoom = graphHandler.getRooms().getRoom(startPosition.toUpperCase());
 
             if (startRoom == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From" + startPosition + " not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From " + startPosition + " not found", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -192,7 +205,8 @@ public class Algorithm {
             Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
             Matcher m = p.matcher(endPosition);
             if (m.matches()) {
-                endRoom = graphHandler.getRooms().getRoom(endPosition.toUpperCase());
+                endRoom = graphHandler.getRooms().getRoom(endPosition);
+                if(endRoom == null) endRoom = graphHandler.getRooms().getRoom(endPosition.toUpperCase());
             } else {
                 List<Room> roomsWithName = graphHandler.getRooms().getAllRoomsWithName(endPosition);
                 if(roomsWithName.size() != 1) {

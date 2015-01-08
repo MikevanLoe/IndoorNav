@@ -626,16 +626,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
                 textView.setText("Start");
 
+                MapDrawer.removePolylines();
+                MapDrawer.removeMarkers();
+                navigationRoute.reset();
+
                 String a = (nextRepair.Building.equals(Reparation.BuildingEnum.Custom)) ? nextRepair.Building + "" + nextRepair.Location : nextRepair.Building + "" + nextRepair.Floor + "." + nextRepair.Location;
-                Log.i("blablabla", currentRepair);
-                Log.i("blablabla4", a);
                 boolean succes = Algorithm.navigate(currentRepair, a);
                 currentRepair = a;
 
-                if (succes) {
-                    navigationRoute.reset();
-                    navigationRoute = new NavigationRoute();
-                }
+                if (succes) navigationRoute = new NavigationRoute();
             } else{
                 textView.setText("Eind");
             }
