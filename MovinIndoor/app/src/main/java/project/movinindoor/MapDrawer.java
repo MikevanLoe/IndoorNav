@@ -64,11 +64,11 @@ public class MapDrawer {
         MapsActivity.getBtnFloorUp().setVisibility(View.VISIBLE);
         MapsActivity.getBtnFloorDown().setVisibility(View.VISIBLE);
 
-        if (floor > 9) {
+        if (floor >= 10) {
             MapsActivity.getBtnFloorUp().setVisibility(View.INVISIBLE);
         }
 
-        if (floor < 1) {
+        if (floor <= 0) {
             MapsActivity.getBtnFloorDown().setVisibility(View.INVISIBLE);
         }
     }

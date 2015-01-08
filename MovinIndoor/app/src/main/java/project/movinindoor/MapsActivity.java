@@ -499,8 +499,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
         textView.setText("Start");
-        Algorithm.navigate(startPosition, endPosition);
-        navigationRoute = new NavigationRoute();
+
+        boolean succes = Algorithm.navigate(startPosition, endPosition);
+        if(succes) navigationRoute = new NavigationRoute();
     }
 
     //OnClick Navigate to Reparation
@@ -517,8 +518,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
         textView.setText("Start");
-        Algorithm.navigate(startRoom, EndRoom);
-        navigationRoute = new NavigationRoute();
+        boolean succes = Algorithm.navigate(startRoom, EndRoom);
+        if(succes) navigationRoute = new NavigationRoute();
     }
 
     //OnClick Activate/Close Reparation
