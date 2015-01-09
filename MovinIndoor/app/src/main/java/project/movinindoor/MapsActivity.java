@@ -875,9 +875,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Corrects the camera position when the user passes a certain
+     *  longitude and latitude.
      *
-     * @param cameraPosition
-     * @return
+     * @param cameraPosition the current camera position.
+     * @return 
      */
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
