@@ -170,8 +170,7 @@ public class LoginActivity extends Activity {
         /*
         Toast toast = Toast.makeText(getApplicationContext(), "email: " + email + " Password " + password, Toast.LENGTH_SHORT);
         toast.show();
-
-        Intent Loginintent = new Intent(this, MapsActivity.class);  
+        Intent Loginintent = new Intent(this, MapsActivity.class);
         startActivity(Loginintent);
         finish(); */
     }
