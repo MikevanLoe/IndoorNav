@@ -698,9 +698,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Tells the program when an item in the menu is selected.
      *
-     * @param item
-     * @return
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to
+     *         proceed, true to consume it here.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -885,7 +887,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     *
+     * Creates a registration id to allow push notification
+     *  to be send to the users phone
      */
     public void getRegId() {
         new AsyncTask<Void, Void, String>() {
@@ -933,7 +936,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     *
+     * When the back button on the phone is pressed,
+     *  set up the map and graph if it is needed.
      */
     @Override
     public void onBackPressed() {
