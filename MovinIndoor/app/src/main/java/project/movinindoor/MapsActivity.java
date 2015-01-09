@@ -446,6 +446,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Animator.visibilityNavigationInfoTop(Animator.Visibility.HIDE);
         Animator.visibilityFloorNavagator(Animator.Visibility.SHOW);
         Animator.visibilityNavigationMenu(Animator.Visibility.SHOW);
+        currentRepair = "";
     }
 
     /**
@@ -679,8 +680,13 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             if (navigationRoute.getNum() == navigationRoute.getLinkedList().size()) {
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_place_white_36dp));
                 //Animator.visibilityCardNavigator(Animator.Visibility.SHOW);
-                navigationRoute.setNum(navigationRoute.getNum() + 1);
-                textView.setText(split[1] + "\n >Volgende reparatie<");
+
+                if(currentRepair.equals("")) {
+                    textView.setText(split[1]);
+                } else {
+                    textView.setText(split[1] + "\n >Volgende reparatie<");
+                    navigationRoute.setNum(navigationRoute.getNum() + 1);
+                }
             } else {
                 textView.setText(split[1]);
             }

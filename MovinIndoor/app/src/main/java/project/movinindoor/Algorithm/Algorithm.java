@@ -251,7 +251,7 @@ public class Algorithm {
 
             endPositionLatLng = new LatLng(endNode.getLatLng().latitude, endNode.getLatLng().longitude);
         } else {
-            if (!startPosition.contains("Custom End")) {
+            if (!endPosition.contains("Custom End")) {
                 endRoom = graphHandler.getRooms().getRoom(endPosition);
                 endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), endRoom.getFloor());
                 extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
