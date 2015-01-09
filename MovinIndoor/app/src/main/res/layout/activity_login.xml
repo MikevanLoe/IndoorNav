@@ -26,7 +26,8 @@
             android:padding="10dp"
             android:hint="Email"
             android:textColorHint="#cccccc"
-            android:drawableLeft="@drawable/email"/>
+            android:drawableLeft="@drawable/email"
+            android:text="monteur@monteur.nl" />
         <EditText
             android:id="@+id/etPass"
             android:layout_width="match_parent"
@@ -37,7 +38,8 @@
             android:hint="Password"
             android:textColorHint="#cccccc"
             android:password="true"
-            android:drawableLeft="@drawable/password"/>
+            android:drawableLeft="@drawable/password"
+            android:text="hallohallo" />
         <Button
             android:id="@+id/btnSingIn"
             android:layout_width="match_parent"
