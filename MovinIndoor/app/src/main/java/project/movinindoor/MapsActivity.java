@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -24,9 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -47,12 +49,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import java.net.MalformedURLException;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import project.movinindoor.Algorithm.Algorithm;
 import project.movinindoor.Algorithm.NavigationRoute;
 import project.movinindoor.Fragment.DFragment;
@@ -64,36 +68,19 @@ import project.movinindoor.Fragment.ShowNavigationCardFragment;
 import project.movinindoor.Graph.Graph.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Graph.Node;
-import project.movinindoor.Readers.HttpJson;
 import project.movinindoor.Models.Room;
+import project.movinindoor.Readers.HttpJson;
 import project.movinindoor.Readers.RepairReader;
 import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
-<<<<<<< HEAD
-    GoogleCloudMessaging gcm;
-    String regid;
-    String PROJECT_NUMBER = "607567241847";
-=======
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-<<<<<<< HEAD
-=======
     private static int loggedIn;
     private static int userinfo;
 
-    public static Context getContext() {
-        return context;
-    }
-
-    public static GoogleMap getMap() {
-        return mMap;
-    }
-
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     private static GraphHandler setupGraph;
 
@@ -167,12 +154,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public static JSONArray getJitems() {
         return jitems;
     }
-<<<<<<< HEAD
-=======
-
-    public static int getUserID() { return userinfo; }
-
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
+    public static int getUserID() {
+        return userinfo;
+    }
     public static void setJitems(JSONArray jitems) {
         MapsActivity.jitems = jitems;
     }
@@ -229,16 +213,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         Log.d("userid", ""+userinfo);
 
         try {
-<<<<<<< HEAD
-            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
-=======
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -304,10 +282,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-    * Changes the configuration when the user changes some settings.
-    *
-    * @param newConfig The new configuration of the application.
-    */
+     * Changes the configuration when the user changes some settings.
+     *
+     * @param newConfig The new configuration of the application.
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -346,7 +324,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             if (longClickMarker != null) longClickMarker.remove();
             TextView txtCord = (TextView) findViewById(R.id.txtCord);
             longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-            //txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+            txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
             if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
                 Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
                 fMarkerDisplay.getView().startAnimation(showBottom);
@@ -544,7 +522,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
-        textView.setText("Klik voor start");
+        textView.setText("Start");
 
         boolean succes = Algorithm.navigate(startPosition, endPosition);
         if(succes) navigationRoute = new NavigationRoute();
@@ -639,8 +617,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Updates the given directions when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void showNextCardLocation(View view) {
         double count = 0.0;
@@ -731,9 +710,11 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Tells the program when an item in the menu is selected.
      *
-     * @param item
-     * @return
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to
+     *         proceed, true to consume it here.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -917,60 +898,15 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         return new LatLng(latitude, longitude);
     }
 
-<<<<<<< HEAD
     /**
-     *
+     * Creates a registration id to allow push notification
+     *  to be send to the users phone
      */
-    public void getRegId() {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                    }
-                    try {
-                        regid = gcm.register(PROJECT_NUMBER);
-
-                    } catch (NullPointerException e) {
-                    }
-                    msg = "Device registered, registration ID=" + regid;
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
-
-                    try {
-                        // Add your data
-                        List<NameValuePair> nameValuePairs = new ArrayList<>();
-                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
-                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                        // Execute HTTP Post Request
-                        HttpResponse response = httpclient.execute(httppost);
-
-                    } catch (ClientProtocolException e) {
-                    } catch (IOException e) {
-                    }
-
-                    // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
-
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-
-                }
-
-                return msg;
-            }
-
-
-        }.execute(null, null, null);
-    }
 
     /**
-     *
+     * When the back button on the phone is pressed,
+     *  set up the map and graph if it is needed.
      */
-=======
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     @Override
     public void onBackPressed() {
         setUpMapIfNeeded();

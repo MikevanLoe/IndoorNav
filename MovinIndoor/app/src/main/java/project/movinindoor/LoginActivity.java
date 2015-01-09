@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,16 +27,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Hashing.md5;
-import project.movinindoor.Readers.HttpJson;
 import project.movinindoor.Readers.HttpJsonLogin;
 
 
@@ -52,25 +45,20 @@ public class LoginActivity extends Activity {
     EditText textEmail;
     EditText textPassword;
 
-<<<<<<< HEAD
     Intent Loginintent;
-=======
     GoogleCloudMessaging gcm;
     String regid;
     String PROJECT_NUMBER = "607567241847";
 
     int loggedIn;
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-<<<<<<< HEAD
         Loginintent = new Intent(this, MapsActivity.class);
 
-=======
         prefs = getSharedPreferences("Login", MODE_PRIVATE);
         editor = prefs.edit();
 
@@ -79,7 +67,6 @@ public class LoginActivity extends Activity {
             Toast toastcon = Toast.makeText(getApplicationContext(), "You need an internet connection for this app.", Toast.LENGTH_LONG);
             toastcon.show();
         }
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     }
 
     @Override
@@ -112,9 +99,6 @@ public class LoginActivity extends Activity {
 
     public void btnSignIn(View view)
     {
-<<<<<<< HEAD
-
-=======
         String email = textEmail.getText().toString();
         String password = textPassword.getText().toString();
         boolean error = false;
@@ -188,7 +172,6 @@ public class LoginActivity extends Activity {
         toast.show();
 
         Intent Loginintent = new Intent(this, MapsActivity.class);
->>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
         startActivity(Loginintent);
         finish(); */
     }

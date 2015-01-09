@@ -1,7 +1,5 @@
 package project.movinindoor.Readers;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
