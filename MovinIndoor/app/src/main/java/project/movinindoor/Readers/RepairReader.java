@@ -39,7 +39,7 @@ public class RepairReader {
             try {
                 jitems = MapsActivity.getJitems();
             } catch (Exception e) {
-                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
             }
 
             for (Integer i = 0; i < jitems.length(); i++) {

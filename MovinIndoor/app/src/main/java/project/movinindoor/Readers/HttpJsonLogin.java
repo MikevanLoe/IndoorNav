@@ -3,6 +3,8 @@ package project.movinindoor.Readers;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -29,7 +31,6 @@ public class HttpJsonLogin extends AsyncTask<String, String, Integer> {
     protected Integer doInBackground(String... url){
 
         try {
-
             // Setup connection
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpPost httppostreq = new HttpPost(url[0]);
@@ -49,8 +50,6 @@ public class HttpJsonLogin extends AsyncTask<String, String, Integer> {
             JSONObject userIDobj = new JSONObject(responseText);
 
             userid = userIDobj.getInt("userid");
-
-            Log.d("response", responseText);
         }
         catch(Exception e)
         {

@@ -3,8 +3,12 @@ package project.movinindoor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,9 +20,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.Hashing.md5;
@@ -28,14 +45,26 @@ import project.movinindoor.Readers.HttpJsonLogin;
 
 public class LoginActivity extends Activity {
 
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+
     Button btnLogin;
     EditText textEmail;
     EditText textPassword;
+
+    GoogleCloudMessaging gcm;
+    String regid;
+    String PROJECT_NUMBER = "607567241847";
+
+    int loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        prefs = getSharedPreferences("Login", MODE_PRIVATE);
+        editor = prefs.edit();
 
         if(!checkConnection())
         {
@@ -122,6 +151,14 @@ public class LoginActivity extends Activity {
                     Toast toastloggedin = Toast.makeText(getApplicationContext(), "Login succesful", Toast.LENGTH_LONG);
                     toastloggedin.show();
 
+                    getRegId(userinfo);
+                    Log.d("beforeid", ""+userinfo);
+                    editor.putInt("LoggedIn", 1);
+                    editor.putInt("UserID", userinfo);
+                    editor.commit();
+
+                    this.loggedIn = prefs.getInt("LoggedIn", -1);
+
                     Intent Loginintent = new Intent(this, MapsActivity.class);
                     startActivity(Loginintent);
                     finish();
@@ -157,5 +194,52 @@ public class LoginActivity extends Activity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void getRegId(final int userid) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    try {
+                        regid = gcm.register(PROJECT_NUMBER);
+                        Log.d("regid", regid);
+
+                    } catch (NullPointerException e) {
+                    }
+                    msg = "Device registered, registration ID=" + regid;
+                    HttpClient httpclient = new DefaultHttpClient();
+                    HttpPost httppost = new HttpPost("http://movin.nvrstt.nl/registrateid.php");
+
+                    try {
+                        // Add your data
+                        List<NameValuePair> nameValuePairs = new ArrayList<>();
+                        nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
+                        nameValuePairs.add(new BasicNameValuePair("userid", "" + userid));
+                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                        // Execute HTTP Post Request
+                        HttpResponse response = httpclient.execute(httppost);
+
+                    } catch (ClientProtocolException e) {
+                    } catch (IOException e) {
+                    }
+
+                    // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+
+                }
+
+                return msg;
+            }
+
+
+        }.execute(null, null, null);
     }
 }
