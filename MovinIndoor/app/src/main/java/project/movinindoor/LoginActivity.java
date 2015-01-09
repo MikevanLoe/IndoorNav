@@ -57,7 +57,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Loginintent = new Intent(this, MapsActivity.class);
+       // Loginintent = new Intent(this, MapsActivity.class);
 
         prefs = getSharedPreferences("Login", MODE_PRIVATE);
         editor = prefs.edit();
@@ -148,7 +148,7 @@ public class LoginActivity extends Activity {
                     toastloggedin.show();
 
                     getRegId(userinfo);
-                    Log.d("beforeid", ""+userinfo);
+                    //Log.d("beforeid", ""+userinfo);
                     editor.putInt("LoggedIn", 1);
                     editor.putInt("UserID", userinfo);
                     editor.commit();
@@ -219,10 +219,13 @@ public class LoginActivity extends Activity {
                         List<NameValuePair> nameValuePairs = new ArrayList<>();
                         nameValuePairs.add(new BasicNameValuePair("registrationid", regid));
                         nameValuePairs.add(new BasicNameValuePair("userid", "" + userid));
+                        //Log.i("REG", ""+regid);
+                        //Log.i("REG2", ""+userid);
                         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                         // Execute HTTP Post Request
                         HttpResponse response = httpclient.execute(httppost);
+                        Log.i("REG2", ""+response);
 
                     } catch (ClientProtocolException e) {
                     } catch (IOException e) {

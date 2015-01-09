@@ -81,7 +81,7 @@ public class GcmMessageHandler extends IntentService {
                 .setAutoCancel(true)
                 .build();
 
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notification.contentIntent = intent;
@@ -89,7 +89,8 @@ public class GcmMessageHandler extends IntentService {
         notification.ledARGB = 0xFFF700FF;
         notification.defaults |= Notification.DEFAULT_SOUND;
         notification.defaults |= Notification.DEFAULT_VIBRATE;
-        notification.flags = Notification.FLAG_SHOW_LIGHTS;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
         notification.ledOnMS = 2000;
         notification.ledOffMS = 2000;
         Random random = new Random();
