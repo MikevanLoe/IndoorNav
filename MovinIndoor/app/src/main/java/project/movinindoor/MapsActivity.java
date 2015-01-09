@@ -879,7 +879,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      *  longitude and latitude.
      *
      * @param cameraPosition the current camera position.
-     * @return 
+     * @return
      */
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
