@@ -309,7 +309,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             if (longClickMarker != null) longClickMarker.remove();
             TextView txtCord = (TextView) findViewById(R.id.txtCord);
             longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-            txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+            //txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
             if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
                 Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
                 fMarkerDisplay.getView().startAnimation(showBottom);
@@ -507,7 +507,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
-        textView.setText("Start");
+        textView.setText("Klik voor start");
 
         boolean succes = Algorithm.navigate(startPosition, endPosition);
         if(succes) navigationRoute = new NavigationRoute();
