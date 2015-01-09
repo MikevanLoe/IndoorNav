@@ -604,8 +604,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Updates the given directions when the user presses the button.
      *
-     * @param view
+     * @param view The button that is pressed.
      */
     public void showNextCardLocation(View view) {
         double count = 0.0;
