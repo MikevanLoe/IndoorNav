@@ -1,6 +1,7 @@
 package project.movinindoor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -69,15 +70,34 @@ import project.movinindoor.Readers.RepairReader;
 import project.movinindoor.Reparation.Reparation;
 
 public class MapsActivity extends FragmentActivity implements ShowNavigationCardFragment.OnFragmentInteractionListener, MarkerInfoFragment.OnFragmentInteractionListener, FloorDisplayFragment.OnFragmentInteractionListener, Fragment_FromToDisplay.OnFragmentInteractionListener, NavigationBar.OnFragmentInteractionListener {
+<<<<<<< HEAD
     GoogleCloudMessaging gcm;
     String regid;
     String PROJECT_NUMBER = "607567241847";
+=======
+>>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
 
     private static Context context;
     private static GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
+<<<<<<< HEAD
+=======
+    private static int loggedIn;
+    private static int userinfo;
+
+    public static Context getContext() {
+        return context;
+    }
+
+    public static GoogleMap getMap() {
+        return mMap;
+    }
+
+>>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     public static final LatLngBounds BOUNDS = new LatLngBounds(new LatLng(52.497917, 6.076639), new LatLng(52.501379, 6.083449));
     private static GraphHandler setupGraph;
+
+    SharedPreferences prefs;
 
     //ExpandableListView
     private ExpandableListAdapterNew listAdapter;
@@ -147,6 +167,12 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public static JSONArray getJitems() {
         return jitems;
     }
+<<<<<<< HEAD
+=======
+
+    public static int getUserID() { return userinfo; }
+
+>>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     public static void setJitems(JSONArray jitems) {
         MapsActivity.jitems = jitems;
     }
@@ -195,8 +221,21 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         setContentView(R.layout.activity_maps);
         getActionBar().hide();
 
+        prefs = getSharedPreferences("Login", MODE_PRIVATE);
+
+        this.loggedIn = prefs.getInt("LoggedIn", -1);
+        this.userinfo = prefs.getInt("UserID", -1);
+
+        Log.d("userid", ""+userinfo);
+
         try {
+<<<<<<< HEAD
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+=======
+            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+>>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
         } catch (ExecutionException e) {
             e.printStackTrace();
         }catch (InterruptedException e) {
@@ -206,8 +245,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         setUpMapIfNeeded();
         context = getApplicationContext();
         setupGraph = new GraphHandler();
-
-        getRegId();
 
         fMarkerDisplay = fm.findFragmentById(R.id.fMarkerDisplay);
         fNavigationCard = fm.findFragmentById(R.id.fNavigationCard);
@@ -790,7 +827,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      */
     public void refreshList() {
         try {
-            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+            jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
             setupGraph.setRepairReader(new RepairReader());
             prepareListData();
         } catch (InterruptedException e) {
@@ -880,6 +917,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         return new LatLng(latitude, longitude);
     }
 
+<<<<<<< HEAD
     /**
      *
      */
@@ -931,6 +969,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     /**
      *
      */
+=======
+>>>>>>> b9ad01e770427473ee04b1634439de306e920ea3
     @Override
     public void onBackPressed() {
         setUpMapIfNeeded();
