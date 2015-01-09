@@ -210,8 +210,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         this.loggedIn = prefs.getInt("LoggedIn", -1);
         this.userinfo = prefs.getInt("UserID", -1);
 
-        Log.d("userid", ""+userinfo);
-
         try {
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
         } catch (ExecutionException e) {
