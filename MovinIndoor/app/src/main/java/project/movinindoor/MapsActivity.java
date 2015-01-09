@@ -742,7 +742,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     *
+     * Resumes the app.
      */
     @Override
     protected void onResume() {
@@ -752,7 +752,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     *
+     * If there is no graph yet, make on.
      */
     private void setUpGraphIfNeeded() {
         if (setupGraph == null) {
@@ -802,7 +802,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     *
+     * Refreshes the list of repairs by sending a new request.
      */
     public void refreshList() {
         try {
@@ -877,7 +877,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      *  longitude and latitude.
      *
      * @param cameraPosition the current camera position.
-     * @return
+     * @return LatLng The limit and the new position of the map
      */
     private LatLng getLatLngCorrection(LatLng cameraPosition) {
         double latitude = cameraPosition.latitude;
