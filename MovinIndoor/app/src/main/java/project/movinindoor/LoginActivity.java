@@ -137,6 +137,8 @@ public class LoginActivity extends Activity {
             try {
                 int userinfo = new HttpJsonLogin().execute("http://movin.nvrstt.nl/mobilelogin.php", textEmail.getText().toString(), hashedpassword).get();
 
+
+
                 if(userinfo < 0)
                 {
                     Toast toastinvalidinfo = Toast.makeText(getApplicationContext(), "Invalid login credentials", Toast.LENGTH_LONG);
@@ -154,8 +156,8 @@ public class LoginActivity extends Activity {
                     editor.commit();
 
                     this.loggedIn = prefs.getInt("LoggedIn", -1);
-
                     Intent Loginintent = new Intent(this, MapsActivity.class);
+
                     startActivity(Loginintent);
                     finish();
                 }
