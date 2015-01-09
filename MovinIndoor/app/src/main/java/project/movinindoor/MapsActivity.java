@@ -899,11 +899,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     * Creates a registration id to allow push notification
-     *  to be send to the users phone
-     */
-
-    /**
      * When the back button on the phone is pressed,
      *  set up the map and graph if it is needed.
      */

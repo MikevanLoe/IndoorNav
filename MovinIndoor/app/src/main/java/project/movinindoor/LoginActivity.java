@@ -191,6 +191,10 @@ public class LoginActivity extends Activity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    /**
+     * Creates a registration id to allow push notification
+     *  to be send to the users phone
+     */
     public void getRegId(final int userid) {
         new AsyncTask<Void, Void, String>() {
             @Override
