@@ -6,9 +6,7 @@
 
 package project.movinindoor.Algorithm;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,8 +22,8 @@ import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Graph.Node;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.MapsActivity;
-import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Models.Room;
+import project.movinindoor.Reparation.Buildings;
 
 /**
  *
@@ -253,7 +251,7 @@ public class Algorithm {
 
             endPositionLatLng = new LatLng(endNode.getLatLng().latitude, endNode.getLatLng().longitude);
         } else {
-            if (!startPosition.contains("Custom End")) {
+            if (!endPosition.contains("Custom End")) {
                 endRoom = graphHandler.getRooms().getRoom(endPosition);
                 endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), endRoom.getFloor());
                 extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);

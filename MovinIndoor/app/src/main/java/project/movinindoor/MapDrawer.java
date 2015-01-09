@@ -1,7 +1,6 @@
 package project.movinindoor;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;

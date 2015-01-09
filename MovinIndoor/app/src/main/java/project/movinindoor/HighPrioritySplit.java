@@ -1,14 +1,8 @@
 package project.movinindoor;
 
-import android.util.Log;
-
-import java.util.Collections;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
 
-import project.movinindoor.Readers.HttpJson;
-import project.movinindoor.Readers.RepairReader;
 import project.movinindoor.Reparation.Building;
 import project.movinindoor.Reparation.Buildings;
 import project.movinindoor.Reparation.Floor;

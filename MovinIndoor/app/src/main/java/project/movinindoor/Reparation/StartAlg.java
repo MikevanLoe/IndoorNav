@@ -6,12 +6,6 @@
 
 package project.movinindoor.Reparation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
-import project.movinindoor.Algorithm.Algorithm;
-
 /**
  *
  * @author Davey
