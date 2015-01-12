@@ -141,9 +141,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public static GraphHandler getSetupGraph() {
         return setupGraph;
     }
-    /*public static void setSetupGraph(GraphHandler setupGraph) {
-        MapsActivity.setupGraph = setupGraph;
-    } *///TODO Unused method removal
     public static JSONArray getJitems() {
         return jitems;
     }
@@ -282,7 +279,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         super.onConfigurationChanged(newConfig);
     }
 
-    //TODO
     public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -301,7 +297,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         }
     };
 
-    //TODO
     public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
         @Override
         public void onMapLongClick(LatLng latLng) {
@@ -488,7 +483,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
-    //TODO
     NavigationRoute navigationRoute = null;
 
     /**
@@ -813,7 +807,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
-    /** //TODO
+    /**
      * Creates the map for the application.
      *
      * @param uri This parameter is not used, but is needed to create the method.
