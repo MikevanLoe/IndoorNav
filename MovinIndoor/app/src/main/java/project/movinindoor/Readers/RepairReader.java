@@ -43,7 +43,7 @@ public class RepairReader {
             try {
                 jitems = MapsActivity.getJitems();
             } catch (Exception e) {
-                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get();
+                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
             }
             int customRoomCount = 1;
 
@@ -183,7 +183,8 @@ public class RepairReader {
                 subList.add("Priority:          " + PrioName);
                 subList.add("Status:           " + statusName);
                 subList.add("Description:  " + r.Description);
-                subList.add("Comment:  " + r.Comment);
+                if(r.Comment.equals("null")) subList.add("Comment:  ");
+                else subList.add("Comment:  " + r.Comment);
                 subList.add("id: " + r.Id);
                 listDataChild.put(r.ShortDescription, subList);
             }

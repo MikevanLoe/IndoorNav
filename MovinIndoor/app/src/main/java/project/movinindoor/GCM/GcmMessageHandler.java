@@ -11,6 +11,7 @@ import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import project.movinindoor.LoginActivity;
@@ -48,11 +49,10 @@ public class GcmMessageHandler extends IntentService {
         mes = extras.getString("name");
         type = extras.getString("type");
 
-        //Log.i("GCM", "Received : (" + messageType + ")  " + extras.getString("name"));
-        //Log.i("GCM", "Received : "+ extras);
         sendPushNotification(mes, type);
         try {
-            MapsActivity.setJitems(new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php").get());
+            MapsActivity.setJitems(new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get());
+
             try {
                 MapsActivity.getSetupGraph().setRepairReader(new RepairReader());
             } catch (NullPointerException e) {}
@@ -69,8 +69,6 @@ public class GcmMessageHandler extends IntentService {
 
     }
 
-    int notifyCount = 0;
-
     public void sendPushNotification(String title, String text) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(MapsActivity.getContext().NOTIFICATION_SERVICE);
         Intent notificationIntent = new Intent(this, LoginActivity.class);
@@ -80,33 +78,25 @@ public class GcmMessageHandler extends IntentService {
                 .setContentTitle(title)
                 .setContentText(text)
                 .setSmallIcon(R.drawable.movin_push)
+                .setAutoCancel(true)
                 .build();
 
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-
-
-        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-         //       | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-
-
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notification.contentIntent = intent;
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        notification.sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-
-        long[] vibrate = { 0, 800, 800, 1200, 2000, 2000 };
-        notification.vibrate = vibrate;
-
         notification.ledARGB = 0xFFF700FF;
-        notification.flags = Notification.FLAG_SHOW_LIGHTS;
+        notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notification.flags |= Notification.FLAG_SHOW_LIGHTS;
         notification.ledOnMS = 2000;
         notification.ledOffMS = 2000;
-        int in = (int) Math.random();
+        Random random = new Random();
+        int m = random.nextInt(9999 - 1000) + 1000;
 
-        notificationManager.notify(in, notification);
+        notificationManager.notify(m, notification);
     }
 
 }
