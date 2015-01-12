@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +27,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,19 +38,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -148,9 +141,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     public static GraphHandler getSetupGraph() {
         return setupGraph;
     }
-    public static void setSetupGraph(GraphHandler setupGraph) {
+    /*public static void setSetupGraph(GraphHandler setupGraph) {
         MapsActivity.setupGraph = setupGraph;
-    } //TODO Unused method removal
+    } *///TODO Unused method removal
     public static JSONArray getJitems() {
         return jitems;
     }
@@ -214,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e){
             e.printStackTrace();
         }
 
@@ -721,8 +714,9 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Called after the application's starting or re-starting process.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState The previous state of the app, if it's restarting, otherwise it is null.
      */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -730,9 +724,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
+     * Creates a small options menu.
      *
-     * @param menu
-     * @return
+     * @param menu The menu you want to create.
+     * @return This returns true to show the menu.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -802,7 +797,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     }
 
     /**
-     * Refreshes the list of repairs by sending a new request.
+     * Refreshes the list of repairs by sending a new request to the database
+     *  and replace the current list.
      */
     public void refreshList() {
         try {
@@ -817,9 +813,10 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
-    /**
+    /** //TODO
+     * Creates the map for the application.
      *
-     * @param uri
+     * @param uri This parameter is not used, but is needed to create the method.
      */
     @Override
     public void onFragmentInteraction(Uri uri) {
