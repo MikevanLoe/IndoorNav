@@ -211,6 +211,7 @@ public class LoginActivity extends Activity {
                         Log.d("regid", regid);
 
                     } catch (NullPointerException e) {
+                        e.printStackTrace();
                     }
                     msg = "Device registered, registration ID=" + regid;
                     HttpClient httpclient = new DefaultHttpClient();
@@ -230,12 +231,15 @@ public class LoginActivity extends Activity {
                         Log.i("REG2", ""+response);
 
                     } catch (ClientProtocolException e) {
+                        e.printStackTrace();
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
                     // AsyncTask<String, String, String> registrationid = PostRequest.execute("http://movin.nvrstt.nl/registrateid.php", "registrationid", msg);
 
                 } catch (IOException ex) {
+                    ex.printStackTrace();
                     msg = "Error :" + ex.getMessage();
 
                 }
