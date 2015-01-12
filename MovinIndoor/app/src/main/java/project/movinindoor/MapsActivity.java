@@ -520,7 +520,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
-        textView.setText("Start");
+        textView.setText("Klik voor start");
 
         boolean succes = Algorithm.navigate(startPosition, endPosition);
         if(succes) navigationRoute = new NavigationRoute();
@@ -542,7 +542,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         ImageView imageView = (ImageView) findViewById(R.id.imgCardIcon);
         TextView textView = (TextView) findViewById(R.id.txtCardText);
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
-        textView.setText("Start");
+        textView.setText("Klik voor start");
         boolean succes = Algorithm.navigate(startRoom, EndRoom);
         if(succes) navigationRoute = new NavigationRoute();
     }
@@ -649,7 +649,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
             if((currentIntRepair + 1) < setupGraph.getRepairReader().getAl().size()) {
                 Reparation nextRepair = setupGraph.getRepairReader().getAl().get(currentIntRepair+1);
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_navigation_white_36dp));
-                textView.setText("Start");
+                textView.setText("Klik voor start");
 
                 MapDrawer.removePolylines();
                 MapDrawer.removeMarkers();
