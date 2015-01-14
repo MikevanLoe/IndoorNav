@@ -187,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     /**
      * Initialize the aplication.
      *
-     * @param savedInstanceState A bundle of information.
+     * @param savedInstanceState a Bundle that you can give key-value items so you can save data if the apps gets closed and later reopened
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -710,7 +710,8 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     /**
      * Called after the application's starting or re-starting process.
      *
-     * @param savedInstanceState The previous state of the app, if it's restarting, otherwise it is null.
+     * @param savedInstanceState a Bundle that you can give key-value items so you can save data if the apps gets closed and later reopened.
+     *
      */
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

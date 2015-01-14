@@ -52,6 +52,10 @@ public class LoginActivity extends Activity {
 
     int loggedIn;
 
+    /**
+     *
+     * @param savedInstanceState a Bundle that you can give key-value items so you can save data if the apps gets closed and later reopened
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

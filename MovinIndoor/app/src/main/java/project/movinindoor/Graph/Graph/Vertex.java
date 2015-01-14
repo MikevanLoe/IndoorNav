@@ -8,9 +8,13 @@ import java.util.List;
 /**
  * Created by Wietse on 24-11-2014.
  */
+
+/**
+ * vertex is a class that has points on the map
+ * A Vertex has a location (latLng) links to other Vertices (adj) and a type (Elevator, Stairs, Room or Hall)
+ */
 public class Vertex {
 
-    //basic data for the class
     public String VertexId;
     protected LatLng latLng;
     protected int floor;
@@ -19,18 +23,20 @@ public class Vertex {
     public enum Vertextype {Elevator, Stairs, Room, Hall};
 
 
-    //data used to determine shortest path
+    /**
+     * data used to determine shortest path
+     */
     protected double dist;
     public Vertex prev;
     protected boolean scratch;
 
-    public Vertex(String VertexId, LatLng latLng) {
-        this.VertexId = VertexId;
-        this.latLng = latLng;
-        adj = new LinkedList<Edge>() ;
-        reset();
-    }
-
+    /**
+     *
+     * @param VertexId number of the vertex
+     * @param latLng latitude and longitude of the vertex
+     * @param type type of the vertex that can be Elevator, Room, Stairs or Hall
+     * @param floor the floor of the vertex
+     */
     public Vertex(String VertexId, LatLng latLng, Vertextype type, int floor){
         this.VertexId = VertexId;
         this.latLng = latLng;
@@ -40,22 +46,20 @@ public class Vertex {
         reset();
     }
 
+    /**
+     * function to reset all the data used by Dijkstra
+     */
     public void reset(){
         dist = Graph.INFINITY;
         prev = null;
         scratch = false;
     }
 
+    /**
+     * getters and setters
+     */
     public String getVertexId() {
         return VertexId;
-    }
-
-    public List<Edge> getAdj() {
-        return adj;
-    }
-
-    public Vertex getPrev() {
-        return prev;
     }
 
     public LatLng getLatLng() {

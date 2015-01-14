@@ -1,7 +1,9 @@
 package project.movinindoor.Graph;
 
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -124,7 +126,7 @@ public class GraphHandler {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                         //MapDrawer.addMarker(t1, t3 + ": " + t2, t4);
+//                         MapDrawer.addMarker(t1, t3 + ": " + t2, t4);
                     }
                 });
 
@@ -165,12 +167,9 @@ public class GraphHandler {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                       // MapDrawer.addPolyline(t1, t2, t3, t4, Color.BLACK, Integer.parseInt(nNew.floor));
+//                       MapDrawer.addPolyline(t1, t2, t3, t4, Color.BLACK, nNew.getFloor());
                     }
                 });
-
-
-                //Log.i("groep3", n.nodeId + " -> " + t.toNodeID + ": " + t.cost);
             }
         }
         Handler handler = new Handler(Looper.getMainLooper());
