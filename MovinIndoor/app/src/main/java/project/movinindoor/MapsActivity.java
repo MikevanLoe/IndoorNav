@@ -103,7 +103,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private ImageView infoWalkingBy;
 
     NavigationRoute navigationRoute = null;
-
     String currentRepair = "";
 
     public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
