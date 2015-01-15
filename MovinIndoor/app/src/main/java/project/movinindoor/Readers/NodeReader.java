@@ -29,6 +29,10 @@ public class NodeReader {
 
     public HashMap<String, Node> jsonList;
 
+    /**
+     * constructor for nodereader
+     * this reads the nodes and creates a jsonlist from the wrs server of movinsoftware.nl
+     */
     public NodeReader() {
         InputStream inputStream = null;
 
@@ -43,6 +47,11 @@ public class NodeReader {
         }
     }
 
+    /**
+     *  calculate all the distances for every tonode
+     * @param read a hashmap of nodes without distances in the tonode
+     * @return a hashmap of nodes with meters in the tonode
+     */
     public HashMap<String, Node> calculate(HashMap<String, Node> read) {
         double lat1 = 0.0;
         double long1 = 0.0;
@@ -65,12 +74,23 @@ public class NodeReader {
         return read;
     }
 
+    /**
+     *
+     * @param in the inputstream
+     * @return a hashmap of nodes
+     * @throws IOException
+     */
     public HashMap<String, Node> readJsonStream(InputStream in) throws IOException {
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         return readMessagesArray(reader);
     }
 
-
+    /**
+     *
+     * @param reader jsonreader
+     * @return hashmap filled with nodes
+     * @throws IOException
+     */
     public HashMap<String, Node> readMessagesArray(JsonReader reader) throws IOException {
         HashMap<String, Node> nodes = new HashMap<String, Node>();
 
@@ -83,7 +103,12 @@ public class NodeReader {
         return nodes;
     }
 
-
+    /**
+     *
+     * @param reader jsonreader
+     * @return returns the node the jsonreader encounters next
+     * @throws IOException
+     */
     public Node readNodes(JsonReader reader) throws IOException {
         String nodeID = "";
         LatLng latLng = null;
@@ -125,7 +150,12 @@ public class NodeReader {
         return new Node(nodeID, latLng, floor, nodeLinks, type);
     }
 
-
+    /**
+     *
+     * @param reader jsonreader
+     * @return returns the latlng the jsonreader encounters next
+     * @throws IOException
+     */
     public LatLng readDoublesArray(JsonReader reader) throws IOException {
         List<Double> doubles = new ArrayList();
 
@@ -137,6 +167,12 @@ public class NodeReader {
         return new LatLng(doubles.get(0), doubles.get(1));
     }
 
+    /**
+     *
+     * @param reader jsonreader
+     * @return returns a list of tonodes
+     * @throws IOException
+     */
     public List<ToNode> readNodeLinks(JsonReader reader) throws IOException {
         List<ToNode> list = new ArrayList<ToNode>();
         String toNodeID = null;
@@ -163,8 +199,12 @@ public class NodeReader {
         return list;
     }
 
-
-    //useless function ATM
+    /**
+     *
+     * @param reader jsonreader
+     * @return returns an arraylist of edgeactions the reader encounters next
+     * @throws IOException
+     */
     public ArrayList<edgeActions> readActions(JsonReader reader) throws IOException {
         String action = "";
         String toNodeID = "";
@@ -192,6 +232,11 @@ public class NodeReader {
         return actions;
     }
 
+    /**
+     * function to find the nearest node near the given latitude and longitude
+     * @param latLng
+     * @return returns the Node
+     */
     public Node findNearestNode(LatLng latLng) {
         double startLat1 = latLng.latitude;
         double startLong1 = latLng.longitude;
@@ -223,6 +268,12 @@ public class NodeReader {
         return tempNode;
     }
 
+    /**
+     * function to find the nearest node near the given latitude and longitude on a specified floor
+     * @param latLng the location
+     * @param floor the floor
+     * @return the nearest node to the given parameters
+     */
     public Node findNearestNode(LatLng latLng, int floor) {
         double startLat1 = latLng.latitude;
         double startLong1 = latLng.longitude;
@@ -255,6 +306,12 @@ public class NodeReader {
         return tempNode;
     }
 
+    /**
+     * function that finds the closest node inside aroom
+     * @param room the room you want to find a node in
+     * @return the node in the room
+     * returns null if there weas not a node found
+     */
     public Node FindClosestNodeInsideRoom(Room room) {
 
         String s = room.getLocation();

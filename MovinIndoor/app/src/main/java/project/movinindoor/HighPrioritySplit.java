@@ -155,41 +155,4 @@ public class HighPrioritySplit {
         catch(NullPointerException e) {}
         return input;
     }
-
-    /*
-    public static void HighTestMethod (Buildings input){
-        Log.i(HighPrioritySplit.LOG_TAG, "Test number 1");
-        System.out.println("systeem test");
-        highSplit(input);
-        for (Building b: input.buildingList.values()){
-            for(Floor f : b.floorList.values()){
-                for(Object r : f.highOrder) {
-                    Reparation s = (Reparation) r;
-                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
-                }
-                for(Object r : f.lowOrder){
-                    Reparation s = (Reparation) r;
-                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
-                }
-            }
-        }
-    }
-    public static void LowTestMethod(Buildings input){
-        Log.i(HighPrioritySplit.LOG_TAG, "Test number 2");
-        System.out.println("test");
-        lowSplit(input);
-        for (Building b: input.buildingList.values()){
-            for(Floor f : b.floorList.values()){
-                for(Object r : f.highOrder) {
-                    Reparation s = (Reparation) r;
-                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
-                }
-                for(Object r : f.lowOrder){
-                    Reparation s = (Reparation) r;
-                    Log.i(HighPrioritySplit.LOG_TAG, s.Description + " " + s.Location);
-                }
-            }
-        }
-    }
-    */
 }

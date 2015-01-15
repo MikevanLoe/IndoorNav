@@ -29,6 +29,9 @@ public class RepairReader {
         return al;
     }
 
+    /**
+     * constructor that reads all the readers from the database and runs the highsplit function on them
+     */
     public RepairReader() {
         try {
             List<Reparation.BuildingEnum> buildingsArray = new ArrayList<Reparation.BuildingEnum>();
@@ -128,6 +131,10 @@ public class RepairReader {
         }
     }
 
+    /**
+     * creates the boxes on the navigation view
+     * @return returns true if the function has been succesful
+     */
     public boolean bindToRepairList() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
