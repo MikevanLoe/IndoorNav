@@ -1,4 +1,4 @@
-package project.movinindoor.Graph.Graph;
+package project.movinindoor.Graph.Dijkstra;
 
 import android.graphics.Color;
 import android.widget.Toast;
@@ -59,39 +59,6 @@ public class Graph {
         }
     }
 
-    //function that you can run after running dijkstra, to get a list of the shortest path to that destination
-
-    /**
-     * function that returns the shortest path to the given destination
-     * @param destname the vertex you want a path to
-     */
-    private void printPath(String destname) {
-        Vertex dest = vertexMap.get(destname);
-    }
-
-    private LinkedList getPath(String destname) {
-        LinkedList a = new LinkedList();
-        a = getPath(vertexMap.get(destname), a);
-        return a;
-    }
-
-    /**
-     * function function that returns the path most recently calculated by Dijkstra
-     * @param v the destination vertex
-     * @param l used for recursive. when first time calling give it an empty list
-     * @return a linkedlist of the path
-     */
-    private LinkedList getPath(Vertex v, LinkedList l) {
-        l.add(0, v);
-        if (v.prev != null) {
-            l = getPath(v.prev, l);
-        }
-        return l;
-    }
-
-    //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
-    //returns the cost of the path.
-
     /**
      *
      * @param v
@@ -110,7 +77,6 @@ public class Graph {
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(v.latLng, 20));
         }
     }
-
 
     //function that verifies if the strings are in the hashmap, and runs the private drawPath function.
     //returns the cost of the path.

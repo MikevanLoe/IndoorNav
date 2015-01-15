@@ -48,7 +48,8 @@ public class NodeReader {
     }
 
     /**
-     *  calculate all the distances for every tonode
+     * calculate all the distances for every tonode
+     *
      * @param read a hashmap of nodes without distances in the tonode
      * @return a hashmap of nodes with meters in the tonode
      */
@@ -75,7 +76,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param in the inputstream
      * @return a hashmap of nodes
      * @throws IOException
@@ -86,7 +86,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param reader jsonreader
      * @return hashmap filled with nodes
      * @throws IOException
@@ -104,7 +103,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param reader jsonreader
      * @return returns the node the jsonreader encounters next
      * @throws IOException
@@ -151,7 +149,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param reader jsonreader
      * @return returns the latlng the jsonreader encounters next
      * @throws IOException
@@ -168,7 +165,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param reader jsonreader
      * @return returns a list of tonodes
      * @throws IOException
@@ -200,7 +196,6 @@ public class NodeReader {
     }
 
     /**
-     *
      * @param reader jsonreader
      * @return returns an arraylist of edgeactions the reader encounters next
      * @throws IOException
@@ -233,45 +228,10 @@ public class NodeReader {
     }
 
     /**
-     * function to find the nearest node near the given latitude and longitude
-     * @param latLng
-     * @return returns the Node
-     */
-    public Node findNearestNode(LatLng latLng) {
-        double startLat1 = latLng.latitude;
-        double startLong1 = latLng.longitude;
-
-        double shortLat = 0.0;
-        double shortLng = 0.0;
-        Node tempNode = null;
-
-        for (Node n : jsonList.values()) {
-
-            double lat1 = n.getLatLng().latitude;
-            double long1 = n.getLatLng().longitude;
-
-            if (shortLng == 0.0 && shortLng == 0.0) {
-                shortLat = lat1;
-                shortLng = long1;
-            }
-
-            double som1 = CalcMath.measureMeters(startLat1, startLong1, lat1, long1);
-            double som2 = CalcMath.measureMeters(startLat1, startLong1, shortLat, shortLng);
-
-            if (som1 <= som2) {
-                shortLat = lat1;
-                shortLng = long1;
-                tempNode = n;
-            }
-        }
-        MapDrawer.addPolyline(shortLat, shortLng, startLat1, startLong1, Color.BLUE);
-        return tempNode;
-    }
-
-    /**
      * function to find the nearest node near the given latitude and longitude on a specified floor
+     *
      * @param latLng the location
-     * @param floor the floor
+     * @param floor  the floor
      * @return the nearest node to the given parameters
      */
     public Node findNearestNode(LatLng latLng, int floor) {
@@ -308,6 +268,7 @@ public class NodeReader {
 
     /**
      * function that finds the closest node inside aroom
+     *
      * @param room the room you want to find a node in
      * @return the node in the room
      * returns null if there weas not a node found

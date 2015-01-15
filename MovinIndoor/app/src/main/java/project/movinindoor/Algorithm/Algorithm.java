@@ -34,8 +34,8 @@ public class Algorithm {
     public Buildings buildings;
 
 
-    public Algorithm(Buildings campusWin) {
-        buildings = campusWin;
+    public Algorithm(Buildings buildingname) {
+        buildings = buildingname;
     }
 
     private static GraphHandler graphHandler = MapsActivity.getSetupGraph();

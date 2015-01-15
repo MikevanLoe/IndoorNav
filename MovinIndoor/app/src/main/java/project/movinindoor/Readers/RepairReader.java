@@ -25,10 +25,6 @@ public class RepairReader {
     private Buildings buildings;
     private ArrayList<Reparation> al;
 
-    public ArrayList<Reparation> getAl() {
-        return al;
-    }
-
     /**
      * constructor that reads all the readers from the database and runs the highsplit function on them
      */
@@ -46,7 +42,7 @@ public class RepairReader {
             try {
                 jitems = MapsActivity.getJitems();
             } catch (Exception e) {
-                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid="+MapsActivity.getUserID()).get();
+                jitems = new HttpJson().execute("http://movin.nvrstt.nl/defectsjson.php?userid=" + MapsActivity.getUserID()).get();
             }
             int customRoomCount = 1;
 
@@ -131,8 +127,13 @@ public class RepairReader {
         }
     }
 
+    public ArrayList<Reparation> getAl() {
+        return al;
+    }
+
     /**
      * creates the boxes on the navigation view
+     *
      * @return returns true if the function has been succesful
      */
     public boolean bindToRepairList() {
@@ -190,7 +191,7 @@ public class RepairReader {
                 subList.add("Priority:          " + PrioName);
                 subList.add("Status:           " + statusName);
                 subList.add("Description:  " + r.Description);
-                if(r.Comment.equals("null")) subList.add("Comment:  ");
+                if (r.Comment.equals("null")) subList.add("Comment:  ");
                 else subList.add("Comment:  " + r.Comment);
                 subList.add("id: " + r.Id);
                 listDataChild.put(r.ShortDescription, subList);

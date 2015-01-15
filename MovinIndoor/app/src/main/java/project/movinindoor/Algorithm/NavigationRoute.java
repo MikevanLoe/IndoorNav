@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import project.movinindoor.Graph.Graph.Graph;
-import project.movinindoor.Graph.Graph.Vertex;
+import project.movinindoor.Graph.Dijkstra.Graph;
+import project.movinindoor.Graph.Dijkstra.Vertex;
 import project.movinindoor.Graph.Node;
 import project.movinindoor.Graph.ToNode;
 import project.movinindoor.Graph.edgeActions;
@@ -25,6 +25,11 @@ public class NavigationRoute {
     private int rotation = 0;
     private LinkedList<RouteStep> LinkedList;
 
+    /**
+     * this class is to show the navigation cards
+     * constructor for NavigationRoute
+     *
+     */
     public NavigationRoute() {
         if (tempMarker != null) tempMarker.remove();
 
@@ -34,45 +39,6 @@ public class NavigationRoute {
 
         for (int v = Graph.getWalkingPath().size() - 1; v >= 0; v--) {
             Vertex v2 = Graph.getWalkingPath().get(v);
-            /*
-            for (Edge e1 : v2.adj) {
-                for (edgeActions e : e1.actions) {
-                    if (v2.name) {
-                        String text = "";
-                        String action = "";
-                        Node nq = nodes.get(e1.toNodeID);
-                        switch (e.action) {
-                            case "GoStraight":
-                                text = "Ga rechtdoor";
-                                action = "GoStraight";
-                                break;
-                            case "GoRight":
-                                text = "Ga naar links";
-                                action = "GoLeft";
-                                break;
-                            case "GoLeft":
-                                text = "Ga naar rechts";
-                                action = "GoRight";
-                                break;
-                            case "GoSlightlyRight":
-                                text = "Ga schuin naar links";
-                                action = "GoSlightlyLeft";
-                                break;
-                            case "GoSlightlyLeft":
-                                text = "Ga schuin naar rechts";
-                                action = "GoSlightlyRight";
-                                break;
-                        }
-
-                        RouteStep routeStep = new RouteStep(action, text, new LatLng(nq.location.get(0), nq.location.get(1)), Integer.valueOf(nq.floor));
-                        LinkedList.add(routeStep);
-                    }
-                }
-            }
-            RouteStep routeStep = new RouteStep("GoLeft", "U bent gearriveerd", LinkedList.getLast().getLatLng(), LinkedList.getLast().getFloor());
-            LinkedList.add(routeStep);
-*/
-
             Node n = nodes.get(Graph.getWalkingPath().get(v).getVertexId());
             for (ToNode tn : n.getToNode()) {
 
@@ -143,6 +109,10 @@ public class NavigationRoute {
 
     Marker tempMarker = null;
 
+    /**
+     *
+     * @return returns the string of the next card
+     */
     public String getNextCard() {
         if (tempMarker != null) tempMarker.remove();
         String s = LinkedList.get(num).getAction() + ", " + LinkedList.get(num).getText();

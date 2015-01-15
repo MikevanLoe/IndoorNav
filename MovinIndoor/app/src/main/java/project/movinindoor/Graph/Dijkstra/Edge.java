@@ -1,4 +1,4 @@
-package project.movinindoor.Graph.Graph;
+package project.movinindoor.Graph.Dijkstra;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class Edge {
         this.actions = actions;
     }
 
-    /**
+     /**
      *
      * @return Arraylist of edgeactions
      */
