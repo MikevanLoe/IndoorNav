@@ -13,7 +13,7 @@ import project.movinindoor.Reparation.Reparation;
  */
 public class HighPrioritySplit {
     //private static final String LOG_TAG = "Mike" ;
-
+    
     /**
      * Splits the input based on the priority of repairs.
      * Takes the high repairs, and follows with the medium and low priority
