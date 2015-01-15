@@ -38,94 +38,22 @@ public class Algorithm {
         buildings = campusWin;
     }
 
-    private enum Travel {
-        ELEVATOR, STAIR
-    }
-
-    /*
-    public static void NavAlgo(Room startPos, Room endPos) {
-        String startLocation= startPos.getLocation();
-        String endLocation= endPos.getLocation();
-
-        String[] splitStartLocation = splitLocation(startLocation);
-        String[] splitEndLocation = splitLocation(endLocation);
-
-        String startBuilding = splitStartLocation[0].substring(0, 1);
-        String endBuilding = splitEndLocation[0].substring(0, 1);
-
-        int startFloor = Integer.valueOf(splitStartLocation[0].substring(1));
-        int endFloor = Integer.valueOf(splitEndLocation[0].substring(1));
-
-        if(startBuilding.equals(endBuilding)) { //Same building
-            if(splitStartLocation[0].equals(splitEndLocation[0])) {  //if Same Building And Floor
-                navigate(startLocation, endLocation);
-            } else { // if Same Building but Different Floor
-                // find all Elevators / Stairs
-                if(Graph.movingByFoot == true) { // If Traveling by Foot
-                    if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
-                        // Find (primarly) Only Elevators
-                        List<Node> nodeList = travelByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
-                        drawRoute(nodeList);
-                    } else {
-                    // Find only Stairs
-                        List<Node> nodeList = travelByElevatorOrStair(Travel.STAIR, startPos, endPos);
-                        drawRoute(nodeList);
-                    }
-                } else { // If Traveling by Foot With Cart
-                  //  Find Only Elevators
-                    List<Node> nodeList = travelByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
-                    drawRoute(nodeList);
-                }
-            }
-        } else { // If Different Building
-            if((buildingHaveBridge(startBuilding) && Math.abs(startFloor) >= 2 )|| (buildingHaveBridge(endBuilding) && Math.abs(startFloor)  >= 2 )) { //Calculate with Floor 2  And 0
-                if(Graph.movingByFoot == true) { // If Traveling by Foot
-                    if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
-                        // Find (primarly) Only Elevators
-                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.ELEVATOR, startPos, endPos);
-                        drawRoute(nodeList);
-                    } else {
-                        // Find only Stairs
-                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.STAIR, startPos, endPos);
-                        drawRoute(nodeList);
-                    }
-                } else { // If Traveling by Foot With Cart
-                    //  Find Only Elevators
-                    List<Node> nodeList = travelBetweenBuildingsByElevatorOrStairByBridge(Travel.ELEVATOR, startPos, endPos);
-                    drawRoute(nodeList);
-                }
-            } else { // Calculate with Floor 0
-                if(Graph.movingByFoot == true) { // If Traveling by Foot
-                    if(Math.abs(startFloor - endFloor) >= 2) { //Floor Differenct is to big
-                        // Find (primarly) Only Elevators
-                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
-                        drawRoute(nodeList);
-                    } else {
-                        // Find only Stairs
-                        List<Node> nodeList = travelBetweenBuildingsByElevatorOrStair(Travel.STAIR, startPos, endPos);
-                        drawRoute(nodeList);
-                    }
-                } else { // If Traveling by Foot With Cart
-                    //  Find Only Elevators
-                    List<Node> nodeList = travelBetweenBuildingsByElevatorOrStair(Travel.ELEVATOR, startPos, endPos);
-                    drawRoute(nodeList);
-                }
-            }
-        }
-    }
-    */
-
     private static GraphHandler graphHandler = MapsActivity.getSetupGraph();
 
-    //Called by methods
-    public static boolean navigate(String start, String end) {
+    /**
+     * function that manages all classes that are needed for running the navigation
+     * @param start the starting point of the navigation
+     * @param destination the destination of the navigation
+     * @return returns true if the function worked without problems
+     */
+    public static boolean navigate(String start, String destination) {
         //Removes From -> To Fragement;
         MapsActivity.getfNavigationInfoBottom().setVisibility(View.INVISIBLE);
         //Removes existing Polylines
         MapDrawer.removePolylines();
         MapDrawer.hideMarkers();
 
-        boolean sucess = navigateRoute(start, end);
+        boolean sucess = navigateRoute(start, destination);
 
         if(sucess) {
             //animate
@@ -151,19 +79,25 @@ public class Algorithm {
         return sucess;
     }
 
-    public static boolean navigateRoute(String startPosition, String endPosition) {
+    /**
+     * supporting funciton of navigate
+     * @param start
+     * @param destination
+     * @return returns true if function ran without problems
+     */
+    private static boolean navigateRoute(String start, String destination) {
         double extraCost = 0.0;
         LatLng startPositionLatLng, endPositionLatLng;
         Node endNode, startNode;
         Room startRoom = null, endRoom = null;
 
         //if not a custom location
-        if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom") && !startPosition.contains("Custom")) {
-            startRoom = graphHandler.getRooms().getRoom(startPosition);
-            if (startRoom == null) startRoom = graphHandler.getRooms().getRoom(startPosition.toUpperCase());
+        if(MapsActivity.getCustomStartPos() == null && !MapsActivity.getEditStart().getText().toString().contains("Custom") && !start.contains("Custom")) {
+            startRoom = graphHandler.getRooms().getRoom(start);
+            if (startRoom == null) startRoom = graphHandler.getRooms().getRoom(start.toUpperCase());
 
             if (startRoom == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From " + startPosition + " not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "From " + start + " not found", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -179,8 +113,8 @@ public class Algorithm {
 
             startPositionLatLng = new LatLng(startNode.getLatLng().latitude, startNode.getLatLng().longitude);
         } else {
-            if (!startPosition.contains("Custom Start")) {
-                startRoom = graphHandler.getRooms().getRoom(startPosition);
+            if (!start.contains("Custom Start")) {
+                startRoom = graphHandler.getRooms().getRoom(start);
                 startNode = graphHandler.getNodes().findNearestNode(startRoom.getLatLngBoundsCenter(), startRoom.getFloor());
                 extraCost = CalcMath.measureMeters(startRoom.getLatLngBoundsCenter().latitude, startRoom.getLatLngBoundsCenter().longitude, startNode.getLatLng().latitude, startNode.getLatLng().longitude);
                 startPositionLatLng = startRoom.getLatLngBoundsCenter();
@@ -193,7 +127,7 @@ public class Algorithm {
         }
 
         //if not a custom location
-        if(MapsActivity.getCustomEndPos() == null  && !MapsActivity.getEditEnd().getText().toString().contains("Custom") && !endPosition.contains("Custom")) {
+        if(MapsActivity.getCustomEndPos() == null  && !MapsActivity.getEditEnd().getText().toString().contains("Custom") && !destination.contains("Custom")) {
             String re1="([a-z])";	// Any Single Word Character (Not Whitespace) 1
             String re2="(\\d+)";	// Integer Number 1
             String re3="(.)";	// Any Single Character 1
@@ -201,12 +135,12 @@ public class Algorithm {
             String re5="(\\d)";	// Any Single Digit 2
 
             Pattern p = Pattern.compile(re1+re2+re3+re4+re5,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-            Matcher m = p.matcher(endPosition);
+            Matcher m = p.matcher(destination);
             if (m.matches()) {
-                endRoom = graphHandler.getRooms().getRoom(endPosition);
-                if(endRoom == null) endRoom = graphHandler.getRooms().getRoom(endPosition.toUpperCase());
+                endRoom = graphHandler.getRooms().getRoom(destination);
+                if(endRoom == null) endRoom = graphHandler.getRooms().getRoom(destination.toUpperCase());
             } else {
-                List<Room> roomsWithName = graphHandler.getRooms().getAllRoomsWithName(endPosition);
+                List<Room> roomsWithName = graphHandler.getRooms().getAllRoomsWithName(destination);
                 if(roomsWithName.size() != 1) {
                     double tempCost = 0.0;
                     Room tempRoom = null;
@@ -230,12 +164,12 @@ public class Algorithm {
                     MapDrawer.removePolylines();
                     endRoom = tempRoom;
                 } else {
-                    endRoom = graphHandler.getRooms().getRoom(endPosition);
+                    endRoom = graphHandler.getRooms().getRoom(destination);
                 }
             }
 
             if (endRoom == null) {
-                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To " + endPosition + " not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.getContext().getApplicationContext(), "To " + destination + " not found", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -251,8 +185,8 @@ public class Algorithm {
 
             endPositionLatLng = new LatLng(endNode.getLatLng().latitude, endNode.getLatLng().longitude);
         } else {
-            if (!endPosition.contains("Custom End")) {
-                endRoom = graphHandler.getRooms().getRoom(endPosition);
+            if (!destination.contains("Custom End")) {
+                endRoom = graphHandler.getRooms().getRoom(destination);
                 endNode = graphHandler.getNodes().findNearestNode(endRoom.getLatLngBoundsCenter(), endRoom.getFloor());
                 extraCost = CalcMath.measureMeters(endRoom.getLatLngBoundsCenter().latitude, endRoom.getLatLngBoundsCenter().longitude, endNode.getLatLng().latitude, endNode.getLatLng().longitude);
                 endPositionLatLng = endRoom.getLatLngBoundsCenter();
@@ -279,8 +213,8 @@ public class Algorithm {
             MapsActivity.getTextSpeed().setText("ETA: " + walkingSpeed);
             MapsActivity.getTextSpeedCost().setText("(" + String.valueOf(Math.round(cost)) + "m)");
 
-            MapsActivity.getTextFrom().setText(startPosition);
-            MapsActivity.getTextTo().setText(endPosition);
+            MapsActivity.getTextFrom().setText(start);
+            MapsActivity.getTextTo().setText(destination);
             MapDrawer.setFloor(startNode.getFloor());
             MapsActivity.getBtnCurrentFloor().setText(String.valueOf(startNode.getFloor()));
 
@@ -290,8 +224,8 @@ public class Algorithm {
 
             MapsActivity.getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(startNode.getLatLng().latitude, startNode.getLatLng().longitude), 20));
 
-            MapDrawer.addMarker(startPositionLatLng, startPosition, startNode.getFloor());
-            MapDrawer.addMarker(endPositionLatLng, endPosition, endNode.getFloor());
+            MapDrawer.addMarker(startPositionLatLng, start, startNode.getFloor());
+            MapDrawer.addMarker(endPositionLatLng, destination, endNode.getFloor());
 
             MapDrawer.hideAllMarkersAndPolylines();
             MapDrawer.showMarkersAndPolylinesFloor(MapDrawer.getFloor());
