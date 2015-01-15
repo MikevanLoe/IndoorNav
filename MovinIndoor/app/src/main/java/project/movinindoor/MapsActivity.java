@@ -102,6 +102,51 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
     private static android.support.v4.app.Fragment fRepairList, fNavigationInfoTop, fFloorNavigator2, fMarkerDisplay, fNavigationCard;
     private ImageView infoWalkingBy;
 
+    NavigationRoute navigationRoute = null;
+
+    String currentRepair = "";
+
+    public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.radioCart:
+                    Graph.setMovement(false);
+                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
+                    Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    Graph.setMovement(true);
+                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
+                    Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
+            textView.setText("");
+
+            inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
+            if (inRoom != null) textView.setText(inRoom.getLocation());
+            else textView.setText("Custom Position");
+
+            if (longClickMarker != null) longClickMarker.remove();
+            TextView txtCord = (TextView) findViewById(R.id.txtCord);
+            longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
+            txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
+            if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
+                Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
+                fMarkerDisplay.getView().startAnimation(showBottom);
+                fMarkerDisplay.getView().setVisibility(View.VISIBLE);
+            }
+
+        }
+    };
+
     /**
      *  Getters and Setters
      */
@@ -279,47 +324,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
         super.onConfigurationChanged(newConfig);
     }
 
-    public RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.radioCart:
-                    Graph.setMovement(false);
-                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_local_grocery_store_black_24dp));
-                    Toast.makeText(getContext(), "Cart selected", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    Graph.setMovement(true);
-                    infoWalkingBy.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_walk_black_24dp));
-                    Toast.makeText(getContext(), "Walking selected", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        }
-    };
-
-    public GoogleMap.OnMapLongClickListener onMapLongClick = new GoogleMap.OnMapLongClickListener() {
-        @Override
-        public void onMapLongClick(LatLng latLng) {
-            TextView textView = (TextView) findViewById(R.id.txtMarkerLocation);
-            textView.setText("");
-
-            inRoom = setupGraph.getRooms().nodeInsideRoom(latLng);
-            if (inRoom != null) textView.setText(inRoom.getLocation());
-            else textView.setText("Custom Position");
-
-            if (longClickMarker != null) longClickMarker.remove();
-            TextView txtCord = (TextView) findViewById(R.id.txtCord);
-            longClickMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-            txtCord.setText(latLng.latitude + "\n " + latLng.longitude);
-            if (fMarkerDisplay.getView().getVisibility() == View.INVISIBLE) {
-                Animation showBottom = AnimationUtils.loadAnimation(MapsActivity.this, R.anim.abc_slide_in_bottom);
-                fMarkerDisplay.getView().startAnimation(showBottom);
-                fMarkerDisplay.getView().setVisibility(View.VISIBLE);
-            }
-
-        }
-    };
-
     /**
      * Goes up one floor and show it on the map when the user presses the button.
      *
@@ -483,8 +487,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
 
     }
 
-    NavigationRoute navigationRoute = null;
-
     /**
      * Opens the navigation overlay and plots a route between
      *  two points given by the user when the user presses it.
@@ -519,7 +521,6 @@ public class MapsActivity extends FragmentActivity implements ShowNavigationCard
      *
      * @param view The button that is pressed.
      */
-    String currentRepair = "";
     public void btnNavigateRepair(View view) {
         int pos = Integer.valueOf(view.getTag().toString());
         String startRoom = (pos > 0) ? listAdapter.getChild(pos - 1, 0).toString().substring(16) : MapsActivity.editStart.getText().toString();
