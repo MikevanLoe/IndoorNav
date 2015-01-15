@@ -258,7 +258,6 @@ public class MapDrawer {
     /**
      * removes all the markers
      */
-
     public static void removeMarkers() {
         for(Marker m : markers) { m.remove(); }
     }

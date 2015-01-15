@@ -155,6 +155,7 @@ public class HighPrioritySplit {
         catch(NullPointerException e) {}
         return input;
     }
+
     /*
     public static void HighTestMethod (Buildings input){
         Log.i(HighPrioritySplit.LOG_TAG, "Test number 1");
