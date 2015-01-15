@@ -28,7 +28,7 @@ public class HttpJsonLogin extends AsyncTask<String, String, Integer> {
 
     private Integer userid;
 
-    protected Integer doInBackground(String... url){
+    protected Integer doInBackground(String... url) {
 
         try {
             // Setup connection
@@ -50,23 +50,13 @@ public class HttpJsonLogin extends AsyncTask<String, String, Integer> {
             JSONObject userIDobj = new JSONObject(responseText);
 
             userid = userIDobj.getInt("userid");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return userid;
     }
 
-    protected void onPreExecute(){
-
-    }
-
-    protected void onProgressUpdate(){
-
-    }
-
-    protected void onPostExecute(){
+    protected void onPreExecute() {
 
     }
 }

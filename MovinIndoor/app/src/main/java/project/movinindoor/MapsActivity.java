@@ -58,7 +58,7 @@ import project.movinindoor.Fragment.Fragment_FromToDisplay;
 import project.movinindoor.Fragment.MarkerInfoFragment;
 import project.movinindoor.Fragment.NavigationBar;
 import project.movinindoor.Fragment.ShowNavigationCardFragment;
-import project.movinindoor.Graph.Graph.Graph;
+import project.movinindoor.Graph.Dijkstra.Graph;
 import project.movinindoor.Graph.GraphHandler;
 import project.movinindoor.Graph.Node;
 import project.movinindoor.Models.Room;

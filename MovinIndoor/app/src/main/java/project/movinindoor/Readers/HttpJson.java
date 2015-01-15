@@ -1,7 +1,6 @@
 package project.movinindoor.Readers;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +19,7 @@ public class HttpJson extends AsyncTask<String, String, JSONArray> {
 
     private JSONArray json = null;
 
-    public JSONArray doInBackground(String... url){
+    public JSONArray doInBackground(String... url) {
 
         try {
             JSONArray jsonobj = new JSONArray();
@@ -30,7 +29,7 @@ public class HttpJson extends AsyncTask<String, String, JSONArray> {
             HttpPost httppostreq = new HttpPost(url[0]);
             StringEntity se = new StringEntity(jsonobj.toString());
             se.setContentType("application/json;charset=UTF-8");
-            se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+            se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
             httppostreq.setEntity(se);
             HttpResponse httpresponse = httpclient.execute(httppostreq);
 
@@ -38,23 +37,13 @@ public class HttpJson extends AsyncTask<String, String, JSONArray> {
             String responseText = null;
             responseText = EntityUtils.toString(httpresponse.getEntity());
             json = new JSONArray(responseText);
-        }
-        catch(Exception e)
-        {
-           e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return json;
     }
 
-    protected void onPreExecute(){
-
-    }
-
-    protected void onProgressUpdate(){
-
-    }
-
-    protected void onPostExecute(){
+    protected void onPreExecute() {
 
     }
 }

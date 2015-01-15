@@ -1,4 +1,4 @@
-package project.movinindoor.Graph.Graph;
+package project.movinindoor.Graph.Dijkstra;
 
 import com.google.android.gms.maps.model.LatLng;
 

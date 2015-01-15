@@ -1,4 +1,4 @@
-package project.movinindoor.Graph.Graph;
+package project.movinindoor.Graph.Dijkstra;
 
 /**
  * Created by Wietse on 24-11-2014.

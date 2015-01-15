@@ -1,14 +1,12 @@
 package project.movinindoor.Graph;
 
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import project.movinindoor.Graph.Graph.Graph;
-import project.movinindoor.Graph.Graph.Vertex;
+import project.movinindoor.Graph.Dijkstra.Graph;
+import project.movinindoor.Graph.Dijkstra.Vertex;
 import project.movinindoor.MapDrawer;
 import project.movinindoor.Models.Rooms;
 import project.movinindoor.Readers.NodeReader;
