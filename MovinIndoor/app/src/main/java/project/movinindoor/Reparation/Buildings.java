@@ -99,14 +99,6 @@ public class Buildings {
         return floorR.repairList;
     }
 
-
-    /* duplicate from getRepairs
-    public Reparation getReparation(Reparation.BuildingEnum building, int floor, int location) {
-        Map<Integer, Floor> getBuilding = getRepairsFromBuilding(building);
-        Floor floorR = getBuilding.get(Integer.toString(floor));
-        return floorR.repairList.get(location);
-    }*/
-
     /**
      * Get a reparation from the specified location in the specified building.
      *
